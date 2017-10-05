@@ -19,6 +19,9 @@ public class MyJMRTDCardApplication {
      * @param args the command line arguments
      */
     
+    static boolean WRITE = true;
+    static boolean READ = false;
+    
     static{
         if (System.getProperty("os.name").contains("Linux")) {
             System.load("/home/" + System.getProperty("user.name") + "/workspace/JavaCardPassport/FingerPrintBridgeLib/dist/FingerPrintBridgeLib.so");
@@ -54,7 +57,7 @@ public class MyJMRTDCardApplication {
                     }
                 }
             }*/
-            com = new CardCom(false, 3);
+            com = new CardCom(READ, 3);
         } catch (Exception e) {
             e.printStackTrace();
         }

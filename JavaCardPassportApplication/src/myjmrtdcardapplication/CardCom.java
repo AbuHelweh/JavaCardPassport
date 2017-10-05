@@ -18,6 +18,7 @@ import java.security.GeneralSecurityException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Security;
 import java.util.ArrayList;
@@ -32,8 +33,10 @@ import jnitestfingerprint.FPrintController;
 import net.sf.scuba.data.Gender;
 import net.sf.scuba.smartcards.*;
 import org.bouncycastle.asn1.ASN1Primitive;
+import org.bouncycastle.asn1.eac.CVCertificate;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.jmrtd.*;
+import org.jmrtd.cert.CardVerifiableCertificate;
 import org.jmrtd.lds.ChipAuthenticationInfo;
 import org.jmrtd.lds.ChipAuthenticationPublicKeyInfo;
 import org.jmrtd.lds.LDSFile;
@@ -91,15 +94,14 @@ public class CardCom {
      */
     public CardCom(boolean opt, int type) throws CardServiceException, CardException, IOException, GeneralSecurityException {
 
-        
         //load keystore onde estão os dois certificados
         //cada um tem um alias, terminal e passport
         //as keys são key para terminal e PassportKey para passaporte
         ks = KeyStore.getInstance("JKS");
         String pw = "123456";
-        FileInputStream fis = new FileInputStream("/home/" + System.getProperty("user.name") +  "/workspace/JavaCardPassport/Documentos/mykeystore.ks");
-        ks.load(fis,pw.toCharArray());
-        
+        FileInputStream fis = new FileInputStream("/home/" + System.getProperty("user.name") + "/workspace/JavaCardPassport/Documentos/mykeystore.ks");
+        ks.load(fis, pw.toCharArray());
+
         key = new BACKey(DOCUMENTNUMBER, DATEOFBIRTH, DATEOFEXPIRY);
         System.out.println(key.toString());
 
@@ -121,6 +123,7 @@ public class CardCom {
             service = new PassportService(new TerminalCardService(reader));
             service.open();
             service.sendSelectApplet(false);
+
             BouncyCastleProvider provider = new BouncyCastleProvider();
             Security.addProvider(provider);
 
@@ -153,6 +156,8 @@ public class CardCom {
 
             } else {
                 perso = new PassportPersoService(service);
+                //perso.putCVCertificate((CardVerifiableCertificate) ks.getCertificate("passport"));
+                //perso.putPrivateEACKey((PrivateKey)ks.getKey("passport", "".toCharArray()));
 
                 SendSecurityInfo(key, keys);
                 SendCOM();
@@ -187,7 +192,6 @@ public class CardCom {
 
         //System.out.println("Sending private KEY");
         //perso.putPrivateKey(keys.getPrivate());
-
         //doSecurity(backey);
     }
 
@@ -273,7 +277,7 @@ public class CardCom {
             System.out.println("Não foi possível acessar o arquivo DG1");
         }
     }
-    
+
     /**
      * Envia o MRZ do arquivo DG1
      *
@@ -427,22 +431,22 @@ public class CardCom {
             imgOut.close();
 
             Mat temp = Imgcodecs.imread(DOCUMENTNUMBER + ".Finger" + 0 + ".jpg");    //Converte
-            MatOfInt params = new MatOfInt(Imgcodecs.CV_IMWRITE_PXM_BINARY, 0);                                     //set params
+            MatOfInt params = new MatOfInt(Imgcodecs.CV_IMWRITE_PXM_BINARY, 1);                                     //set params
             Imgcodecs.imwrite(DOCUMENTNUMBER + ".Finger" + 0 + ".pgm", temp, params);                                 //pra pgm
 
             File pgmImg = new File(DOCUMENTNUMBER + ".Finger" + 0 + ".pgm"); //Carrega ela
             BufferedImage print = ImageIO.read(pgmImg);        //Carrega a imagem jpg em java
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(print, "pnm", baos);
-            
+            ImageIO.write(print, "pnm", baos);// aqui deve dar merda...
+
             imgBytes = baos.toByteArray();     //Transforma em byteArray
 
             int offset = 57;
-            
-            char[] imgChar = new char[imgBytes.length-offset];  //charArray
 
-            for (int i = 0; i < imgBytes.length-offset; i++) {
-                imgChar[i] = (char) (imgBytes[i + offset] & 0xFF);        //carrega os bytes como char
+            char[] imgChar = new char[imgBytes.length];  //charArray
+
+            for (int i = 0; i < imgBytes.length; i++) {
+                imgChar[i] = (char) (imgBytes[i] & 0xFF);        //carrega os bytes como char
             }
 
             for (int i = 0; i < 100; i++) {
@@ -455,6 +459,7 @@ public class CardCom {
                 new FPrintController().verifyImage(imgChar, 540, 160);      //go
                 String choice = new Scanner(System.in).next();
                 if (choice.equals("N")) {
+                    pgmImg.deleteOnExit();
                     break;
                 }
             }
@@ -476,6 +481,10 @@ public class CardCom {
 
         //Talvez colocar o dedo como entrada para ter todos os dedos como entrada
         char[] image = new FPrintController().scanImage();      //get image charArray from print but image is already in memory as finger_standardized.pgm
+
+        for (int i = 0; i < 100; i++) {
+            System.out.print(image[i]);
+        }
 
         Mat temp = Imgcodecs.imread("finger_standardized.pgm"); //Utiliza o OpenCV para ler a imagem pgm
         MatOfInt params = new MatOfInt(Imgcodecs.CV_IMWRITE_JPEG_QUALITY, 100);  //com este parametro
@@ -589,17 +598,16 @@ public class CardCom {
         perso.lockApplet();
         perso.close();
     }
-    
-    private void sendDG14() throws CardServiceException{
+
+    private void sendDG14() throws CardServiceException {
         TerminalAuthenticationInfo TAInfo = new TerminalAuthenticationInfo();
         ChipAuthenticationInfo CAInfo = new ChipAuthenticationInfo("TODO", 2);
         ChipAuthenticationPublicKeyInfo CAPkInfo = new ChipAuthenticationPublicKeyInfo(null); //PK
-        
+
         ArrayList<SecurityInfo> sInfos = new ArrayList();
-        
+
         DG14File dg14 = new DG14File(sInfos);
-        
-        
+
         perso.createFile(service.EF_DG14, (short) dg14.getEncoded().length);
         perso.selectFile(service.EF_DG14);
 

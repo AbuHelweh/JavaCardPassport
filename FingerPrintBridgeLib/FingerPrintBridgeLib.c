@@ -355,7 +355,7 @@ JNIEXPORT jboolean JNICALL Java_jnitestfingerprint_FPrintController_verifyImage(
     struct fp_img * img = fpi_img_new((*env)->GetArrayLength(env, imageBytes) * sizeof (char));
     struct fp_img_driver *driver = fpi_driver_to_img_driver(dev->drv);
     
-    img->height = driver->img_height > 0 ? driver->img_height : img_height; //no meu caso varia muito, então vem -1
+    img->height = driver->img_height > 0 ? driver->img_height : img_height; //no meu caso varia , então vem -1
     img->width = driver->img_width > 0 ? driver->img_width : img_width;
     printf("%d %d", img->width,  img->height);
 
