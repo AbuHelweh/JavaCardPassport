@@ -1,0 +1,60 @@
+libfprint:
+1--  As digitais depois de escaneadas, podem ser salvas utilizando "int fp_print_data_save ( struct fp_print_data *data,	enum fp_finger finger) " que elas serão salvas na maquina, porém apenas uma por dispositivo de captura e dedo, então podem existir os 10 dedos salvos para a leitora do PC, os 10 para a leitora externa, mas ao salvar, é um overwrite incondicional.
+
+1.1-- Dedução, pode-se salvar as digitais a vontade sendo elas da mesma pessoa e depois transferi-las para o cartão e ao DB com  DONE
+int fp_print_data_load ( struct fp_dev *dev, enum fp_finger finger,	struct fp_print_data ** data) que as carrega do computador.
+
+1.2-- Adendo: ou simplesmente escaneia e armazena na hora. DONE
+
+1.3-- Pesquisar como se deve armazenar as digitais dentro do cartão, possível que seja apenas o polegar direito. DONE
+
+
+DB:
+1--  Estudar interação Java DB
+
+1.1-- Modelar um BD que funcione direitinho com as informações biométricas, dentro dos guias das ISOS, ou NISTIR. Basicamente do mesmo jeito que no Aplicativo do JMRTD.
+
+
+JMRTD:
+1--  Ler PDFs NISTIR e isoiec7816 para saber das digitais, e ISOS para IRIS, Face, e Digital 
+
+1.1-- Ler Javadoc
+
+
+2.0:
+Active authentication não serve para impedir acesso aos DG's 3 e 4, ele serve para aumentar a segurança.
+PACE serve para aumentar a segurança
+Passive authentication -> Importante
+Basic Access Control aumenta segurança
+Extended Access Control é o que impede de acessar os arquivos.
+
+libfprint/OpenCV:
+.1-- digitais podem ser salvas como imagens jpg utilizando-se em conjunto Open-CV e libfprint. Com "int fp_enroll_finger_img(struct fp_dev *dev, struct fp_print_data **print_data,
+	struct fp_img **img)" se cadastra uma digital, e retira-se uma imagem, com Open-CV se pode extrair a imagem em jpg com "opencv::imread(filepath[,flags])" para ler a imagem pgm criada pela lib e "opencv::imwrite(filepath, mat img[, matofint params]" com os parametros "CV_IMWRITE_JPEG_QUALITY e 95" para 95% de qualidade jpeg
+.2-- o contrário também é válido, onde se lê o jpeg, com imread, e escreve para pgm com imwrite, e os parametros "CV_IMWRITE_PXM_BINARY"
+
+stasm:
+.1-- stasm usado exemplo minimo pois já encontra todos os pontos, e já foram mapeados para os pontos da ISO.
+
+
+Tecnologias usadas, links e datas:
+
+JMRTD:
+v0.5.15
+http://jmrtd.org/
+15/08/2017 10:00
+
+libfprint:
+v0.7.0
+https://www.freedesktop.org/wiki/Software/fprint/libfprint/
+15/08/2017 10:15
+
+openCV Java
+v3.3.0
+http://opencv.org/
+15/08/2017 10:15
+
+Stasm
+v4.1.0
+http://www.milbo.users.sonic.net/stasm/
+15/08/2017 10:15
