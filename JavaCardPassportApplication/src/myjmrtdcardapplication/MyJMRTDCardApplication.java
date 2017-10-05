@@ -57,7 +57,7 @@ public class MyJMRTDCardApplication {
                     }
                 }
             }*/
-            com = new CardCom(READ, 3);
+            com = new CardCom(WRITE, 3);
         } catch (Exception e) {
             e.printStackTrace();
         }

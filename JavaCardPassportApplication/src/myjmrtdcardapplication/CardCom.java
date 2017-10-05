@@ -21,6 +21,8 @@ import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Security;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -84,6 +86,8 @@ public class CardCom {
     BACKey key;
     KeyStore ks;
 
+    BouncyCastleProvider provider = new BouncyCastleProvider();
+    
     /**
      * Teste para comunicação do cartão
      *
@@ -123,8 +127,6 @@ public class CardCom {
             service = new PassportService(new TerminalCardService(reader));
             service.open();
             service.sendSelectApplet(false);
-
-            BouncyCastleProvider provider = new BouncyCastleProvider();
             Security.addProvider(provider);
 
             KeyPairGenerator keygen = KeyPairGenerator.getInstance("RSA", provider);
@@ -156,7 +158,8 @@ public class CardCom {
 
             } else {
                 perso = new PassportPersoService(service);
-                //perso.putCVCertificate((CardVerifiableCertificate) ks.getCertificate("passport"));
+                //File cert = new File("/home/" + System.getProperty("user.name") + "/workspace/JavaCardPassport/Documentos/PassportCert.pem");
+                //perso.putCVCertificate((CardVerifiableCertificate) readCertFromFile(cert, "CVC"));
                 //perso.putPrivateEACKey((PrivateKey)ks.getKey("passport", "".toCharArray()));
 
                 SendSecurityInfo(key, keys);
@@ -728,6 +731,16 @@ public class CardCom {
         fps[56] = new FeaturePoint(type, 12, 4, (int) fs[102], (int) fs[104]);    //Narina Direita
 
         return fps;
+    }
+
+    private Certificate readCertFromFile(File file, String algorithmName) {
+        try {
+            CertificateFactory cf = CertificateFactory.getInstance(algorithmName, provider);
+            return cf.generateCertificate(new FileInputStream(file));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }
