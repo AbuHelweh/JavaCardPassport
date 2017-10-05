@@ -10,12 +10,14 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.KeyStore;
 import java.security.PublicKey;
 import java.security.Security;
 import java.util.ArrayList;
@@ -29,10 +31,16 @@ import javax.swing.JFileChooser;
 import jnitestfingerprint.FPrintController;
 import net.sf.scuba.data.Gender;
 import net.sf.scuba.smartcards.*;
+import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.jmrtd.*;
+import org.jmrtd.lds.ChipAuthenticationInfo;
+import org.jmrtd.lds.ChipAuthenticationPublicKeyInfo;
 import org.jmrtd.lds.LDSFile;
+import org.jmrtd.lds.SecurityInfo;
+import org.jmrtd.lds.TerminalAuthenticationInfo;
 import org.jmrtd.lds.icao.COMFile;
+import org.jmrtd.lds.icao.DG14File;
 import org.jmrtd.lds.icao.DG15File;
 import org.jmrtd.lds.icao.DG1File;
 import org.jmrtd.lds.icao.DG2File;
@@ -71,6 +79,7 @@ public class CardCom {
     PassportService service = null;
     PassportPersoService perso;
     BACKey key;
+    KeyStore ks;
 
     /**
      * Teste para comunicação do cartão
@@ -102,6 +111,12 @@ public class CardCom {
          */
         //Com as informacoes necessárias cria uma chave BAC
         //*/
+        
+        ks = KeyStore.getInstance("JKS");
+        String pw = "123456";
+        FileInputStream fis = new FileInputStream("/home/" + System.getProperty("user.name") +  "/workspace/JavaCardPassport/Documentos/mykeystore.ks");
+        ks.load(fis,pw.toCharArray());
+        
         key = new BACKey(DOCUMENTNUMBER, DATEOFBIRTH, DATEOFEXPIRY);
         System.out.println(key.toString());
 
@@ -590,6 +605,23 @@ public class CardCom {
     private void LockCard() throws CardServiceException {
         perso.lockApplet();
         perso.close();
+    }
+    
+    private void sendDG14() throws CardServiceException{
+        TerminalAuthenticationInfo TAInfo = new TerminalAuthenticationInfo();
+        ChipAuthenticationInfo CAInfo = new ChipAuthenticationInfo("TODO", 2);
+        ChipAuthenticationPublicKeyInfo CAPkInfo = new ChipAuthenticationPublicKeyInfo(null); //PK
+        
+        ArrayList<SecurityInfo> sInfos = new ArrayList();
+        
+        DG14File dg14 = new DG14File(sInfos);
+        
+        
+        perso.createFile(service.EF_DG14, (short) dg14.getEncoded().length);
+        perso.selectFile(service.EF_DG14);
+
+        System.out.println("Enviando arquivo DG14");
+        perso.writeFile(service.EF_DG14, new ByteArrayInputStream(dg14.getEncoded()));
     }
 
     /**
