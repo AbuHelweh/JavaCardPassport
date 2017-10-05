@@ -39,7 +39,7 @@ public class Main extends JFrame {
 
         this.add(new MainPanel(this));
         this.setSize(400,300);
-        this.setTitle("JMRTD Card Builder and Verifier");
+        this.setTitle("JMRTD Card Builder and checker, does't verify, that's with Brandão");
         this.setLocationRelativeTo(null);
         this.setVisible(true);
         this.setFocusable(true);

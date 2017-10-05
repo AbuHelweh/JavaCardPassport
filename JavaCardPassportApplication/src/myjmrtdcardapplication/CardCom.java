@@ -91,27 +91,10 @@ public class CardCom {
      */
     public CardCom(boolean opt, int type) throws CardServiceException, CardException, IOException, GeneralSecurityException {
 
-        //set
-        /*
-            Scanner sc = new Scanner(System.in);
-            System.out.println("Digite o código, P ou V (Document Code)");
-            code = sc.next();
-            System.out.println("Digite o país onde o documento foi emitido (Issuing State) código de 3 digitos");
-            issuingState = sc.next();
-            System.out.println("Digite o seu último nome (Last Name)");
-            lastName = sc.next();
-            System.out.println("Digite seus primeiros nomes (First Name (s))");
-            firstNames = sc.next();
-            System.out.println("Digite sua nacionalidade (Nacionality) código com 3 dígitos");
-            nationality = sc.next();
-            System.out.println("Digite seu genero (Gender) M ou F");
-            gender = sc.next().equals("M") ? Gender.MALE : Gender.FEMALE;
-            System.out.println("Digite seu cpf (Personal Number) até 15 dígitos");
-            cpf = sc.next();
-         */
-        //Com as informacoes necessárias cria uma chave BAC
-        //*/
         
+        //load keystore onde estão os dois certificados
+        //cada um tem um alias, terminal e passport
+        //as keys são key para terminal e PassportKey para passaporte
         ks = KeyStore.getInstance("JKS");
         String pw = "123456";
         FileInputStream fis = new FileInputStream("/home/" + System.getProperty("user.name") +  "/workspace/JavaCardPassport/Documentos/mykeystore.ks");
