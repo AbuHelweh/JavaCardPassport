@@ -1,0 +1,13 @@
+/home/luca/TCC/stasm4.1.0/Build1/CMakeFiles/install.dir
+/home/luca/TCC/stasm4.1.0/Build1/CMakeFiles/stasmMain.dir
+/home/luca/TCC/stasm4.1.0/Build1/CMakeFiles/stasm.dir
+/home/luca/TCC/stasm4.1.0/Build1/CMakeFiles/list_install_components.dir
+/home/luca/TCC/stasm4.1.0/Build1/CMakeFiles/install/strip.dir
+/home/luca/TCC/stasm4.1.0/Build1/CMakeFiles/install/local.dir
+/home/luca/TCC/stasm4.1.0/Build1/CMakeFiles/rebuild_cache.dir
+/home/luca/TCC/stasm4.1.0/Build1/CMakeFiles/minimal2.dir
+/home/luca/TCC/stasm4.1.0/Build1/CMakeFiles/minimal.dir
+/home/luca/TCC/stasm4.1.0/Build1/CMakeFiles/tasm.dir
+/home/luca/TCC/stasm4.1.0/Build1/CMakeFiles/swas.dir
+/home/luca/TCC/stasm4.1.0/Build1/CMakeFiles/test.dir
+/home/luca/TCC/stasm4.1.0/Build1/CMakeFiles/edit_cache.dir

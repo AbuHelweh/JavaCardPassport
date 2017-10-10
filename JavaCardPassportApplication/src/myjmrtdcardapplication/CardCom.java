@@ -19,6 +19,7 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
 import java.security.PrivateKey;
+import java.security.Provider;
 import java.security.PublicKey;
 import java.security.Security;
 import java.security.cert.Certificate;
@@ -34,9 +35,6 @@ import javax.swing.JFileChooser;
 import jnitestfingerprint.FPrintController;
 import net.sf.scuba.data.Gender;
 import net.sf.scuba.smartcards.*;
-import org.bouncycastle.asn1.ASN1Primitive;
-import org.bouncycastle.asn1.eac.CVCertificate;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.jmrtd.*;
 import org.jmrtd.cert.CardVerifiableCertificate;
 import org.jmrtd.lds.ChipAuthenticationInfo;
@@ -86,8 +84,8 @@ public class CardCom {
     BACKey key;
     KeyStore ks;
 
-    BouncyCastleProvider provider = new BouncyCastleProvider();
-    
+    Provider bcProvider = JMRTDSecurityProvider.getBouncyCastleProvider();
+    Provider jmrtdProvider = (JMRTDSecurityProvider) JMRTDSecurityProvider.getInstance();
     /**
      * Teste para comunicação do cartão
      *
@@ -119,7 +117,7 @@ public class CardCom {
 
         System.out.println("Por favor insira um cartão");
 
-        for (int i = 0; i < 3 || !reader.isCardPresent(); i++) {
+        for (int i = 0; i < 3 && !reader.isCardPresent(); i++) {
             reader.waitForCardPresent(10000);
             System.out.println("Cartão " + (reader.isCardPresent() ? "" : "não ") + "conectado");
         }
@@ -127,9 +125,11 @@ public class CardCom {
             service = new PassportService(new TerminalCardService(reader));
             service.open();
             service.sendSelectApplet(false);
-            Security.addProvider(provider);
+            bcProvider.put("CertificateFactory.CVC", jmrtdProvider.get("CertificateFactory.CVC"));
+            Security.addProvider(bcProvider);
+            Security.addProvider(jmrtdProvider);
 
-            KeyPairGenerator keygen = KeyPairGenerator.getInstance("RSA", provider);
+            KeyPairGenerator keygen = KeyPairGenerator.getInstance("RSA", bcProvider);
             keygen.initialize(2048);
             KeyPair keys = keygen.genKeyPair();
 
@@ -158,11 +158,11 @@ public class CardCom {
 
             } else {
                 perso = new PassportPersoService(service);
-                //File cert = new File("/home/" + System.getProperty("user.name") + "/workspace/JavaCardPassport/Documentos/PassportCert.pem");
-                //perso.putCVCertificate((CardVerifiableCertificate) readCertFromFile(cert, "CVC"));
-                //perso.putPrivateEACKey((PrivateKey)ks.getKey("passport", "".toCharArray()));
+                File cert = new File("/home/" + System.getProperty("user.name") + "/workspace/JavaCardPassport/Documentos/PassportCert.pem");
+                perso.putCVCertificate((CardVerifiableCertificate) readCertFromFile(cert, "CVC"));
+                perso.putPrivateEACKey((PrivateKey)ks.getKey("passport", "".toCharArray()));
 
-                SendSecurityInfo(key, keys);
+                SendSecurityInfo(key);
                 SendCOM();
                 SendDG1();
                 //SendDG2();
@@ -185,7 +185,7 @@ public class CardCom {
      * @param keys chaves privada e pública a serem inseridas no cartão
      * @throws CardServiceException
      */
-    private void SendSecurityInfo(BACKeySpec backey, KeyPair keys) throws CardServiceException {
+    private void SendSecurityInfo(BACKeySpec backey) throws CardServiceException {
         if (!perso.isOpen()) {
             perso.open();
         }
@@ -193,9 +193,12 @@ public class CardCom {
         System.out.println("Sending BAC");
         perso.setBAC(backey.getDocumentNumber(), backey.getDateOfBirth(), backey.getDateOfExpiry());
 
+        
+        
+        
         //System.out.println("Sending private KEY");
         //perso.putPrivateKey(keys.getPrivate());
-        //doSecurity(backey);
+        doSecurity(backey);
     }
 
     /**
@@ -209,9 +212,8 @@ public class CardCom {
         BACResult result = service.doBAC(backey);
         System.out.println(result.toString());
 
-        //PublicKey AAkey = readDG15();
-        //System.out.println(service.doAA(AAkey, "SHA512", "RSA", service.sendGetChallenge()));
-        //perso = new PassportPersoService(service, result.getWrapper());
+        //CAResult cares = service.doCA(BigInteger keyID, String OID, String pkOID, PublicKey pk);
+        //TAResult tares = service.doTA(CVCPrincipal caReference, List<CardVerifiableCe3rtificates> terminalCertificates, Private Key terminalKey, String taAlg, chipAuthenticationResult cares, String DocumentNumber);
         if (perso != null) {
             perso.setWrapper(result.getWrapper());
         }
@@ -735,7 +737,7 @@ public class CardCom {
 
     private Certificate readCertFromFile(File file, String algorithmName) {
         try {
-            CertificateFactory cf = CertificateFactory.getInstance(algorithmName, provider);
+            CertificateFactory cf = CertificateFactory.getInstance(algorithmName);
             return cf.generateCertificate(new FileInputStream(file));
         } catch (Exception e) {
             e.printStackTrace();
