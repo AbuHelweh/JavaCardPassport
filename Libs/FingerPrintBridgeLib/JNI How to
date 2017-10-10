@@ -1,2 +1,0 @@
-javah -o FingerPrintBridgeLib/FingerPrintBridgeLib.h -classpath JNITestFingerPrint/build/classes/ jnitestfingerprint.Main
-
