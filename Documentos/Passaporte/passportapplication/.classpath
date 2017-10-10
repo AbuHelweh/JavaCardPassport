@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/passporthostapi"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/scuba_util"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/scuba_smartcards"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/scuba_util_j2se"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/scuba_sc_j2se"/>
+	<classpathentry exported="true" kind="lib" path="lib/bcpkix-jdk14-148.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/bcprov-jdk15on-148.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ejbca.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/scuba.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-logging-1.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ws-commons-util-1.0.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xmlrpc-client-3.1.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xmlrpc-common-3.1.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xmlrpc-server-3.1.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/csp.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/httpcore-4.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/httpclient-4.3.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/httpmime-4.3.1.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
