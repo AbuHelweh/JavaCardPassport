@@ -101,7 +101,7 @@ public class CardCom {
         //as keys são key para terminal e PassportKey para passaporte
         ks = KeyStore.getInstance("JKS");
         String pw = "123456";
-        FileInputStream fis = new FileInputStream("/home/" + System.getProperty("user.name") + "/TCC/JavaCardPassport/Documentos/mykeystore.ks");
+        FileInputStream fis = new FileInputStream("/home/" + System.getProperty("user.name") + "/workspace/JavaCardPassport/Documentos/mykeystore.ks");
         ks.load(fis, pw.toCharArray());
 
         key = new BACKey(DOCUMENTNUMBER, DATEOFBIRTH, DATEOFEXPIRY);
@@ -158,9 +158,9 @@ public class CardCom {
 
             } else {
                 perso = new PassportPersoService(service);
-                //File cert = new File("/home/" + System.getProperty("user.name") + "/workspace/JavaCardPassport/Documentos/PassportCert.pem");
-                //perso.putCVCertificate((CardVerifiableCertificate) readCertFromFile(cert, "CVC"));
-                //perso.putPrivateEACKey((PrivateKey)ks.getKey("passport", "".toCharArray()));
+                File cert = new File("/home/" + System.getProperty("user.name") + "/workspace/JavaCardPassport/Documentos/CVCertUntrusted");
+                perso.putCVCertificate((CardVerifiableCertificate) readCertFromFile(cert, "CVC"));
+                perso.putPrivateEACKey((PrivateKey)ks.getKey("passport", "".toCharArray()));
 
                 SendSecurityInfo(key);
                 SendCOM();
