@@ -2,16 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/home/luca/workspace/JavaCardPassport/JavaCardPassportApplication/src/myjmrtdcardapplication/CardCom.java</file>
-            <file>file:/home/luca/workspace/JavaCardPassport/JavaCardPassportApplication/src/myjmrtdcardapplication/CardSender.java</file>
-            <file>file:/home/luca/workspace/JavaCardPassport/JavaCardPassportApplication/src/UI/Main.java</file>
-            <file>file:/home/luca/workspace/JavaCardPassport/JavaCardPassportApplication/src/myjmrtdcardapplication/JMRTDSecurityProvider.java</file>
-            <file>file:/home/luca/workspace/JavaCardPassport/JavaCardPassportApplication/src/myjmrtdcardapplication/PassportPersoService.java</file>
-            <file>file:/home/luca/workspace/JavaCardPassport/JavaCardPassportApplication/src/UI/CreatePanel.java</file>
-            <file>file:/home/luca/workspace/JavaCardPassport/JavaCardPassportApplication/src/UI/ImageCollectionFrame.java</file>
-            <file>file:/home/luca/workspace/JavaCardPassport/JavaCardPassportApplication/src/myjmrtdcardapplication/MyJMRTDCardApplication.java</file>
-            <file>file:/home/luca/workspace/JavaCardPassport/JavaCardPassportApplication/src/UI/VerifyPanel.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>
