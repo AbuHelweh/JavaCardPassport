@@ -14,17 +14,18 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigInteger;
 import java.security.GeneralSecurityException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
-import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.PublicKey;
 import java.security.Security;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 import javax.imageio.ImageIO;
@@ -33,9 +34,13 @@ import javax.smartcardio.CardTerminal;
 import javax.smartcardio.TerminalFactory;
 import javax.swing.JFileChooser;
 import jnitestfingerprint.FPrintController;
+import net.sf.scuba.data.Country;
 import net.sf.scuba.data.Gender;
 import net.sf.scuba.smartcards.*;
 import org.jmrtd.*;
+import org.jmrtd.cert.CVCAuthorizationTemplate;
+import org.jmrtd.cert.CVCPrincipal;
+import org.jmrtd.cert.CVCertificateBuilder;
 import org.jmrtd.cert.CardVerifiableCertificate;
 import org.jmrtd.lds.ChipAuthenticationInfo;
 import org.jmrtd.lds.ChipAuthenticationPublicKeyInfo;
@@ -57,9 +62,11 @@ import org.jmrtd.lds.iso19794.FaceInfo;
 import org.jmrtd.lds.iso19794.FingerImageInfo;
 import org.jmrtd.lds.iso19794.FingerInfo;
 import org.jmrtd.protocol.BACResult;
+import org.jmrtd.protocol.CAResult;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfInt;
 import org.opencv.imgcodecs.Imgcodecs;
+import sun.security.jca.Providers;
 
 /**
  *
@@ -85,7 +92,15 @@ public class CardCom {
     KeyStore ks;
 
     Provider bcProvider = JMRTDSecurityProvider.getBouncyCastleProvider();
-    Provider jmrtdProvider = (JMRTDSecurityProvider) JMRTDSecurityProvider.getInstance();
+    Provider jmrtdProvider = JMRTDSecurityProvider.getInstance();
+
+    //Test purposes need to extract from files ASAP
+    CVCPrincipal holderRef;
+    CVCPrincipal caRef;
+    KeyPair pair;
+    CardVerifiableCertificate passportCertificate;
+    CardVerifiableCertificate terminalCertificate;
+
     /**
      * Teste para comunicação do cartão
      *
@@ -129,7 +144,7 @@ public class CardCom {
             Security.addProvider(bcProvider);
             Security.addProvider(jmrtdProvider);
 
-            KeyPairGenerator keygen = KeyPairGenerator.getInstance("RSA", bcProvider);
+            KeyPairGenerator keygen = KeyPairGenerator.getInstance("RSA");
             keygen.initialize(2048);
             KeyPair keys = keygen.genKeyPair();
 
@@ -158,17 +173,14 @@ public class CardCom {
 
             } else {
                 perso = new PassportPersoService(service);
-                File cert = new File("/home/" + System.getProperty("user.name") + "/workspace/JavaCardPassport/Documentos/CVCertUntrusted");
-                perso.putCVCertificate((CardVerifiableCertificate) readCertFromFile(cert, "CVC"));
-                perso.putPrivateEACKey((PrivateKey)ks.getKey("passport", "".toCharArray()));
 
                 SendSecurityInfo(key);
                 SendCOM();
                 SendDG1();
-                //SendDG2();
-                SendDG3();
+                SendDG2();
+                //SendDG3();
                 //SendDG15(keys);
-                SendSOD();
+                //SendSOD();
                 LockCard();
             }
             //*/
@@ -185,35 +197,56 @@ public class CardCom {
      * @param keys chaves privada e pública a serem inseridas no cartão
      * @throws CardServiceException
      */
-    private void SendSecurityInfo(BACKeySpec backey) throws CardServiceException {
-        if (!perso.isOpen()) {
-            perso.open();
+    private void SendSecurityInfo(BACKeySpec backey) {
+        try {
+            if (!perso.isOpen()) {
+                perso.open();
+            }
+
+            System.out.println("Sending BAC");
+            perso.setBAC(backey.getDocumentNumber(), backey.getDateOfBirth(), backey.getDateOfExpiry());
+
+            
+            holderRef = new CVCPrincipal(Country.getInstance("BRA"), "Brazil", "00001");
+            caRef = new CVCPrincipal(Country.getInstance("BRA"), "Brazil", "00001");
+            KeyPairGenerator gen = KeyPairGenerator.getInstance("RSA", bcProvider);
+            gen.initialize(2048);
+            pair = gen.genKeyPair();
+            passportCertificate = CVCertificateBuilder.createCertificate(pair.getPublic(),
+                    pair.getPrivate(), "SHA256withRSA", caRef, holderRef,
+                    new CVCAuthorizationTemplate(CVCAuthorizationTemplate.Role.CVCA, CVCAuthorizationTemplate.Permission.READ_ACCESS_DG3_AND_DG4),
+                    new Date(2017, 10, 10), new Date(2018, 10, 10), "BC");
+            terminalCertificate = CVCertificateBuilder.createCertificate(pair.getPublic(),
+                    pair.getPrivate(), "SHA256withRSA", caRef, holderRef,
+                    new CVCAuthorizationTemplate(CVCAuthorizationTemplate.Role.CVCA, CVCAuthorizationTemplate.Permission.READ_ACCESS_DG3_AND_DG4),
+                    new Date(2017, 10, 10), new Date(2018, 10, 10), "BC");
+
+            perso.putCVCertificate(passportCertificate);
+            perso.putPrivateEACKey(pair.getPrivate());
+            
+            //doSecurity(backey);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.exit(1);
         }
-
-        System.out.println("Sending BAC");
-        perso.setBAC(backey.getDocumentNumber(), backey.getDateOfBirth(), backey.getDateOfExpiry());
-
-        
-        
-        
-        //System.out.println("Sending private KEY");
-        //perso.putPrivateKey(keys.getPrivate());
-        doSecurity(backey);
     }
 
     /**
-     * Faz a autenticação do cartão atualizando o serviçoe de envio de
-     * informação TODO: PACE, EAC, PA, CA
+     * Faz a autenticação do cartão atualizando o serviços de envio de
+     * informação TODO: PACE, TA, PA, CA
      *
      * @param backey Chave para fazer o Basic Access Controll
      * @throws CardServiceException
      */
-    private void doSecurity(BACKeySpec backey) throws CardServiceException {
+    private void doSecurity(BACKeySpec backey) throws CardServiceException, IOException {
         BACResult result = service.doBAC(backey);
         System.out.println(result.toString());
 
-        //CAResult cares = service.doCA(BigInteger keyID, String OID, String pkOID, PublicKey pk);
-        //TAResult tares = service.doTA(CVCPrincipal caReference, List<CardVerifiableCe3rtificates> terminalCertificates, Private Key terminalKey, String taAlg, chipAuthenticationResult cares, String DocumentNumber);
+        //DG14File dg14 = SendDG14();
+        //ArrayList<SecurityInfo> info = (ArrayList<SecurityInfo>) dg14.getSecurityInfos();
+
+        //CAResult cares = service.doCA(new BigInteger(SecurityInfo.ID_CA_DH_AES_CBC_CMAC_256), SecurityInfo.ID_CA_DH_AES_CBC_CMAC_256, SecurityInfo.ID_PK_DH, pair.getPublic());
+        //TAResult tares = service.doTA(CVCPrincipal caReference, List<CardVerifiableCertificates> terminalCertificates, Private Key terminalKey, String taAlg, chipAuthenticationResult cares, String DocumentNumber);
         if (perso != null) {
             perso.setWrapper(result.getWrapper());
         }
@@ -426,7 +459,7 @@ public class CardCom {
             dg3 = new DG3File(dg3Input);
             FingerImageInfo image = dg3.getFingerInfos().get(0).getFingerImageInfos().get(0);
 
-            FileOutputStream imgOut = new FileOutputStream(DOCUMENTNUMBER + ".Finger" + 0 + ".jpg"); //retira imagem do cartão
+            FileOutputStream imgOut = new FileOutputStream(DOCUMENTNUMBER + ".Finger" + 1 + ".jpg"); //retira imagem do cartão
 
             byte[] imgBytes = new byte[image.getImageLength()];
 
@@ -435,11 +468,11 @@ public class CardCom {
             imgOut.write(imgBytes);
             imgOut.close();
 
-            Mat temp = Imgcodecs.imread(DOCUMENTNUMBER + ".Finger" + 0 + ".jpg");    //Converte
+            Mat temp = Imgcodecs.imread(DOCUMENTNUMBER + ".Finger" + 1 + ".jpg");    //Converte
             MatOfInt params = new MatOfInt(Imgcodecs.CV_IMWRITE_PXM_BINARY, 1);                                     //set params
-            Imgcodecs.imwrite(DOCUMENTNUMBER + ".Finger" + 0 + ".pgm", temp, params);                                 //pra pgm
+            Imgcodecs.imwrite(DOCUMENTNUMBER + ".Finger" + 1 + ".pgm", temp, params);                                 //pra pgm
 
-            File pgmImg = new File(DOCUMENTNUMBER + ".Finger" + 0 + ".pgm"); //Carrega ela
+            File pgmImg = new File(DOCUMENTNUMBER + ".Finger" + 1 + ".pgm"); //Carrega ela
             BufferedImage print = ImageIO.read(pgmImg);        //Carrega a imagem jpg em java
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ImageIO.write(print, "pnm", baos);// aqui deve dar merda...
@@ -604,11 +637,28 @@ public class CardCom {
         perso.close();
     }
 
-    private void sendDG14() throws CardServiceException {
-        TerminalAuthenticationInfo TAInfo = new TerminalAuthenticationInfo();
-        ChipAuthenticationInfo CAInfo = new ChipAuthenticationInfo("TODO", 2);
-        ChipAuthenticationPublicKeyInfo CAPkInfo = new ChipAuthenticationPublicKeyInfo(null); //PK
+    private DG14File readDG14() throws CardServiceException, IOException {
+        InputStream dg14Input;
+        DG14File dg14;
 
+        if (canSelectFile(service.EF_DG14)) {
+            System.out.println("DG14 FILE PRESENT");
+            dg14Input = service.getInputStream(service.EF_DG14);
+            dg14 = new DG14File(dg14Input);
+            return dg14;
+
+        } else {
+            System.out.println("Não foi possível acessar o arquivo DG14");
+            return null;
+        }
+    }
+
+    private DG14File SendDG14() throws CardServiceException {
+        TerminalAuthenticationInfo TAInfo = new TerminalAuthenticationInfo();
+        ChipAuthenticationInfo CAInfo = new ChipAuthenticationInfo(SecurityInfo.ID_CA_DH_AES_CBC_CMAC_256, 2);
+        ChipAuthenticationPublicKeyInfo CAPkInfo = new ChipAuthenticationPublicKeyInfo(pair.getPublic()); //PK
+
+        //Precisa do Terminal e mais muita coisa nossa... que saco...
         ArrayList<SecurityInfo> sInfos = new ArrayList();
 
         DG14File dg14 = new DG14File(sInfos);
@@ -618,6 +668,8 @@ public class CardCom {
 
         System.out.println("Enviando arquivo DG14");
         perso.writeFile(service.EF_DG14, new ByteArrayInputStream(dg14.getEncoded()));
+
+        return dg14;
     }
 
     /**
