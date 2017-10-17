@@ -19,16 +19,18 @@ public class Control {
     public void command() {
         FPrintController controller = new FPrintController();
         controller.sayHello();
-        int[] size = {540,160};
+        int[] size = {540, 160};
 
         image = controller.scanImage();
-        
+
         /*
         for(char c : image){
             System.out.println((short)c + " ");
         }
          */
-        controller.verifyImage(image,size[0],size[1]);
+        while (true) {
+            controller.verifyImage(image, size[0], size[1]);
+        }
     }
 
 }

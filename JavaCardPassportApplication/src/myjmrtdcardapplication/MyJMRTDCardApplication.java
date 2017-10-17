@@ -25,9 +25,9 @@ public class MyJMRTDCardApplication {
     static{
         if (System.getProperty("os.name").contains("Linux")) {
             //System.load("/home/" + System.getProperty("user.name") + "/workspace/JavaCardPassport/FingerPrintBridgeLib/dist/FingerPrintBridgeLib.so");
-            System.load("/home/" + System.getProperty("user.name") + "/TCC/JavaCardPassport/FingerPrintBridgeLib/dist/FingerPrintBridgeLib.so");
+            System.load("/home/" + System.getProperty("user.name") + "/workspace/JavaCardPassport/FingerPrintBridgeLib/dist/FingerPrintBridgeLib.so");
             //System.load("/home/" + System.getProperty("user.name") + "/workspace/JavaCardPassport/StasmBridgeLib/dist/StasmBridgeLib.so");
-            System.load("/home/" + System.getProperty("user.name") + "/TCC/JavaCardPassport/StasmBridgeLib/dist/StasmBridgeLib.so");
+            System.load("/home/" + System.getProperty("user.name") + "/workspace/JavaCardPassport/StasmBridgeLib/dist/StasmBridgeLib.so");
             System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         }
     }
@@ -59,7 +59,7 @@ public class MyJMRTDCardApplication {
                     }
                 }
             }*/
-            com = new CardCom(WRITE, 3);
+            com = new CardCom(WRITE, 1);
         } catch (Exception e) {
             e.printStackTrace();
         }
