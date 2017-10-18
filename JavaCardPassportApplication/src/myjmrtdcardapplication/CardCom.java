@@ -209,11 +209,11 @@ public class CardCom {
             
             holderRef = new CVCPrincipal(Country.getInstance("BRA"), "Brazil", "00001");
             caRef = new CVCPrincipal(Country.getInstance("BRA"), "Brazil", "00001");
-            KeyPairGenerator gen = KeyPairGenerator.getInstance("RSA", bcProvider);
+            KeyPairGenerator gen = KeyPairGenerator.getInstance("EC", bcProvider);    //Curva Eliptica BrainPool
             gen.initialize(2048);
             pair = gen.genKeyPair();
             passportCertificate = CVCertificateBuilder.createCertificate(pair.getPublic(),
-                    pair.getPrivate(), "SHA256withRSA", caRef, holderRef,
+                    pair.getPrivate(), "SHA256withRSA", caRef, holderRef, //SHA256 BrainPool
                     new CVCAuthorizationTemplate(CVCAuthorizationTemplate.Role.CVCA, CVCAuthorizationTemplate.Permission.READ_ACCESS_DG3_AND_DG4),
                     new Date(2017, 10, 10), new Date(2018, 10, 10), "BC");
             terminalCertificate = CVCertificateBuilder.createCertificate(pair.getPublic(),
