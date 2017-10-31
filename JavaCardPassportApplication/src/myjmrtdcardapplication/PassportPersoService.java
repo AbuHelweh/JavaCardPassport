@@ -165,8 +165,7 @@ public class PassportPersoService extends CardService {
         kArray[0] = (byte) ((k & 0xFF00) >> 8);
         kArray[1] = (byte) (k & 0xFF);
 
-        ECFieldF2m fm = (ECFieldF2m) privateKey.getParams().getCurve()
-                .getField();
+        ECFieldF2m fm = (ECFieldF2m) privateKey.getParams().getCurve().getField();
         byte[] pArray = null;
         if (fm.getMidTermsOfReductionPolynomial() == null) {
             int m = fm.getM();

@@ -144,10 +144,6 @@ public class CardCom {
             Security.addProvider(bcProvider);
             Security.addProvider(jmrtdProvider);
 
-            KeyPairGenerator keygen = KeyPairGenerator.getInstance("RSA");
-            keygen.initialize(2048);
-            KeyPair keys = keygen.genKeyPair();
-
             //*
             if (!opt) {
                 doSecurity(key);
@@ -222,7 +218,7 @@ public class CardCom {
                     new Date(2017, 10, 10), new Date(2018, 10, 10), "BC");
 
             perso.putCVCertificate(passportCertificate);
-            perso.putPrivateEACKey(pair.getPrivate());
+            //perso.putPrivateEACKey(pair.getPrivate());
             
             //doSecurity(backey);
         } catch (Exception ex) {
