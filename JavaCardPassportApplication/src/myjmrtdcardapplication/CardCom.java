@@ -14,7 +14,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigInteger;
 import java.security.GeneralSecurityException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -26,9 +25,11 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Scanner;
 import javax.imageio.ImageIO;
+
 import javax.smartcardio.CardException;
 import javax.smartcardio.CardTerminal;
 import javax.smartcardio.TerminalFactory;
@@ -62,11 +63,10 @@ import org.jmrtd.lds.iso19794.FaceInfo;
 import org.jmrtd.lds.iso19794.FingerImageInfo;
 import org.jmrtd.lds.iso19794.FingerInfo;
 import org.jmrtd.protocol.BACResult;
-import org.jmrtd.protocol.CAResult;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfInt;
 import org.opencv.imgcodecs.Imgcodecs;
-import sun.security.jca.Providers;
+import org.bouncycastle.jce.ECNamedCurveTable;
 
 /**
  *
@@ -118,7 +118,7 @@ public class CardCom {
         String pw = "123456";
         FileInputStream fis = new FileInputStream("/home/" + System.getProperty("user.name") + "/workspace/JavaCardPassport/Documentos/mykeystore.ks");
         ks.load(fis, pw.toCharArray());
-
+       
         key = new BACKey(DOCUMENTNUMBER, DATEOFBIRTH, DATEOFEXPIRY);
         System.out.println(key.toString());
 
@@ -133,7 +133,7 @@ public class CardCom {
         System.out.println("Por favor insira um cartão");
 
         for (int i = 0; i < 3 && !reader.isCardPresent(); i++) {
-            reader.waitForCardPresent(10000);
+            reader.waitForCardPresent(5000);
             System.out.println("Cartão " + (reader.isCardPresent() ? "" : "não ") + "conectado");
         }
         if (reader.isCardPresent()) {
@@ -206,7 +206,10 @@ public class CardCom {
             holderRef = new CVCPrincipal(Country.getInstance("BRA"), "Brazil", "00001");
             caRef = new CVCPrincipal(Country.getInstance("BRA"), "Brazil", "00001");
             KeyPairGenerator gen = KeyPairGenerator.getInstance("ECDSA", bcProvider);    //Curva Eliptica BrainPool
-            gen.initialize(256);
+
+            
+            
+            gen.initialize(ECNamedCurveTable.getParameterSpec("c2tnb431r1"));
             pair = gen.genKeyPair();
             passportCertificate = CVCertificateBuilder.createCertificate(pair.getPublic(),
                     pair.getPrivate(), "SHA256withECDSA", caRef, holderRef, //SHA256 BrainPool
@@ -217,8 +220,13 @@ public class CardCom {
                     new CVCAuthorizationTemplate(CVCAuthorizationTemplate.Role.CVCA, CVCAuthorizationTemplate.Permission.READ_ACCESS_DG3_AND_DG4),
                     new Date(2017, 10, 10), new Date(2018, 10, 10), "BC");
 
+            for(byte b : passportCertificate.getCertBodyData()){
+                System.out.print(b);
+            }
+            
+            
             perso.putCVCertificate(passportCertificate);
-            //perso.putPrivateEACKey(pair.getPrivate());
+            perso.putPrivateEACKey(pair.getPrivate());
             
             //doSecurity(backey);
         } catch (Exception ex) {
