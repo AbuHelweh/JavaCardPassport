@@ -25,7 +25,6 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Scanner;
 import javax.imageio.ImageIO;
@@ -118,7 +117,7 @@ public class CardCom {
         String pw = "123456";
         FileInputStream fis = new FileInputStream("/home/" + System.getProperty("user.name") + "/workspace/JavaCardPassport/Documentos/mykeystore.ks");
         ks.load(fis, pw.toCharArray());
-       
+
         key = new BACKey(DOCUMENTNUMBER, DATEOFBIRTH, DATEOFEXPIRY);
         System.out.println(key.toString());
 
@@ -202,32 +201,31 @@ public class CardCom {
             System.out.println("Sending BAC");
             perso.setBAC(backey.getDocumentNumber(), backey.getDateOfBirth(), backey.getDateOfExpiry());
 
-            
             holderRef = new CVCPrincipal(Country.getInstance("BRA"), "Brazil", "00001");
             caRef = new CVCPrincipal(Country.getInstance("BRA"), "Brazil", "00001");
-            KeyPairGenerator gen = KeyPairGenerator.getInstance("ECDSA", bcProvider);    //Curva Eliptica BrainPool
+            KeyPairGenerator gen = KeyPairGenerator.getInstance("ECDSA", bcProvider);    //Curva Eliptica
 
-            
-            
-            gen.initialize(ECNamedCurveTable.getParameterSpec("c2tnb431r1"));
+            gen.initialize(ECNamedCurveTable.getParameterSpec("c2tnb239v3"));   //Campo binario f2m 239bits
             pair = gen.genKeyPair();
-            passportCertificate = CVCertificateBuilder.createCertificate(pair.getPublic(),
-                    pair.getPrivate(), "SHA256withECDSA", caRef, holderRef, //SHA256 BrainPool
+
+            gen = KeyPairGenerator.getInstance("RSA", bcProvider);
+            gen.initialize(1024);
+            KeyPair RSApair = gen.genKeyPair();
+
+            passportCertificate = CVCertificateBuilder.createCertificate(RSApair.getPublic(), //Sha1-RSA... mas por que???
+                    RSApair.getPrivate(), "SHA1withRSA", caRef, holderRef,
                     new CVCAuthorizationTemplate(CVCAuthorizationTemplate.Role.CVCA, CVCAuthorizationTemplate.Permission.READ_ACCESS_DG3_AND_DG4),
                     new Date(2017, 10, 10), new Date(2018, 10, 10), "BC");
-            terminalCertificate = CVCertificateBuilder.createCertificate(pair.getPublic(),
-                    pair.getPrivate(), "SHA256withECDSA", caRef, holderRef,
+            terminalCertificate = CVCertificateBuilder.createCertificate(RSApair.getPublic(),
+                    RSApair.getPrivate(), "SHA1withRSA", caRef, holderRef,
                     new CVCAuthorizationTemplate(CVCAuthorizationTemplate.Role.CVCA, CVCAuthorizationTemplate.Permission.READ_ACCESS_DG3_AND_DG4),
                     new Date(2017, 10, 10), new Date(2018, 10, 10), "BC");
 
-            for(byte b : passportCertificate.getCertBodyData()){
-                System.out.print(b);
-            }
-            
-            
-            perso.putCVCertificate(passportCertificate);
+            System.out.println("Sending EAC Private");
             perso.putPrivateEACKey(pair.getPrivate());
-            
+            System.out.println("Sending Certificate");
+            perso.putCVCertificate(passportCertificate);
+
             //doSecurity(backey);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -248,7 +246,6 @@ public class CardCom {
 
         //DG14File dg14 = SendDG14();
         //ArrayList<SecurityInfo> info = (ArrayList<SecurityInfo>) dg14.getSecurityInfos();
-
         //CAResult cares = service.doCA(new BigInteger(SecurityInfo.ID_CA_DH_AES_CBC_CMAC_256), SecurityInfo.ID_CA_DH_AES_CBC_CMAC_256, SecurityInfo.ID_PK_DH, pair.getPublic());
         //TAResult tares = service.doTA(CVCPrincipal caReference, List<CardVerifiableCertificates> terminalCertificates, Private Key terminalKey, String taAlg, chipAuthenticationResult cares, String DocumentNumber);
         if (perso != null) {
