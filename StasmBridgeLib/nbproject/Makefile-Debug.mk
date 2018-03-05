@@ -42,8 +42,8 @@ OBJECTFILES= \
 CFLAGS=-shared
 
 # CC Compiler Flags
-CCFLAGS=-shared
-CXXFLAGS=-shared
+CCFLAGS=-shared --verbose
+CXXFLAGS=-shared --verbose
 
 # Fortran Compiler Flags
 FFLAGS=
@@ -52,7 +52,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-L/home/luca/TCC/stasm4.1.0/Build1 -L/home/luca/TCC/OpenCV/opencv-3.3.0/Build/lib -lstasm -lopencv_core -lopencv_imgproc -lopencv_imgcodecs -lopencv_highgui -lopencv_objdetect
+LDLIBSOPTIONS=-L/home/luca/workspace/JavaCardPassport/Libs/Downloads/stasm4.1.0/Build1 -L/home/luca/TCC/OpenCV/opencv-3.3.0/Build/lib -lstasm -lopencv_core -lopencv_imgproc -lopencv_imgcodecs -lopencv_highgui -lopencv_objdetect
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
@@ -60,12 +60,12 @@ LDLIBSOPTIONS=-L/home/luca/TCC/stasm4.1.0/Build1 -L/home/luca/TCC/OpenCV/opencv-
 
 dist/StasmBridgeLib.so: ${OBJECTFILES}
 	${MKDIR} -p dist
-	${LINK.cc} -o dist/StasmBridgeLib.so ${OBJECTFILES} ${LDLIBSOPTIONS} -shared -fPIC
+	${LINK.cc} -o dist/StasmBridgeLib.so ${OBJECTFILES} ${LDLIBSOPTIONS} --verbose -shared -fPIC
 
 ${OBJECTDIR}/_ext/e699828c/StasmBridgeLib.o: /home/luca/workspace/JavaCardPassport/StasmBridgeLib/StasmBridgeLib.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/e699828c
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/home/luca/Documents/TCC/jdk1.8.0_131/include -I/home/luca/Documents/TCC/jdk1.8.0_131/include/linux -I/home/luca/TCC/stasm4.1.0/stasm -I/home/luca/TCC/stasm4.1.0/stasm/MOD_1 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e699828c/StasmBridgeLib.o /home/luca/workspace/JavaCardPassport/StasmBridgeLib/StasmBridgeLib.cpp
+	$(COMPILE.cc) -g -I/home/luca/Documents/TCC/jdk1.8.0_131/include -I/home/luca/Documents/TCC/jdk1.8.0_131/include/linux -I/home/luca/workspace/JavaCardPassport/Libs/Downloads/stasm4.1.0/stasm -I/home/luca/workspace/JavaCardPassport/Libs/Downloads/stasm4.1.0/stasm/MOD_1 -I/home/luca/workspace/JavaCardPassport/Libs/Downloads/stasm4.1.0/Build1 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e699828c/StasmBridgeLib.o /home/luca/workspace/JavaCardPassport/StasmBridgeLib/StasmBridgeLib.cpp
 
 # Subprojects
 .build-subprojects:

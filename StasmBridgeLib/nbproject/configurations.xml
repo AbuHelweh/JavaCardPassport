@@ -29,7 +29,7 @@
   </logicalFolder>
   <sourceRootList>
     <Elem>/home/luca/workspace/JavaCardPassport/StasmBridgeLib</Elem>
-    <Elem>/home/luca/TCC/stasm4.1.0/stasm</Elem>
+    <Elem>/home/luca/workspace/JavaCardPassport/Libs/Downloads/stasm4.1.0/stasm</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -44,9 +44,9 @@
           <incDir>
             <pElem>/home/luca/Documents/TCC/jdk1.8.0_131/include</pElem>
             <pElem>/home/luca/Documents/TCC/jdk1.8.0_131/include/linux</pElem>
-            <pElem>/home/luca/TCC/stasm4.1.0/stasm</pElem>
-            <pElem>/home/luca/TCC/stasm4.1.0/stasm/MOD_1</pElem>
-            <pElem>/home/luca/TCC/stasm4.1.0/Build</pElem>
+            <pElem>/home/luca/workspace/JavaCardPassport/Libs/Downloads/stasm4.1.0/stasm</pElem>
+            <pElem>/home/luca/workspace/JavaCardPassport/Libs/Downloads/stasm4.1.0/stasm/MOD_1</pElem>
+            <pElem>/home/luca/workspace/JavaCardPassport/Libs/Downloads/stasm4.1.0/Build1</pElem>
           </incDir>
           <commandLine>-shared</commandLine>
         </cTool>
@@ -54,15 +54,16 @@
           <incDir>
             <pElem>/home/luca/Documents/TCC/jdk1.8.0_131/include</pElem>
             <pElem>/home/luca/Documents/TCC/jdk1.8.0_131/include/linux</pElem>
-            <pElem>/home/luca/TCC/stasm4.1.0/stasm</pElem>
-            <pElem>/home/luca/TCC/stasm4.1.0/stasm/MOD_1</pElem>
+            <pElem>/home/luca/workspace/JavaCardPassport/Libs/Downloads/stasm4.1.0/stasm</pElem>
+            <pElem>/home/luca/workspace/JavaCardPassport/Libs/Downloads/stasm4.1.0/stasm/MOD_1</pElem>
+            <pElem>/home/luca/workspace/JavaCardPassport/Libs/Downloads/stasm4.1.0/Build1</pElem>
           </incDir>
-          <commandLine>-shared</commandLine>
+          <commandLine>-shared --verbose</commandLine>
         </ccTool>
         <linkerTool>
           <output>dist/StasmBridgeLib.so</output>
           <linkerAddLib>
-            <pElem>/home/luca/TCC/stasm4.1.0/Build1</pElem>
+            <pElem>/home/luca/workspace/JavaCardPassport/Libs/Downloads/stasm4.1.0/Build1</pElem>
             <pElem>/home/luca/TCC/OpenCV/opencv-3.3.0/Build/lib</pElem>
           </linkerAddLib>
           <linkerLibItems>
@@ -73,6 +74,7 @@
             <linkerLibLibItem>opencv_highgui</linkerLibLibItem>
             <linkerLibLibItem>opencv_objdetect</linkerLibLibItem>
           </linkerLibItems>
+          <commandLine>--verbose</commandLine>
         </linkerTool>
       </compileType>
       <item path="/home/luca/workspace/JavaCardPassport/StasmBridgeLib/StasmBridgeLib.cpp"
