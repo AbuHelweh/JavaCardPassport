@@ -10,7 +10,6 @@
             <sourceEncoding>UTF-8</sourceEncoding>
             <make-dep-projects/>
             <sourceRootList>
-                <sourceRootElem>/home/luca/NetBeansProjects/FingerPrintBridgeLib</sourceRootElem>
                 <sourceRootElem>/home/luca/workspace/JavaCardPassport/FingerPrintBridgeLib</sourceRootElem>
             </sourceRootList>
             <confList>

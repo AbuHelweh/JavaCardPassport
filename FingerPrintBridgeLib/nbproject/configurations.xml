@@ -28,7 +28,6 @@
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
-    <Elem>/home/luca/NetBeansProjects/FingerPrintBridgeLib</Elem>
     <Elem>/home/luca/workspace/JavaCardPassport/FingerPrintBridgeLib</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
@@ -42,13 +41,13 @@
       <compileType>
         <cTool>
           <incDir>
-            <pElem>/home/luca/Documents/TCC/jdk1.8.0_131/include</pElem>
-            <pElem>/home/luca/Documents/TCC/jdk1.8.0_131/include/linux</pElem>
-            <pElem>/home/luca/TCC/libfprint-0.7.0/libfprint</pElem>
             <pElem>/usr/include/libusb-1.0</pElem>
-            <pElem>/home/luca/TCC/libfprint-0.7.0</pElem>
             <pElem>/usr/include/glib-2.0</pElem>
             <pElem>/usr/lib/x86_64-linux-gnu/glib-2.0/include</pElem>
+            <pElem>/home/luca/workspace/JavaCardPassport/Libs/Downloads/jdk1.8.0_131/include</pElem>
+            <pElem>/home/luca/workspace/JavaCardPassport/Libs/Downloads/jdk1.8.0_131/include/linux</pElem>
+            <pElem>/home/luca/workspace/JavaCardPassport/Libs/Downloads/libfprint-0.7.0</pElem>
+            <pElem>/home/luca/workspace/JavaCardPassport/Libs/Downloads/libfprint-0.7.0/libfprint</pElem>
           </incDir>
           <commandLine>-shared</commandLine>
         </cTool>

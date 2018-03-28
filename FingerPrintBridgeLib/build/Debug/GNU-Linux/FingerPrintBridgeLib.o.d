@@ -1,11 +1,12 @@
 build/Debug/GNU-Linux/FingerPrintBridgeLib.o: FingerPrintBridgeLib.c \
  FingerPrintBridgeLib.h \
- /home/luca/Documents/TCC/jdk1.8.0_131/include/jni.h \
- /home/luca/Documents/TCC/jdk1.8.0_131/include/linux/jni_md.h \
- /home/luca/TCC/libfprint-0.7.0/libfprint/fprint.h \
- /home/luca/TCC/libfprint-0.7.0/libfprint/fp_internal.h \
- /home/luca/TCC/libfprint-0.7.0/config.h /usr/include/glib-2.0/glib.h \
- /usr/include/glib-2.0/glib/galloca.h /usr/include/glib-2.0/glib/gtypes.h \
+ /home/luca/workspace/JavaCardPassport/Libs/Downloads/jdk1.8.0_131/include/jni.h \
+ /home/luca/workspace/JavaCardPassport/Libs/Downloads/jdk1.8.0_131/include/linux/jni_md.h \
+ /home/luca/workspace/JavaCardPassport/Libs/Downloads/libfprint-0.7.0/libfprint/fprint.h \
+ /home/luca/workspace/JavaCardPassport/Libs/Downloads/libfprint-0.7.0/libfprint/fp_internal.h \
+ /home/luca/workspace/JavaCardPassport/Libs/Downloads/libfprint-0.7.0/config.h \
+ /usr/include/glib-2.0/glib.h /usr/include/glib-2.0/glib/galloca.h \
+ /usr/include/glib-2.0/glib/gtypes.h \
  /usr/lib/x86_64-linux-gnu/glib-2.0/include/glibconfig.h \
  /usr/include/glib-2.0/glib/gmacros.h \
  /usr/include/glib-2.0/glib/gversionmacros.h \
@@ -72,15 +73,15 @@ build/Debug/GNU-Linux/FingerPrintBridgeLib.o: FingerPrintBridgeLib.c \
 
 FingerPrintBridgeLib.h:
 
-/home/luca/Documents/TCC/jdk1.8.0_131/include/jni.h:
+/home/luca/workspace/JavaCardPassport/Libs/Downloads/jdk1.8.0_131/include/jni.h:
 
-/home/luca/Documents/TCC/jdk1.8.0_131/include/linux/jni_md.h:
+/home/luca/workspace/JavaCardPassport/Libs/Downloads/jdk1.8.0_131/include/linux/jni_md.h:
 
-/home/luca/TCC/libfprint-0.7.0/libfprint/fprint.h:
+/home/luca/workspace/JavaCardPassport/Libs/Downloads/libfprint-0.7.0/libfprint/fprint.h:
 
-/home/luca/TCC/libfprint-0.7.0/libfprint/fp_internal.h:
+/home/luca/workspace/JavaCardPassport/Libs/Downloads/libfprint-0.7.0/libfprint/fp_internal.h:
 
-/home/luca/TCC/libfprint-0.7.0/config.h:
+/home/luca/workspace/JavaCardPassport/Libs/Downloads/libfprint-0.7.0/config.h:
 
 /usr/include/glib-2.0/glib.h:
 

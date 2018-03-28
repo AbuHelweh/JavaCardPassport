@@ -65,7 +65,7 @@ dist/FingerPrintBridgeLib.so: ${OBJECTFILES}
 ${OBJECTDIR}/FingerPrintBridgeLib.o: FingerPrintBridgeLib.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -I/home/luca/Documents/TCC/jdk1.8.0_131/include -I/home/luca/Documents/TCC/jdk1.8.0_131/include/linux -I/home/luca/TCC/libfprint-0.7.0/libfprint -I/usr/include/libusb-1.0 -I/home/luca/TCC/libfprint-0.7.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/FingerPrintBridgeLib.o FingerPrintBridgeLib.c
+	$(COMPILE.c) -g -I/usr/include/libusb-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/home/luca/workspace/JavaCardPassport/Libs/Downloads/jdk1.8.0_131/include -I/home/luca/workspace/JavaCardPassport/Libs/Downloads/jdk1.8.0_131/include/linux -I/home/luca/workspace/JavaCardPassport/Libs/Downloads/libfprint-0.7.0 -I/home/luca/workspace/JavaCardPassport/Libs/Downloads/libfprint-0.7.0/libfprint -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/FingerPrintBridgeLib.o FingerPrintBridgeLib.c
 
 # Subprojects
 .build-subprojects:

@@ -43,6 +43,10 @@ public class CardReader {
             //listam-se eles
             List<CardTerminal> readers = terminal.terminals().list();
             //escolhe-se a primeira
+            if(readers.isEmpty()){
+                System.out.println("No Readers Found");
+                System.exit(-1);
+            }
             CardTerminal reader = readers.get(0);
             System.out.println("Reader: " + reader);
 
