@@ -1,5 +1,7 @@
 *.class
 JavaCardPassportApplication/src/myjmrtdcardapplication/MyJMRTDCardApplication.java
 *.xml
+JavaCardPassportApplication/nbproject/private/private.xml
+JavaCardPassportApplication/nbproject/project.properties
 JavaCardPassportApplication/nbproject/
 JavaCardPassportApplication/Build/
