@@ -218,7 +218,7 @@ out:
     return r;
 }
 
-JNIEXPORT jcharArray JNICALL Java_jnitestfingerprint_FPrintController_scanImage(JNIEnv * env, jobject obj) {
+JNIEXPORT jcharArray JNICALL Java_jnitestfingerprint_FPrintController_scanImage(JNIEnv * env, jobject obj, jint * img_height, jint * img_width) {
     int r = 1;
 
     struct fp_img * img;
@@ -278,7 +278,7 @@ JNIEXPORT jcharArray JNICALL Java_jnitestfingerprint_FPrintController_scanImage(
 
     printf("%d %d\n", img->width, img->height);
     
-    jcharArray image = (*env)->NewCharArray(env, img->length / sizeof (char));
+    jcharArray image = (*env)->NewCharArray(env, (img->length / sizeof (char)));
     /*
     for(int i = 0; i < img->length; i++){
         printf("%d\n",img->data[i]);
@@ -292,7 +292,6 @@ JNIEXPORT jcharArray JNICALL Java_jnitestfingerprint_FPrintController_scanImage(
         //printf("%d\n",body[i]);
         //fflush(stdout);
     }
-    
 
     (*env)->ReleaseCharArrayElements(env, image, body, 0);
 

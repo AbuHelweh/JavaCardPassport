@@ -37,7 +37,7 @@ JNIEXPORT jint JNICALL Java_jnitestfingerprint_FPrintController_verifyPrint
  * Signature: ()[C
  */
 JNIEXPORT jcharArray JNICALL Java_jnitestfingerprint_FPrintController_scanImage
-  (JNIEnv *, jobject);
+  (JNIEnv *, jobject, jint *, jint *);
 
 /*
  * Class:     jnitestfingerprint_FPrintController
