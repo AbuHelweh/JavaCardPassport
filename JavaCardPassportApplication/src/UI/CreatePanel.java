@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
@@ -83,7 +84,7 @@ public class CreatePanel extends javax.swing.JPanel {
 
                     } else {
                         JOptionPane.showMessageDialog(null, "Loading Camera", "Image Capture", JOptionPane.PLAIN_MESSAGE);
-                        new ImageCollectionFrame(Instance);
+                        new ImageGetFrame(Instance);
                     }
                 }
 
@@ -110,6 +111,8 @@ public class CreatePanel extends javax.swing.JPanel {
         }
         MonthBox.setSelectedIndex(cal.get(Calendar.MONTH));
 
+        DayBox.setSelectedIndex(cal.get(Calendar.DATE));
+
         YearBox.removeAllItems();
         for (int i = 0; i <= 100; i++) {
             YearBox.addItem((cal.get(Calendar.YEAR) - i) + "");
@@ -133,6 +136,19 @@ public class CreatePanel extends javax.swing.JPanel {
         jPanel1.setBackground(Color.black);
 
         valSpinner.setModel(new SpinnerNumberModel(1, 1, 10, 1));
+
+    }
+
+    public void placeImage(BufferedImage photo) {
+
+        if (photo == null) {
+            System.out.println("ImageError");
+        }
+
+        Graphics g = jPanel1.getGraphics();
+        g.fillRect(0, 0, 150, 200);
+
+        g.drawImage(photo, 0, 0, 150, 200, jPanel1);
 
     }
 
@@ -463,13 +479,17 @@ public class CreatePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_CancelButtonActionPerformed
 
     private void OKButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OKButtonActionPerformed
+
+        boolean worked = true;
         try {
+            Calendar cal = Calendar.getInstance();
 
             System.out.println(this.YearBox.getItemAt(this.YearBox.getSelectedIndex()).trim().substring(2)
                     + (this.MonthBox.getSelectedIndex() < 9 ? "0" + (this.MonthBox.getSelectedIndex() + 1) : (this.MonthBox.getSelectedIndex() + 1))
                     + (this.DayBox.getSelectedIndex() < 9 ? "0" + (this.DayBox.getSelectedIndex() + 1) : (this.DayBox.getSelectedIndex() + 1)));
 
-            CardSender sender = new CardSender();
+            System.out.println(Integer.parseInt(this.YearBox.getItemAt(this.YearBox.getSelectedIndex()).trim().substring(2)) +(int)this.valSpinner.getValue());
+            
             MRZInfo mrz = new MRZInfo("P", this.EmitCombo.getItemAt(this.EmitCombo.getSelectedIndex()).trim().substring(0, 3),
                     this.TextFieldNome.getText().trim().toUpperCase(),
                     this.TextFieldSobreNome.getText().trim().toUpperCase(),
@@ -479,11 +499,13 @@ public class CreatePanel extends javax.swing.JPanel {
                     + (this.MonthBox.getSelectedIndex() < 9 ? "0" + (this.MonthBox.getSelectedIndex() + 1) : (this.MonthBox.getSelectedIndex() + 1))
                     + (this.DayBox.getSelectedIndex() < 9 ? "0" + (this.DayBox.getSelectedIndex() + 1) : (this.DayBox.getSelectedIndex() + 1)),
                     this.SexBox.getSelectedIndex() == 0 ? Gender.MALE : (this.SexBox.getSelectedIndex() == 1 ? Gender.FEMALE : Gender.UNSPECIFIED),
-                    this.YearBox.getItemAt(this.YearBox.getSelectedIndex()).trim().substring(2)
-                    + (this.MonthBox.getSelectedIndex() < 9 ? "0" + (this.MonthBox.getSelectedIndex() + 1) : (this.MonthBox.getSelectedIndex() + 1))
-                    + (this.DayBox.getSelectedIndex() < 9 ? "0" + (this.DayBox.getSelectedIndex() + 1) : (this.DayBox.getSelectedIndex() + 1)),
+                    (cal.get(Calendar.YEAR) + (int)valSpinner.getValue() + "").substring(2) +
+                            ((cal.get(Calendar.MONTH) + 1) < 9 ? "0" +(cal.get(Calendar.MONTH) + 1) : (cal.get(Calendar.MONTH) + 1)) + cal.get(Calendar.DAY_OF_MONTH),
                     this.CPFField.getText().trim());
 
+            System.out.println(mrz);
+            
+            CardSender sender = new CardSender();
             BACKey key = new BACKey(mrz.getDocumentNumber(), mrz.getDateOfBirth(), mrz.getDateOfExpiry());
             sender.SendSecurityInfo(key);
             sender.SendCOM();
@@ -491,10 +513,12 @@ public class CreatePanel extends javax.swing.JPanel {
             sender.SendDG2(chosenImage);
             sender.LockCard();
         } catch (Exception ex) {
+            worked = false;
             Logger.getLogger(CreatePanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        JOptionPane.showMessageDialog(null, "Card Successfully Uploaded!");
+        if (worked) {
+            JOptionPane.showMessageDialog(null, "Card Successfully Uploaded!");
+        }
         this.container.dispose();
     }//GEN-LAST:event_OKButtonActionPerformed
 
@@ -503,7 +527,6 @@ public class CreatePanel extends javax.swing.JPanel {
         for (int i = 1; i <= this.getDays(); i++) {
             DayBox.addItem(i + "");
         }
-
     }//GEN-LAST:event_MonthBoxActionPerformed
 
     private void DayBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DayBoxActionPerformed

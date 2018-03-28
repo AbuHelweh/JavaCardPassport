@@ -14,16 +14,21 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
+import java.math.BigInteger;
 import java.security.GeneralSecurityException;
+import java.security.Key;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
+import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.PublicKey;
 import java.security.Security;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
@@ -66,6 +71,8 @@ import org.opencv.core.Mat;
 import org.opencv.core.MatOfInt;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.bouncycastle.jce.ECNamedCurveTable;
+import org.jmrtd.protocol.CAResult;
+import org.jmrtd.protocol.TAResult;
 
 /**
  *
@@ -83,7 +90,7 @@ public class CardCom {
     String lastName = "CAMPELLI";
     String firstNames = "LUCA";
     String nationality = "BRA";
-    Gender gender = Gender.UNKNOWN;
+    Gender gender = Gender.MALE;
     String cpf = "";
     PassportService service = null;
     PassportPersoService perso;
@@ -171,12 +178,12 @@ public class CardCom {
 
                 SendSecurityInfo(key);
                 SendCOM();
-                SendDG1();
-                SendDG2();
+                //SendDG1();
+                //SendDG2();
                 //SendDG3();
                 //SendDG15(keys);
                 //SendSOD();
-                LockCard();
+                //LockCard();
             }
             //*/
 
@@ -208,6 +215,7 @@ public class CardCom {
             gen.initialize(ECNamedCurveTable.getParameterSpec("c2tnb239v3"));   //Campo binario f2m 239bits
             pair = gen.genKeyPair();
 
+            
             gen = KeyPairGenerator.getInstance("RSA", bcProvider);
             gen.initialize(1024);
             KeyPair RSApair = gen.genKeyPair();
@@ -215,16 +223,17 @@ public class CardCom {
             passportCertificate = CVCertificateBuilder.createCertificate(RSApair.getPublic(), //Sha1-RSA... mas por que???
                     RSApair.getPrivate(), "SHA1withRSA", caRef, holderRef,
                     new CVCAuthorizationTemplate(CVCAuthorizationTemplate.Role.CVCA, CVCAuthorizationTemplate.Permission.READ_ACCESS_DG3_AND_DG4),
-                    new Date(2017, 10, 10), new Date(2018, 10, 10), "BC");
+                    Calendar.getInstance().getTime(), Calendar.getInstance().getTime(), "BC");
             terminalCertificate = CVCertificateBuilder.createCertificate(RSApair.getPublic(),
                     RSApair.getPrivate(), "SHA1withRSA", caRef, holderRef,
                     new CVCAuthorizationTemplate(CVCAuthorizationTemplate.Role.CVCA, CVCAuthorizationTemplate.Permission.READ_ACCESS_DG3_AND_DG4),
-                    new Date(2017, 10, 10), new Date(2018, 10, 10), "BC");
+                    Calendar.getInstance().getTime(), Calendar.getInstance().getTime(), "BC");
 
-            System.out.println("Sending EAC Private");
-            perso.putPrivateEACKey(pair.getPrivate());
             System.out.println("Sending Certificate");
             perso.putCVCertificate(passportCertificate);
+            System.out.println("Sending EAC Private");
+            perso.putPrivateEACKey(pair.getPrivate());
+            
 
             //doSecurity(backey);
         } catch (Exception ex) {
@@ -244,10 +253,17 @@ public class CardCom {
         BACResult result = service.doBAC(backey);
         System.out.println(result.toString());
 
+        CVCPrincipal caReference = null; //<<---TODO
+        List<CardVerifiableCertificate> terminalCertificates = null;
+        PrivateKey terminalKey = null;
+        String taAlg = "";
+        
         //DG14File dg14 = SendDG14();
         //ArrayList<SecurityInfo> info = (ArrayList<SecurityInfo>) dg14.getSecurityInfos();
-        //CAResult cares = service.doCA(new BigInteger(SecurityInfo.ID_CA_DH_AES_CBC_CMAC_256), SecurityInfo.ID_CA_DH_AES_CBC_CMAC_256, SecurityInfo.ID_PK_DH, pair.getPublic());
-        //TAResult tares = service.doTA(CVCPrincipal caReference, List<CardVerifiableCertificates> terminalCertificates, Private Key terminalKey, String taAlg, chipAuthenticationResult cares, String DocumentNumber);
+        CAResult cares = service.doCA(new BigInteger(SecurityInfo.ID_CA_DH_AES_CBC_CMAC_256), SecurityInfo.ID_CA_DH_AES_CBC_CMAC_256, SecurityInfo.ID_PK_DH, pair.getPublic());
+        TAResult tares = service.doTA(caReference, terminalCertificates, terminalKey, taAlg, cares, DOCUMENTNUMBER);
+        
+        
         if (perso != null) {
             perso.setWrapper(result.getWrapper());
         }
@@ -460,8 +476,12 @@ public class CardCom {
             dg3 = new DG3File(dg3Input);
             FingerImageInfo image = dg3.getFingerInfos().get(0).getFingerImageInfos().get(0);
 
-            FileOutputStream imgOut = new FileOutputStream(DOCUMENTNUMBER + ".Finger" + 1 + ".jpg"); //retira imagem do cartão
+            
+            
+            FileOutputStream imgOut = new FileOutputStream(DOCUMENTNUMBER + ".Finger" + 1 + ".pgm"); //retira imagem do cartão //.jpg -> .pgm
 
+            
+            
             byte[] imgBytes = new byte[image.getImageLength()];
 
             new DataInputStream(image.getImageInputStream()).readFully(imgBytes);
@@ -469,21 +489,22 @@ public class CardCom {
             imgOut.write(imgBytes);
             imgOut.close();
 
+            //*
+            
             Mat temp = Imgcodecs.imread(DOCUMENTNUMBER + ".Finger" + 1 + ".jpg");    //Converte
             MatOfInt params = new MatOfInt(Imgcodecs.CV_IMWRITE_PXM_BINARY, 1);                                     //set params
             Imgcodecs.imwrite(DOCUMENTNUMBER + ".Finger" + 1 + ".pgm", temp, params);                                 //pra pgm
 
             File pgmImg = new File(DOCUMENTNUMBER + ".Finger" + 1 + ".pgm"); //Carrega ela
-            BufferedImage print = ImageIO.read(pgmImg);        //Carrega a imagem jpg em java
+            BufferedImage print = ImageIO.read(pgmImg);        //Carrega a imagem pgm em java
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ImageIO.write(print, "pnm", baos);// aqui deve dar merda...
 
             imgBytes = baos.toByteArray();     //Transforma em byteArray
-
-            int offset = 57;
+            //*/
 
             char[] imgChar = new char[imgBytes.length];  //charArray
-
+            
             for (int i = 0; i < imgBytes.length; i++) {
                 imgChar[i] = (char) (imgBytes[i] & 0xFF);        //carrega os bytes como char
             }
@@ -495,10 +516,10 @@ public class CardCom {
             System.out.println("Image Loaded, now to verification");
 
             while (true) {
-                new FPrintController().verifyImage(imgChar, 540, 160);      //go
+                new FPrintController().verifyImage(imgChar,500,160);      //go
                 String choice = new Scanner(System.in).next();
                 if (choice.equals("N")) {
-                    pgmImg.deleteOnExit();
+                    //pgmImg.deleteOnExit();
                     break;
                 }
             }
@@ -520,29 +541,34 @@ public class CardCom {
 
         //Talvez colocar o dedo como entrada para ter todos os dedos como entrada
         char[] image = new FPrintController().scanImage();      //get image charArray from print but image is already in memory as finger_standardized.pgm
-
-        for (int i = 0; i < 100; i++) {
-            System.out.print(image[i]);
-        }
-
+        
+        //* TO DO Make conversion work to not modify content
         Mat temp = Imgcodecs.imread("finger_standardized.pgm"); //Utiliza o OpenCV para ler a imagem pgm
         MatOfInt params = new MatOfInt(Imgcodecs.CV_IMWRITE_JPEG_QUALITY, 100);  //com este parametro
         Imgcodecs.imwrite(DOCUMENTNUMBER + ".Finger" + 0 + ".jpg", temp, params);    //Salva a imagem em formato JPEG
 
+        //File pgmFile = new File("finger_standardized1.pgm"); 
+        //BufferedImage portrait = ImageIO.read(pgmFile);
         BufferedImage portrait = ImageIO.read(new File(DOCUMENTNUMBER + ".Finger" + 0 + ".jpg"));    //Carrega a imagem Jpeg
         ByteArrayOutputStream baos = new ByteArrayOutputStream();   //Retira os bytes
         ImageIO.write(portrait, "jpg", baos);
         baos.flush();
-        byte[] imageBytes = baos.toByteArray();
+        byte[] imageBytes = baos.toByteArray();       
+        
+        
 
         FingerImageInfo finger = new FingerImageInfo(FingerImageInfo.POSITION_RIGHT_INDEX_FINGER,
                 1, 1, 100, //view count, view number, quality%
                 FingerImageInfo.IMPRESSION_TYPE_SWIPE, //impression type
-                temp.cols(), temp.rows(), //Dimensions w,h
+                portrait.getWidth(), portrait.getHeight(), //Dimensions w,h
                 new ByteArrayInputStream(imageBytes), //image bytes
                 imageBytes.length, //image size in bytes
                 FingerInfo.COMPRESSION_JPEG); //compression type          //Cria uma entrada de digital para um dedo
 
+        //*/
+        
+        System.out.println(imageBytes.length);
+        
         fingerImages.add(finger);       //add no array
 
         FingerInfo fingerInfo = new FingerInfo(0, //capture device ID 0= unspecified

@@ -4,7 +4,14 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/home/luca/workspace/JavaCardPassport/JavaCardPassportApplication/src/myjmrtdcardapplication/CardCom.java</file>
+            <file>file:/home/luca/workspace/JavaCardPassport/JavaCardPassportApplication/src/myjmrtdcardapplication/CardSender.java</file>
+            <file>file:/home/luca/workspace/JavaCardPassport/JavaCardPassportApplication/src/UI/ImageGetFrame.java</file>
+            <file>file:/home/luca/workspace/JavaCardPassport/JavaCardPassportApplication/src/myjmrtdcardapplication/GlobalFlags.java</file>
             <file>file:/home/luca/workspace/JavaCardPassport/JavaCardPassportApplication/src/myjmrtdcardapplication/PassportPersoService.java</file>
+            <file>file:/home/luca/workspace/JavaCardPassport/JavaCardPassportApplication/src/UI/CreatePanel.java</file>
+            <file>file:/home/luca/workspace/JavaCardPassport/JavaCardPassportApplication/src/UI/ProgramFrame.java</file>
+            <file>file:/home/luca/workspace/JavaCardPassport/JavaCardPassportApplication/src/myjmrtdcardapplication/MyJMRTDCardApplication.java</file>
+            <file>file:/home/luca/workspace/JavaCardPassport/JavaCardPassportApplication/src/jnitestfingerprint/Main.java</file>
         </group>
     </open-files>
 </project-private>

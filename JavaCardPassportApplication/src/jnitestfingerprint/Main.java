@@ -5,6 +5,8 @@
  */
 package jnitestfingerprint;
 
+import org.opencv.core.Core;
+
 /**
  *
  * @author luca
@@ -21,6 +23,7 @@ public class Main {
 
         if (System.getProperty("os.name").contains("Linux")) {
             System.load("/home/" + System.getProperty("user.name") + "/workspace/JavaCardPassport/FingerPrintBridgeLib/dist/FingerPrintBridgeLib.so");
+            System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
             //System.load("/usr/lib/libfprint.so");
         }
     }

@@ -5,6 +5,7 @@
         <data xmlns="http://www.netbeans.org/ns/j2se-project/3">
             <name>JNITestFingerPrint</name>
             <source-roots>
+                <root id="src.java3.dir"/>
                 <root id="src.dir"/>
                 <root id="src.java.dir"/>
                 <root id="src.java2.dir"/>

@@ -25,9 +25,9 @@ import org.jmrtd.lds.icao.MRZInfo;
 public class VerifyPanel extends javax.swing.JPanel {
 
     private JFrame container;
-    public String DOCUMENTNUMBER = "123456789"; //RG - requerido 9digitos
-    public String DATEOFBIRTH = "150831"; // requerido - yymmdd
-    public String DATEOFEXPIRY = "150831"; // gerado
+    public String DOCUMENTNUMBER = ""; //"123456789"; //RG - requerido 9digitos
+    public String DATEOFBIRTH = "";//150831"; // requerido - yymmdd
+    public String DATEOFEXPIRY = "";//150831"; // gerado
     private BufferedImage picture;
 
     /**
@@ -36,9 +36,27 @@ public class VerifyPanel extends javax.swing.JPanel {
     public VerifyPanel(JFrame container) {
         initComponents();
         this.container = container;
-        this.DOCUMENTNUMBER = JOptionPane.showInputDialog("Numero do documento");
-        this.DATEOFBIRTH = JOptionPane.showInputDialog("Data de Nascimento");   //Ainda a fazer do jeito certo
-        this.DATEOFEXPIRY = JOptionPane.showInputDialog("Data de Validade");    //Ainda a fazer do jeito certo
+        while (DOCUMENTNUMBER.length() != 9) {
+            this.DOCUMENTNUMBER = JOptionPane.showInputDialog("Numero do documento");
+            if(this.DOCUMENTNUMBER == null){
+                this.container.dispose();
+                return;
+            }
+        }
+        while (this.DATEOFBIRTH.length() != 6) {
+            this.DATEOFBIRTH = JOptionPane.showInputDialog("Data de Nascimento");   //Ainda a fazer do jeito certo
+            if(this.DATEOFBIRTH == null){
+                this.container.dispose();
+                return;
+            }
+        }
+        while (this.DATEOFEXPIRY.length() != 6) {
+            this.DATEOFEXPIRY = JOptionPane.showInputDialog("Data de Validade");    //Ainda a fazer do jeito certo
+            if(this.DATEOFEXPIRY == null){
+                this.container.dispose();
+                return;
+            }
+        }
         container.addWindowListener(new WindowAdapter() {
             @Override
             public void windowOpened(WindowEvent e) {
@@ -80,7 +98,7 @@ public class VerifyPanel extends javax.swing.JPanel {
             CPFLabel.setText(info.getPersonalNumber());
 
             picture = reader.readDG2();
-            
+
         } catch (Exception ex) {
             Logger.getLogger(VerifyPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
