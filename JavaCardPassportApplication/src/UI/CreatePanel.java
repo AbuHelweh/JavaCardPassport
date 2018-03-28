@@ -111,7 +111,7 @@ public class CreatePanel extends javax.swing.JPanel {
         }
         MonthBox.setSelectedIndex(cal.get(Calendar.MONTH));
 
-        DayBox.setSelectedIndex(cal.get(Calendar.DATE));
+        DayBox.setSelectedIndex(cal.get(Calendar.DATE)-1);
 
         YearBox.removeAllItems();
         for (int i = 0; i <= 100; i++) {
@@ -520,6 +520,7 @@ public class CreatePanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Card Successfully Uploaded!");
         }
         this.container.dispose();
+        
     }//GEN-LAST:event_OKButtonActionPerformed
 
     private void MonthBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MonthBoxActionPerformed

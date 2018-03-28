@@ -28,7 +28,7 @@ public class ProgramFrame extends JFrame {
             @Override
             public void windowClosed(WindowEvent e) {
                 parent.setVisible(true);
-                parent.setAlwaysOnTop(true);
+                //parent.setAlwaysOnTop(true);
             }
         });
     }

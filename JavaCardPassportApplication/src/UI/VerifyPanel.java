@@ -22,7 +22,7 @@ import org.jmrtd.lds.icao.MRZInfo;
  *
  * @author luca
  */
-public class VerifyPanel extends javax.swing.JPanel {
+public class VerifyPanel extends javax.swing.JPanel implements Runnable{
 
     private JFrame container;
     public String DOCUMENTNUMBER = ""; //"123456789"; //RG - requerido 9digitos
@@ -35,32 +35,15 @@ public class VerifyPanel extends javax.swing.JPanel {
      */
     public VerifyPanel(JFrame container) {
         initComponents();
+        
         this.container = container;
-        while (DOCUMENTNUMBER.length() != 9) {
-            this.DOCUMENTNUMBER = JOptionPane.showInputDialog("Numero do documento");
-            if(this.DOCUMENTNUMBER == null){
-                this.container.dispose();
-                return;
-            }
-        }
-        while (this.DATEOFBIRTH.length() != 6) {
-            this.DATEOFBIRTH = JOptionPane.showInputDialog("Data de Nascimento");   //Ainda a fazer do jeito certo
-            if(this.DATEOFBIRTH == null){
-                this.container.dispose();
-                return;
-            }
-        }
-        while (this.DATEOFEXPIRY.length() != 6) {
-            this.DATEOFEXPIRY = JOptionPane.showInputDialog("Data de Validade");    //Ainda a fazer do jeito certo
-            if(this.DATEOFEXPIRY == null){
-                this.container.dispose();
-                return;
-            }
-        }
+        
+        new BACFrame(this);        
+        
         container.addWindowListener(new WindowAdapter() {
             @Override
             public void windowOpened(WindowEvent e) {
-                Read();
+                //Read();
             }
 
             @Override
@@ -78,8 +61,17 @@ public class VerifyPanel extends javax.swing.JPanel {
         });
 
     }
+    
+    protected void set(String DocNum, String birth, String exp){
+        this.DOCUMENTNUMBER = DocNum;
+        this.DATEOFBIRTH = birth;
+        this.DATEOFEXPIRY = exp;
+        
+        new Thread(this).start();
+        
+    }
 
-    private void Read() {
+    public void run() {
         try {
             CardReader reader = new CardReader();
             BACKey key = new BACKey(DOCUMENTNUMBER, DATEOFBIRTH, DATEOFEXPIRY);
@@ -98,6 +90,8 @@ public class VerifyPanel extends javax.swing.JPanel {
             CPFLabel.setText(info.getPersonalNumber());
 
             picture = reader.readDG2();
+            
+            JOptionPane.showMessageDialog(null,"Finished");
 
         } catch (Exception ex) {
             Logger.getLogger(VerifyPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -305,6 +299,9 @@ public class VerifyPanel extends javax.swing.JPanel {
         this.container.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    public void close(){
+        this.container.dispose();
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel BirthLabel;
