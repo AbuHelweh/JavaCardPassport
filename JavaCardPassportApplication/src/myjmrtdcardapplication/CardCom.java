@@ -14,10 +14,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
-import java.math.BigInteger;
 import java.security.GeneralSecurityException;
-import java.security.Key;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
@@ -29,7 +26,6 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 import javax.imageio.ImageIO;
@@ -71,8 +67,6 @@ import org.opencv.core.Mat;
 import org.opencv.core.MatOfInt;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.bouncycastle.jce.ECNamedCurveTable;
-import org.jmrtd.protocol.CAResult;
-import org.jmrtd.protocol.TAResult;
 
 /**
  *
@@ -178,9 +172,9 @@ public class CardCom {
 
                 SendSecurityInfo(key);
                 SendCOM();
-                //SendDG1();
+                SendDG1();
                 //SendDG2();
-                //SendDG3();
+                SendDG3();
                 //SendDG15(keys);
                 //SendSOD();
                 //LockCard();
@@ -244,7 +238,7 @@ public class CardCom {
 
     /**
      * Faz a autenticação do cartão atualizando o serviços de envio de
-     * informação TODO: PACE, TA, PA, CA
+     * informação TODO: TA, PA, CA
      *
      * @param backey Chave para fazer o Basic Access Controll
      * @throws CardServiceException
@@ -260,8 +254,9 @@ public class CardCom {
         
         //DG14File dg14 = SendDG14();
         //ArrayList<SecurityInfo> info = (ArrayList<SecurityInfo>) dg14.getSecurityInfos();
-        CAResult cares = service.doCA(new BigInteger(SecurityInfo.ID_CA_DH_AES_CBC_CMAC_256), SecurityInfo.ID_CA_DH_AES_CBC_CMAC_256, SecurityInfo.ID_PK_DH, pair.getPublic());
-        TAResult tares = service.doTA(caReference, terminalCertificates, terminalKey, taAlg, cares, DOCUMENTNUMBER);
+        //CA deve ser feito apos PA para garantir integridade do chip
+        //CAResult cares = service.doCA(new BigInteger(SecurityInfo.ID_CA_DH_AES_CBC_CMAC_256), SecurityInfo.ID_CA_DH_AES_CBC_CMAC_256, SecurityInfo.ID_PK_DH, pair.getPublic());
+        //TAResult tares = service.doTA(caReference, terminalCertificates, terminalKey, taAlg, cares, DOCUMENTNUMBER);
         
         
         if (perso != null) {

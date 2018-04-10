@@ -7,9 +7,6 @@ package UI;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.io.File;
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -27,7 +24,7 @@ public class ProgramFrame extends JFrame {
             
             @Override
             public void windowClosed(WindowEvent e) {
-                parent.setVisible(true);
+                //parent.setVisible(true);
                 //parent.setAlwaysOnTop(true);
             }
         });

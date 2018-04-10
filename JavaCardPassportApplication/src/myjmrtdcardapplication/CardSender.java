@@ -5,21 +5,24 @@
  */
 package myjmrtdcardapplication;
 
-import UI.ImageWorks;
+import util.DebugPersistence;
+import util.ImageWorks;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
+import java.security.GeneralSecurityException;
+import java.security.MessageDigest;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.Security;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import javax.imageio.ImageIO;
 import javax.smartcardio.CardTerminal;
 import javax.smartcardio.TerminalFactory;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import jnitestfingerprint.FPrintController;
 import static myjmrtdcardapplication.CardCom.DOCUMENTNUMBER;
@@ -29,8 +32,14 @@ import net.sf.scuba.smartcards.TerminalCardService;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.jmrtd.BACKeySpec;
 import org.jmrtd.PassportService;
+import org.jmrtd.cert.CardVerifiableCertificate;
+import org.jmrtd.lds.ChipAuthenticationInfo;
+import org.jmrtd.lds.ChipAuthenticationPublicKeyInfo;
 import org.jmrtd.lds.LDSFile;
+import org.jmrtd.lds.SODFile;
+import org.jmrtd.lds.SecurityInfo;
 import org.jmrtd.lds.icao.COMFile;
+import org.jmrtd.lds.icao.DG14File;
 import org.jmrtd.lds.icao.DG1File;
 import org.jmrtd.lds.icao.DG2File;
 import org.jmrtd.lds.icao.DG3File;
@@ -39,7 +48,6 @@ import org.jmrtd.lds.iso19794.FaceImageInfo;
 import org.jmrtd.lds.iso19794.FaceInfo;
 import org.jmrtd.lds.iso19794.FingerImageInfo;
 import org.jmrtd.lds.iso19794.FingerInfo;
-import org.jmrtd.protocol.BACResult;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfInt;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -53,42 +61,70 @@ public class CardSender {
     PassportService service;
     PassportPersoService perso;
 
+    MessageDigest digest;
+    HashMap<Integer, byte[]> sodHashes; //Doc 7 part 2.1 "A hash for each Data Group in use SHALL be stored in the Document Security Object (EF.SOD)"
+    int[] tagList = new int[17];
+
     public CardSender() {
 
+        sodHashes = new HashMap();
+
         try {
+
+            digest = MessageDigest.getInstance("SHA-256");
+
+            //Encontra-se a factory
             TerminalFactory terminal = TerminalFactory.getDefault();
-            //listam-se eles
+            //listam-se os terminais
             List<CardTerminal> readers = terminal.terminals().list();
-            //escolhe-se a primeira
+            //escolhe-se o primeiro
             CardTerminal reader = readers.get(0);
             System.out.println("Reader: " + reader);
 
             System.out.println("Por favor insira um cartão");
 
             for (int i = 0; i < 3 || !reader.isCardPresent(); i++) {
-                reader.waitForCardPresent(10000);
+                reader.waitForCardPresent(10000);   //Se espera por um cartão
                 System.out.println("Cartão " + (reader.isCardPresent() ? "" : "não ") + "conectado");
             }
             if (reader.isCardPresent()) {
-                service = new PassportService(new TerminalCardService(reader));
+                service = new PassportService(new TerminalCardService(reader)); //abre o processo do passaporte
                 service.open();
-                service.sendSelectApplet(false);
-                perso = new PassportPersoService(service);
+
+                service.sendSelectApplet(false);    //envia o comando para se selecionar o aplicativo, PACE PODE SER FEITO ANTES PARA AUTENTICAR O CARTAO
+
+                perso = new PassportPersoService(service);  //abre o servico de edicao do cartao
                 BouncyCastleProvider provider = new BouncyCastleProvider();
                 Security.addProvider(provider);
-                
+
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            if(e instanceof CardServiceException){
-                JOptionPane.showMessageDialog(null,"ERRO DE LEITURA COM O CARTÂO");
+            if (e instanceof CardServiceException) {
+                JOptionPane.showMessageDialog(null, "ERRO DE LEITURA COM O CARTÂO");
             }
         }
     }
-    
-    public void SendSecurityInfo(BACKeySpec backey) throws CardServiceException {
+
+    /**
+     * Envia as informacoes de seguranca para o cartao Problema se executamos do
+     * Security logo apos para enviar as informacoes criptografadas.
+     *
+     * @param backey - chave bac gerada das informacoes postas no MRZ
+     * @throws CardServiceException
+     */
+    public void SendSecurityInfo(BACKeySpec backey, CardVerifiableCertificate certificate) throws CardServiceException {
         if (!perso.isOpen()) {
             perso.open();
+        }
+
+        if (certificate != null) {
+
+            System.out.println("Enviando Chave Privada EAC/ ECDH");
+            perso.putPrivateEACKey(DebugPersistence.getInstance().getECPair().getPrivate());
+
+            System.out.println("Sending Certificate");
+            perso.putCVCertificate(certificate);
         }
 
         System.out.println("Sending BAC");
@@ -97,42 +133,36 @@ public class CardSender {
         //doSecurity(backey);
     }
 
-    public void doSecurity(BACKeySpec backey) throws CardServiceException {
-        BACResult result = service.doBAC(backey);
-        System.out.println(result.toString());
-
-        if (perso != null) {
-            perso.setWrapper(result.getWrapper());
-        }
-    }
-    
+    /**
+     * Envia o arquivo COM para o cartao, ele possui uma lista dos arquivos
+     * existentes dentro do cartao
+     *
+     * @throws CardServiceException
+     */
     public void SendCOM() throws CardServiceException {
 
-        int[] tagList = new int[17];
         tagList[0] = LDSFile.EF_COM_TAG;
-        tagList[1] = LDSFile.EF_DG1_TAG;
-        tagList[2] = LDSFile.EF_DG2_TAG;
-        tagList[3] = LDSFile.EF_DG3_TAG;
-        tagList[4] = LDSFile.EF_DG4_TAG;
-        tagList[5] = LDSFile.EF_DG5_TAG;
-        tagList[6] = LDSFile.EF_DG6_TAG;
-        tagList[7] = LDSFile.EF_DG7_TAG;
-        tagList[8] = LDSFile.EF_DG8_TAG;
-        tagList[9] = LDSFile.EF_DG9_TAG;
-        tagList[10] = LDSFile.EF_DG10_TAG;
-        tagList[11] = LDSFile.EF_DG11_TAG;
-        tagList[12] = LDSFile.EF_DG12_TAG;
-        tagList[13] = LDSFile.EF_DG13_TAG;
-        tagList[14] = LDSFile.EF_DG14_TAG;
-        tagList[15] = LDSFile.EF_DG15_TAG;
-        tagList[16] = LDSFile.EF_SOD_TAG;
 
-        COMFile com = new COMFile("0.1", "0.0.1", tagList);
+        tagList[4] = 0;//LDSFile.EF_DG4_TAG;
+        tagList[5] = 0;//LDSFile.EF_DG5_TAG;
+        tagList[6] = 0;//LDSFile.EF_DG6_TAG;
+        tagList[7] = 0;//LDSFile.EF_DG7_TAG;
+        tagList[8] = 0;//LDSFile.EF_DG8_TAG;
+        tagList[9] = 0;//LDSFile.EF_DG9_TAG;
+        tagList[10] = 0;//LDSFile.EF_DG10_TAG;
+        tagList[11] = 0;//LDSFile.EF_DG11_TAG;
+        tagList[12] = 0;//LDSFile.EF_DG12_TAG;
+        tagList[13] = 0;//LDSFile.EF_DG13_TAG;
+
+        tagList[15] = 0;//LDSFile.EF_DG15_TAG;
+
+        COMFile com = new COMFile("01.08", "08.00.00", tagList); //LDS Version and UTF version
 
         if (!perso.isOpen()) {
             perso.open();
         }
 
+        System.out.println("Enviando arquivo COM");
         perso.createFile(service.EF_COM, (short) com.getEncoded().length);
         perso.selectFile(service.EF_COM);
         perso.writeFile(service.EF_COM, new ByteArrayInputStream(com.getEncoded()));
@@ -141,9 +171,10 @@ public class CardSender {
 
     /**
      * Envia o arquivo DG1 para o cartão
-     * @param info  as informações do MRZ
+     *
+     * @param info as informações do MRZ
      * @throws CardServiceException
-     * @throws IOException 
+     * @throws IOException
      */
     public void SendDG1(MRZInfo info) throws CardServiceException, IOException {
 
@@ -161,13 +192,17 @@ public class CardSender {
 
         System.out.println("Enviando arquivo DG1");
         perso.writeFile(service.EF_DG1, new ByteArrayInputStream(dg1.getEncoded()));
+
+        sodHashes.put(1, digest.digest(dg1.getEncoded()));
+        tagList[1] = LDSFile.EF_DG1_TAG;
     }
-    
+
     /**
      * Envia o arquivo DG2 para o cartão
-     * @param file  o Arquivo contendo a imagem da pessoa
+     *
+     * @param file o Arquivo contendo a imagem da pessoa
      * @throws IOException
-     * @throws CardServiceException 
+     * @throws CardServiceException
      */
     public void SendDG2(File file) throws IOException, CardServiceException {
 
@@ -181,7 +216,7 @@ public class CardSender {
         FaceImageInfo.FeaturePoint[] fps = ImageWorks.extractPointsFromImageAndResolve(file);
 
         //Imagem para o cartão
-        BufferedImage portrait = ImageIO.read(file);        //Carrega a imagem jpg em java
+        BufferedImage portrait = ImageIO.read(file);        //Carrega a imagem jpg em java modificar com o metodo do fingerprint 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write(portrait, "jpg", baos);
         baos.flush();
@@ -224,63 +259,33 @@ public class CardSender {
         System.out.println("Enviando arquivo DG2");
         perso.writeFile(service.EF_DG2, new ByteArrayInputStream(dg2.getEncoded()));
 
+        sodHashes.put(2, digest.digest(dg2.getEncoded()));
+        tagList[2] = LDSFile.EF_DG2_TAG;
     }
 
     /**
-     * Envia o arquivo DG3, Coletando uma digital como teste
+     * Envia o arquivo DG3 para o cartão com todas as digitais coletadas
      *
+     * @param finger
      * @throws IOException
      * @throws CardServiceException
      */
-    private void SendDG3() throws IOException, CardServiceException {
+    public void SendDG3(FingerInfo[] fingers) throws IOException, CardServiceException {
 
-        ArrayList<FingerImageInfo> fingerImages = new ArrayList<>();
-
-        //Talvez colocar o dedo como entrada para ter todos os dedos como entrada
-        char[] image = new FPrintController().scanImage();      //get image charArray from print but image is already in memory as finger_standardized.pgm
+        if(fingers == null){
+            return;
+        }
         
-        //* TO DO Make conversion work to not modify content
-        Mat temp = Imgcodecs.imread("finger_standardized.pgm"); //Utiliza o OpenCV para ler a imagem pgm
-        MatOfInt params = new MatOfInt(Imgcodecs.CV_IMWRITE_JPEG_QUALITY, 100);  //com este parametro
-        Imgcodecs.imwrite(DOCUMENTNUMBER + ".Finger" + 0 + ".jpg", temp, params);    //Salva a imagem em formato JPEG
-
-        //File pgmFile = new File("finger_standardized1.pgm"); 
-        //BufferedImage portrait = ImageIO.read(pgmFile);
-        BufferedImage portrait = ImageIO.read(new File(DOCUMENTNUMBER + ".Finger" + 0 + ".jpg"));    //Carrega a imagem Jpeg
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();   //Retira os bytes
-        ImageIO.write(portrait, "jpg", baos);
-        baos.flush();
-        byte[] imageBytes = baos.toByteArray();       
-        
-        
-
-        FingerImageInfo finger = new FingerImageInfo(FingerImageInfo.POSITION_RIGHT_INDEX_FINGER,
-                1, 1, 100, //view count, view number, quality%
-                FingerImageInfo.IMPRESSION_TYPE_SWIPE, //impression type
-                portrait.getWidth(), portrait.getHeight(), //Dimensions w,h
-                new ByteArrayInputStream(imageBytes), //image bytes
-                imageBytes.length, //image size in bytes
-                FingerInfo.COMPRESSION_JPEG); //compression type          //Cria uma entrada de digital para um dedo
-
-        //*/
-        
-        System.out.println(imageBytes.length);
-        
-        fingerImages.add(finger);       //add no array
-
-        FingerInfo fingerInfo = new FingerInfo(0, //capture device ID 0= unspecified
-                30, //aquisition level 30 = 500dpi
-                FingerInfo.SCALE_UNITS_PPI, //scale units
-                160, 500, //dimension picture w,h
-                160, 500, //dimension reader w,h
-                8, //pixel depth
-                FingerInfo.COMPRESSION_JPEG,
-                fingerImages);      //cria uma entrada de série de digitais
-
         ArrayList<FingerInfo> fingerInfos = new ArrayList<>();
 
-        fingerInfos.add(fingerInfo);
-
+        /*
+        for (FingerInfo fingerInfo : fingers) {
+            if(fingerInfo != null)
+                fingerInfos.add(fingerInfo);
+        }
+        */
+        fingerInfos.add(fingers[0]);
+        
         DG3File dg3 = new DG3File(fingerInfos);
 
         if (!perso.isOpen()) {
@@ -292,9 +297,72 @@ public class CardSender {
 
         System.out.println("Enviando arquivo DG3");
         perso.writeFile(service.EF_DG3, new ByteArrayInputStream(dg3.getEncoded()));
+
+        sodHashes.put(3, digest.digest(dg3.getEncoded()));
+        tagList[3] = LDSFile.EF_DG3_TAG;
     }
-    
-    
+
+    /**
+     * Envia o arquivo DG14 que contem as informacoes necessarias para o
+     * protocolo CA, parte do EAC
+     *
+     * @param RSApublicKey
+     * @throws CardServiceException
+     */
+    public void SendDG14(PublicKey RSApublicKey) throws CardServiceException {
+        ArrayList<SecurityInfo> infos = new ArrayList();
+
+        SecurityInfo caInfo = new ChipAuthenticationInfo(SecurityInfo.ID_CA_ECDH_AES_CBC_CMAC_256, 2);  //Encontrar o ID Certo
+        SecurityInfo caKInfo = new ChipAuthenticationPublicKeyInfo(RSApublicKey);
+        //SecurityInfo taInfo = new TerminalAuthenticationInfo();
+
+        infos.add(caInfo);
+        infos.add(caKInfo);
+        //infos.add(taInfo);
+
+        DG14File dg14 = new DG14File(infos);
+
+        if (!perso.isOpen()) {
+            perso.open();
+        }
+
+        perso.createFile(service.EF_DG14, (short) dg14.getEncoded().length);
+        perso.selectFile(service.EF_DG14);
+
+        System.out.println("Enviando arquivo DG14");
+        perso.writeFile(service.EF_DG14, new ByteArrayInputStream(dg14.getEncoded()));
+
+        sodHashes.put(14, digest.digest(dg14.getEncoded()));
+        tagList[14] = LDSFile.EF_DG14_TAG;
+    }
+
+    public void sendSOD() throws GeneralSecurityException {
+        // Establish digestAlgorithm -> SHA256?
+        // Establish digestEncryptionAlgorithm
+        // Hashes ok
+        //PrivateKey to sign the data... wtf?
+        //Document Signer Certificate
+
+        PrivateKey key = DebugPersistence.getInstance().getECPair().getPrivate();
+
+        sodHashes.put(4, null);
+        sodHashes.put(5, null);
+        sodHashes.put(6, null);
+        sodHashes.put(7, null);
+        sodHashes.put(8, null);
+        sodHashes.put(9, null);
+        sodHashes.put(10, null);
+        sodHashes.put(11, null);
+        sodHashes.put(12, null);
+        sodHashes.put(13, null);
+        sodHashes.put(15, null);
+        sodHashes.put(16, null);
+
+        SODFile sod = new SODFile("SHA256", "SHA256withRSA", sodHashes, key, null);
+
+        tagList[16] = LDSFile.EF_SOD_TAG;
+    }
+
     /**
      * Fecha o cartão, o deixando não editável
      *
@@ -303,5 +371,9 @@ public class CardSender {
     public void LockCard() throws CardServiceException {
         perso.lockApplet();
         perso.close();
+    }
+
+    private void doPA() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

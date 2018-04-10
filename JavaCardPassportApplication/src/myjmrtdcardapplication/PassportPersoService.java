@@ -93,11 +93,11 @@ public class PassportPersoService extends CardService {
             rapdu = wrapper.unwrap(rapdu);
         }
 
-        System.out.println(rapdu);
+        printRapdu(rapdu);
 
         return rapdu.getData();
     }
-
+    
     /**
      * Sends a PUT_DATA command to the card to set the private keys used for
      * Active Authentication.
@@ -278,7 +278,7 @@ public class PassportPersoService extends CardService {
             rapdu = wrapper.unwrap(rapdu);
         }
 
-        System.out.println(rapdu);
+        printRapdu(rapdu);
 
         return rapdu.getData();
     }
@@ -306,7 +306,7 @@ public class PassportPersoService extends CardService {
             rapdu = wrapper.unwrap(rapdu);
         }
 
-        System.out.println(rapdu);
+        printRapdu(rapdu);
         return rapdu.getData();
 
     }
@@ -464,5 +464,31 @@ public class PassportPersoService extends CardService {
 
     public void setWrapper(SecureMessagingWrapper wrap) {
         this.wrapper = wrap;
+    }
+    
+    public void printRapdu(ResponseAPDU apdu){
+        String response = Integer.toHexString(apdu.getSW());
+        if(response.equals("6982")){
+            response = "6982: SECURITY STATUS NOT SATISFIED";
+        }
+        if(response.equals("9000")){
+            response = "9000: OK";
+        }
+        if(response.equals("6a82")){
+            response = "6A82: FILE NOT FOUND";
+        }
+        if(response.equals("6a84")){
+            response = "6A84: NOT ENOUGH SPACE IN FILE";
+        }
+        if(response.equals("6985")){
+            response = "6985: CONDITIONS NOT SATISFIED";
+        }
+        if(response.equals("6f00")){
+            response = "6F00: UNKNOWN";
+        }
+        if(response.equals("6a80")){
+            response = "6A80: WRONG DATA";
+        }
+        System.out.println(response);
     }
 }

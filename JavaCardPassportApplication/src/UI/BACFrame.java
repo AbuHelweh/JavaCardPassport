@@ -247,12 +247,12 @@ public class BACFrame extends javax.swing.JFrame {
         }
         
         birth = BIRTHYEARBOX.getItemAt(BIRTHYEARBOX.getSelectedIndex()).substring(2);
-        birth += ((BIRTHMONTHBOX.getSelectedIndex()+1) < 9 ? "0" + (BIRTHMONTHBOX.getSelectedIndex()+1) : (BIRTHMONTHBOX.getSelectedIndex()+1));
-        birth += ((BIRTHDAYBOX.getSelectedIndex()+1) < 9 ? "0" + (BIRTHDAYBOX.getSelectedIndex()+1) : (BIRTHDAYBOX.getSelectedIndex()+1));
+        birth += ((BIRTHMONTHBOX.getSelectedIndex()+1) <= 9 ? "0" + (BIRTHMONTHBOX.getSelectedIndex()+1) : (BIRTHMONTHBOX.getSelectedIndex()+1));
+        birth += ((BIRTHDAYBOX.getSelectedIndex()+1) <= 9 ? "0" + (BIRTHDAYBOX.getSelectedIndex()+1) : (BIRTHDAYBOX.getSelectedIndex()+1));
         
         exp = EXPYEARBOX.getItemAt(EXPYEARBOX.getSelectedIndex()).substring(2);
-        exp += ((EXPMONTHBOX.getSelectedIndex()+1) < 9 ? "0" + (EXPMONTHBOX.getSelectedIndex()+1) : (EXPMONTHBOX.getSelectedIndex()+1));
-        exp += ((EXPDAYBOX.getSelectedIndex()+1) < 9 ? "0" + (EXPDAYBOX.getSelectedIndex()+1) : (EXPDAYBOX.getSelectedIndex()+1));
+        exp += ((EXPMONTHBOX.getSelectedIndex()+1) <= 9 ? "0" + (EXPMONTHBOX.getSelectedIndex()+1) : (EXPMONTHBOX.getSelectedIndex()+1));
+        exp += ((EXPDAYBOX.getSelectedIndex()+1) <= 9 ? "0" + (EXPDAYBOX.getSelectedIndex()+1) : (EXPDAYBOX.getSelectedIndex()+1));
         
         System.out.println(DocNum);
         System.out.println(birth);

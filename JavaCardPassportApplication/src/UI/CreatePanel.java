@@ -5,7 +5,9 @@
  */
 package UI;
 
-import myjmrtdcardapplication.GlobalFlags;
+import util.MyCertificateFactory;
+import util.DebugPersistence;
+import util.GlobalFlags;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
@@ -26,7 +28,10 @@ import myjmrtdcardapplication.CardSender;
 import net.sf.scuba.data.Country;
 import net.sf.scuba.data.Gender;
 import org.jmrtd.BACKey;
+import org.jmrtd.cert.CardVerifiableCertificate;
 import org.jmrtd.lds.icao.MRZInfo;
+import org.jmrtd.lds.iso19794.FingerInfo;
+import util.ControlledDialog;
 
 /**
  *
@@ -37,14 +42,14 @@ public class CreatePanel extends javax.swing.JPanel {
     private JFrame container;
     private HashMap<Integer, Integer> daysMonths;
     private File chosenImage;
-    private static CreatePanel Instance;
+    private CardVerifiableCertificate certificate = null;
+    private FingerInfo[] fingers = new FingerInfo[10]; //Ordenado de dedao a mindinho mao direita e esquerda
 
     /**
      * Creates new form CreatePanel
      */
     public CreatePanel(JFrame container) {
         initComponents();
-        Instance = this;
         this.daysMonths = new HashMap();
         daysMonths.put(1, 31);
         daysMonths.put(2, 28);
@@ -65,27 +70,7 @@ public class CreatePanel extends javax.swing.JPanel {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 if (e.getClickCount() > 1) {
-                    if (GlobalFlags.DEBUG) {
-
-                        JFileChooser chooser = new JFileChooser();
-                        File file = null;
-                        int choice = chooser.showOpenDialog(null);
-
-                        if (choice == JFileChooser.APPROVE_OPTION) {
-                            file = chooser.getSelectedFile();
-                        }
-
-                        if (file == null) {
-                            System.out.println("File Error");
-                            return;
-                        }
-
-                        chosenImage = file;
-
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Loading Camera", "Image Capture", JOptionPane.PLAIN_MESSAGE);
-                        new ImageGetFrame(Instance);
-                    }
+                    mouseHandler();
                 }
 
                 if (chosenImage == null) {
@@ -111,7 +96,7 @@ public class CreatePanel extends javax.swing.JPanel {
         }
         MonthBox.setSelectedIndex(cal.get(Calendar.MONTH));
 
-        DayBox.setSelectedIndex(cal.get(Calendar.DATE)-1);
+        DayBox.setSelectedIndex(cal.get(Calendar.DATE) - 1);
 
         YearBox.removeAllItems();
         for (int i = 0; i <= 100; i++) {
@@ -137,6 +122,39 @@ public class CreatePanel extends javax.swing.JPanel {
 
         valSpinner.setModel(new SpinnerNumberModel(1, 1, 10, 1));
 
+    }
+
+    public void mouseHandler() {
+        if (GlobalFlags.DEBUG) {
+
+            JFileChooser chooser = new JFileChooser();
+            File file = null;
+            int choice = chooser.showOpenDialog(null);
+
+            if (choice == JFileChooser.APPROVE_OPTION) {
+                file = chooser.getSelectedFile();
+            }
+
+            if (file == null) {
+                System.out.println("File Error");
+                return;
+            }
+
+            chosenImage = file;
+
+        } else {
+            ControlledDialog.showMessageDialog("Loading Camera", "Please Wait");
+            new ImageGetFrame(this);
+        }
+    }
+
+    public void placeFingerInfos(FingerInfo[] fingers) {
+        this.fingers = fingers;
+        System.out.println("Saved Images");
+    }
+
+    public FingerInfo[] getFingerInfos() {
+        return fingers;
     }
 
     public void placeImage(BufferedImage photo) {
@@ -225,6 +243,9 @@ public class CreatePanel extends javax.swing.JPanel {
         jLabel9 = new javax.swing.JLabel();
         PassportNumber = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
+        CertificateButton = new javax.swing.JButton();
+        EACPrivButton = new javax.swing.JButton();
+        PrintButton = new javax.swing.JButton();
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -295,14 +316,14 @@ public class CreatePanel extends javax.swing.JPanel {
             }
         });
 
-        OKButton.setText("Upload");
+        OKButton.setText("Enviar");
         OKButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 OKButtonActionPerformed(evt);
             }
         });
 
-        CancelButton.setText("Cancel");
+        CancelButton.setText("Cancelar");
         CancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 CancelButtonActionPerformed(evt);
@@ -338,57 +359,79 @@ public class CreatePanel extends javax.swing.JPanel {
 
         jLabel10.setText("Num Pass:");
 
+        CertificateButton.setText("Certificado");
+        CertificateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CertificateButtonActionPerformed(evt);
+            }
+        });
+
+        EACPrivButton.setText("EAC Priv");
+        EACPrivButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EACPrivButtonActionPerformed(evt);
+            }
+        });
+
+        PrintButton.setText("Enviar Digital");
+        PrintButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PrintButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
                     .addComponent(jLabel8)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(valSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(8, 8, 8)
-                        .addComponent(jLabel9)))
+                        .addComponent(jLabel9))
+                    .addComponent(PrintButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(CertificateButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(EACPrivButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2)
+                    .addComponent(TextFieldNome)
+                    .addComponent(TextFieldSobreNome)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(DayBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(MonthBox, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(YearBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel3)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addComponent(NacCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6)
+                            .addComponent(SexBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(52, 52, 52)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel7)
+                            .addComponent(EmitCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5)
+                            .addComponent(CPFField)))
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel10)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(PassportNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 334, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(OKButton, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(110, 110, 110)
-                            .addComponent(CancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(jLabel1)
-                        .addComponent(jLabel2)
-                        .addComponent(jLabel3)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(DayBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(MonthBox, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(YearBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(TextFieldNome, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
-                            .addComponent(TextFieldSobreNome, javax.swing.GroupLayout.Alignment.LEADING))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel4)
-                                .addComponent(NacCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel6)
-                                .addComponent(SexBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGap(52, 52, 52)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel7)
-                                .addComponent(CPFField, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(EmitCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel5)))))
-                .addContainerGap(39, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(85, 85, 85)
+                        .addComponent(OKButton, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(CancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -432,7 +475,7 @@ public class CreatePanel extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel10)
                             .addComponent(PassportNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(OKButton)
                             .addComponent(CancelButton)))
@@ -445,8 +488,15 @@ public class CreatePanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(valSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel9))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel9))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(PrintButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(CertificateButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(EACPrivButton)
+                        .addGap(0, 12, Short.MAX_VALUE)))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -488,39 +538,48 @@ public class CreatePanel extends javax.swing.JPanel {
                     + (this.MonthBox.getSelectedIndex() < 9 ? "0" + (this.MonthBox.getSelectedIndex() + 1) : (this.MonthBox.getSelectedIndex() + 1))
                     + (this.DayBox.getSelectedIndex() < 9 ? "0" + (this.DayBox.getSelectedIndex() + 1) : (this.DayBox.getSelectedIndex() + 1)));
 
-            System.out.println(Integer.parseInt(this.YearBox.getItemAt(this.YearBox.getSelectedIndex()).trim().substring(2)) +(int)this.valSpinner.getValue());
-            
+            System.out.println(Integer.parseInt(this.YearBox.getItemAt(this.YearBox.getSelectedIndex()).trim().substring(2)) + (int) this.valSpinner.getValue());
+
             MRZInfo mrz = new MRZInfo("P", this.EmitCombo.getItemAt(this.EmitCombo.getSelectedIndex()).trim().substring(0, 3),
                     this.TextFieldNome.getText().trim().toUpperCase(),
                     this.TextFieldSobreNome.getText().trim().toUpperCase(),
                     this.PassportNumber.getText().trim().toUpperCase(),
                     this.NacCombo.getItemAt(this.NacCombo.getSelectedIndex()).trim().substring(0, 3),
                     this.YearBox.getItemAt(this.YearBox.getSelectedIndex()).trim().substring(2)
-                    + (this.MonthBox.getSelectedIndex() < 9 ? "0" + (this.MonthBox.getSelectedIndex() + 1) : (this.MonthBox.getSelectedIndex() + 1))
-                    + (this.DayBox.getSelectedIndex() < 9 ? "0" + (this.DayBox.getSelectedIndex() + 1) : (this.DayBox.getSelectedIndex() + 1)),
+                    + (this.MonthBox.getSelectedIndex() <= 9 ? "0" + (this.MonthBox.getSelectedIndex() + 1) : (this.MonthBox.getSelectedIndex() + 1))
+                    + (this.DayBox.getSelectedIndex() <= 9 ? "0" + (this.DayBox.getSelectedIndex() + 1) : (this.DayBox.getSelectedIndex() + 1)),
                     this.SexBox.getSelectedIndex() == 0 ? Gender.MALE : (this.SexBox.getSelectedIndex() == 1 ? Gender.FEMALE : Gender.UNSPECIFIED),
-                    (cal.get(Calendar.YEAR) + (int)valSpinner.getValue() + "").substring(2) +
-                            ((cal.get(Calendar.MONTH) + 1) < 9 ? "0" +(cal.get(Calendar.MONTH) + 1) : (cal.get(Calendar.MONTH) + 1)) + cal.get(Calendar.DAY_OF_MONTH),
+                    (cal.get(Calendar.YEAR) + (int) valSpinner.getValue() + "").substring(2)
+                    + ((cal.get(Calendar.MONTH) + 1) <= 9 ? "0" + (cal.get(Calendar.MONTH) + 1) : (cal.get(Calendar.MONTH) + 1))
+                    + ((cal.get(Calendar.DAY_OF_MONTH)) <= 9 ? "0" + (cal.get(Calendar.DAY_OF_MONTH)) : (cal.get(Calendar.DAY_OF_MONTH))),
                     this.CPFField.getText().trim());
 
             System.out.println(mrz);
-            
+
             CardSender sender = new CardSender();
             BACKey key = new BACKey(mrz.getDocumentNumber(), mrz.getDateOfBirth(), mrz.getDateOfExpiry());
-            sender.SendSecurityInfo(key);
-            sender.SendCOM();
+            sender.SendSecurityInfo(key, certificate);
+            
             sender.SendDG1(mrz);
             sender.SendDG2(chosenImage);
+            sender.SendDG3(fingers);
+            
+            if (certificate != null) {
+                sender.SendDG14(DebugPersistence.getInstance().getDHKey().getPublic());
+            }
+            //sender.sendSOD();  needs X509 Certificate... WTF
+            sender.SendCOM();
             sender.LockCard();
         } catch (Exception ex) {
             worked = false;
+            JOptionPane.showMessageDialog(null, "A problem happened check debug status!");
             Logger.getLogger(CreatePanel.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (worked) {
             JOptionPane.showMessageDialog(null, "Card Successfully Uploaded!");
         }
         this.container.dispose();
-        
+
     }//GEN-LAST:event_OKButtonActionPerformed
 
     private void MonthBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MonthBoxActionPerformed
@@ -538,16 +597,37 @@ public class CreatePanel extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_YearBoxActionPerformed
 
+    private void CertificateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CertificateButtonActionPerformed
+        try {
+            // TODO Save Terminal Certificate and References in files, or better yet, GET them from files.
+            certificate = MyCertificateFactory.getInstance().generateCertificate(Country.getInstance("BRA"), 10);
+            System.out.println(certificate.toString());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_CertificateButtonActionPerformed
+
+    private void PrintButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PrintButtonActionPerformed
+        new FingerPrintCollection(this);
+    }//GEN-LAST:event_PrintButtonActionPerformed
+
+    private void EACPrivButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EACPrivButtonActionPerformed
+        // TODO Send EAC privateKey.
+    }//GEN-LAST:event_EACPrivButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField CPFField;
     private javax.swing.JButton CancelButton;
+    private javax.swing.JButton CertificateButton;
     private javax.swing.JComboBox<String> DayBox;
+    private javax.swing.JButton EACPrivButton;
     private javax.swing.JComboBox<String> EmitCombo;
     private javax.swing.JComboBox<String> MonthBox;
     private javax.swing.JComboBox<String> NacCombo;
     private javax.swing.JButton OKButton;
     private javax.swing.JTextField PassportNumber;
+    private javax.swing.JButton PrintButton;
     private javax.swing.JComboBox<String> SexBox;
     private javax.swing.JTextField TextFieldNome;
     private javax.swing.JTextField TextFieldSobreNome;

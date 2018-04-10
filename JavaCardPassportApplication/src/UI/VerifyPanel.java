@@ -9,7 +9,8 @@ import java.awt.Graphics;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -17,6 +18,7 @@ import javax.swing.JOptionPane;
 import myjmrtdcardapplication.CardReader;
 import org.jmrtd.BACKey;
 import org.jmrtd.lds.icao.MRZInfo;
+import org.jmrtd.lds.iso19794.FingerInfo;
 
 /**
  *
@@ -29,6 +31,9 @@ public class VerifyPanel extends javax.swing.JPanel implements Runnable{
     public String DATEOFBIRTH = "";//150831"; // requerido - yymmdd
     public String DATEOFEXPIRY = "";//150831"; // gerado
     private BufferedImage picture;
+    Thread readThread;
+    private boolean isReading = false;
+    private ArrayList<FingerInfo> fingers;
 
     /**
      * Creates new form VerifyPanel
@@ -42,8 +47,8 @@ public class VerifyPanel extends javax.swing.JPanel implements Runnable{
         
         container.addWindowListener(new WindowAdapter() {
             @Override
-            public void windowOpened(WindowEvent e) {
-                //Read();
+            public void windowClosed(WindowEvent e) {
+
             }
 
             @Override
@@ -67,12 +72,16 @@ public class VerifyPanel extends javax.swing.JPanel implements Runnable{
         this.DATEOFBIRTH = birth;
         this.DATEOFEXPIRY = exp;
         
-        new Thread(this).start();
+        readThread = new Thread(this);
+        readThread.start();
         
     }
 
     public void run() {
         try {
+            isReading = true;
+            container.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+            
             CardReader reader = new CardReader();
             BACKey key = new BACKey(DOCUMENTNUMBER, DATEOFBIRTH, DATEOFEXPIRY);
             reader.doSecurity(key);
@@ -80,21 +89,31 @@ public class VerifyPanel extends javax.swing.JPanel implements Runnable{
 
             DocNumLabel.setText(info.getDocumentNumber());
             NameLabel.setText(info.getPrimaryIdentifier());
-            SurLabel.setText(info.getSecondaryIdentifier().replace("<", ""));
+            SurLabel.setText(info.getSecondaryIdentifier().replace("<", " "));
             SexLabel.setText(info.getGender().toString());
             NascLabel.setText(info.getNationality());
             EmitLabel.setText(info.getIssuingState());
-            BirthLabel.setText(info.getDateOfBirth());
-            ExpiryLabel.setText(info.getDateOfExpiry());
+            
+            BirthLabel.setText(formatDateUStoW(info.getDateOfBirth()));  //<<Formatar
+            ExpiryLabel.setText(formatDateUStoW(info.getDateOfExpiry()));
 
             CPFLabel.setText(info.getPersonalNumber());
 
             picture = reader.readDG2();
+            fingers = reader.readDG3();
             
             JOptionPane.showMessageDialog(null,"Finished");
+            
+            container.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            isReading = false;
+            
+            
 
         } catch (Exception ex) {
             Logger.getLogger(VerifyPanel.class.getName()).log(Level.SEVERE, null, ex);
+            isReading = false;
+            JOptionPane.showMessageDialog(null, "Wrong BAC entry");
+            container.dispose();
         }
 
     }
@@ -130,6 +149,7 @@ public class VerifyPanel extends javax.swing.JPanel implements Runnable{
         DocNumLabel = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -194,23 +214,29 @@ public class VerifyPanel extends javax.swing.JPanel implements Runnable{
             }
         });
 
+        jButton3.setText("Conferir Digitais");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
                     .addComponent(jLabel6)
-                    .addComponent(ExpiryLabel))
+                    .addComponent(ExpiryLabel)
+                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(CPFLabel)
                             .addComponent(jLabel8)
                             .addComponent(jLabel1)
                             .addComponent(NameLabel)
@@ -220,20 +246,21 @@ public class VerifyPanel extends javax.swing.JPanel implements Runnable{
                             .addComponent(BirthLabel)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel4)
-                                    .addComponent(NascLabel))
-                                .addGap(114, 114, 114)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(EmitLabel)
-                                    .addComponent(jLabel5)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel7)
                                     .addComponent(SexLabel))
                                 .addGap(52, 52, 52)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(DocNumLabel)
-                                    .addComponent(jLabel9))))
+                                    .addComponent(jLabel9)))
+                            .addComponent(CPFLabel)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel4)
+                                    .addComponent(NascLabel))
+                                .addGap(114, 114, 114)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(EmitLabel)
+                                    .addComponent(jLabel5))))
                         .addContainerGap(84, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -280,10 +307,12 @@ public class VerifyPanel extends javax.swing.JPanel implements Runnable{
                     .addComponent(SexLabel)
                     .addComponent(DocNumLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel8)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(jButton3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(CPFLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2))
@@ -292,17 +321,40 @@ public class VerifyPanel extends javax.swing.JPanel implements Runnable{
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        this.container.dispose();
+        if(!isReading)
+            this.container.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        this.container.dispose();
+        if(!isReading)
+            this.container.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        new FingerPrintVerification(fingers);
+    }//GEN-LAST:event_jButton3ActionPerformed
+
     public void close(){
-        this.container.dispose();
+        if(!isReading)
+            this.container.dispose();
     }
 
+    private String formatDateUStoW(String yymmdd){
+        String res = "";
+        Calendar cal = Calendar.getInstance();
+        
+        String year = yymmdd.substring(4);
+        String month = yymmdd.substring(2, 4);
+        String day = yymmdd.substring(0,2);
+        if(Integer.parseInt(year) > cal.get(Calendar.YEAR) - 2000){
+            year = "19" + year;
+        } else {
+            year = "20" + year;
+        }
+        
+        return day + " / " + month + " / " + year;
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel BirthLabel;
     private javax.swing.JLabel CPFLabel;
@@ -315,6 +367,7 @@ public class VerifyPanel extends javax.swing.JPanel implements Runnable{
     private javax.swing.JLabel SurLabel;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

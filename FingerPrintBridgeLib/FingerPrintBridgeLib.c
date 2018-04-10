@@ -58,7 +58,7 @@ int verify(struct fp_dev *dev, struct fp_print_data *data) {
                 return 0;
             case FP_VERIFY_MATCH:
                 printf("MATCH!\n");
-                return 0;
+                return 1;
             case FP_VERIFY_RETRY:
                 printf("Scan didn't quite work. Please try again.\n");
                 break;
@@ -375,7 +375,7 @@ JNIEXPORT jboolean JNICALL Java_jnitestfingerprint_FPrintController_verifyImage(
 
     fpi_img_to_print_data(img_dev, img, &data);
 
-    verify(dev, data);
+    
 
-    return 0;
+    return verify(dev, data);
 }

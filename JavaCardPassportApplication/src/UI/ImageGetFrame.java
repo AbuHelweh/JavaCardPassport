@@ -5,6 +5,7 @@
  */
 package UI;
 
+import util.ImageWorks;
 import java.awt.Graphics;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -20,6 +21,7 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.videoio.VideoCapture;
 import static org.opencv.videoio.Videoio.CV_CAP_PROP_FRAME_HEIGHT;
 import static org.opencv.videoio.Videoio.CV_CAP_PROP_FRAME_WIDTH;
+import util.ControlledDialog;
 
 /**
  *
@@ -59,7 +61,9 @@ public class ImageGetFrame extends javax.swing.JFrame {
         });
         this.setVisible(true);
 
+        
         new Thread(new ImageGetThread(this, cv)).start();
+        ControlledDialog.closeMessageDialog();
     }
 
     public boolean taken() {
