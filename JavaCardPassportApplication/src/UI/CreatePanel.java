@@ -532,27 +532,14 @@ public class CreatePanel extends javax.swing.JPanel {
 
         boolean worked = true;
         try {
-            Calendar cal = Calendar.getInstance();
+            
 
             System.out.println(this.YearBox.getItemAt(this.YearBox.getSelectedIndex()).trim().substring(2)
                     + (this.MonthBox.getSelectedIndex() < 9 ? "0" + (this.MonthBox.getSelectedIndex() + 1) : (this.MonthBox.getSelectedIndex() + 1))
                     + (this.DayBox.getSelectedIndex() < 9 ? "0" + (this.DayBox.getSelectedIndex() + 1) : (this.DayBox.getSelectedIndex() + 1)));
 
-            System.out.println(Integer.parseInt(this.YearBox.getItemAt(this.YearBox.getSelectedIndex()).trim().substring(2)) + (int) this.valSpinner.getValue());
 
-            MRZInfo mrz = new MRZInfo("P", this.EmitCombo.getItemAt(this.EmitCombo.getSelectedIndex()).trim().substring(0, 3),
-                    this.TextFieldNome.getText().trim().toUpperCase(),
-                    this.TextFieldSobreNome.getText().trim().toUpperCase(),
-                    this.PassportNumber.getText().trim().toUpperCase(),
-                    this.NacCombo.getItemAt(this.NacCombo.getSelectedIndex()).trim().substring(0, 3),
-                    this.YearBox.getItemAt(this.YearBox.getSelectedIndex()).trim().substring(2)
-                    + (this.MonthBox.getSelectedIndex() <= 9 ? "0" + (this.MonthBox.getSelectedIndex() + 1) : (this.MonthBox.getSelectedIndex() + 1))
-                    + (this.DayBox.getSelectedIndex() <= 9 ? "0" + (this.DayBox.getSelectedIndex() + 1) : (this.DayBox.getSelectedIndex() + 1)),
-                    this.SexBox.getSelectedIndex() == 0 ? Gender.MALE : (this.SexBox.getSelectedIndex() == 1 ? Gender.FEMALE : Gender.UNSPECIFIED),
-                    (cal.get(Calendar.YEAR) + (int) valSpinner.getValue() + "").substring(2)
-                    + ((cal.get(Calendar.MONTH) + 1) <= 9 ? "0" + (cal.get(Calendar.MONTH) + 1) : (cal.get(Calendar.MONTH) + 1))
-                    + ((cal.get(Calendar.DAY_OF_MONTH)) <= 9 ? "0" + (cal.get(Calendar.DAY_OF_MONTH)) : (cal.get(Calendar.DAY_OF_MONTH))),
-                    this.CPFField.getText().trim());
+            MRZInfo mrz = parseMRZ();
 
             System.out.println(mrz);
 
@@ -564,11 +551,15 @@ public class CreatePanel extends javax.swing.JPanel {
             sender.SendDG2(chosenImage);
             sender.SendDG3(fingers);
             
+            //Certificado do cartão, provavelmente uma versao CV do certificado SOD
             if (certificate != null) {
                 sender.SendDG14(DebugPersistence.getInstance().getDHKey().getPublic());
             }
-            //sender.sendSOD();  needs X509 Certificate... WTF
+                        
             sender.SendCOM();
+            
+            sender.sendSOD();  //needs X509 Certificate... WTF
+
             sender.LockCard();
         } catch (Exception ex) {
             worked = false;
@@ -600,7 +591,7 @@ public class CreatePanel extends javax.swing.JPanel {
     private void CertificateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CertificateButtonActionPerformed
         try {
             // TODO Save Terminal Certificate and References in files, or better yet, GET them from files.
-            certificate = MyCertificateFactory.getInstance().generateCertificate(Country.getInstance("BRA"), 10);
+            certificate = MyCertificateFactory.getInstance().generateCVCertificate(Country.getInstance("BRA"), 10);
             System.out.println(certificate.toString());
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -615,6 +606,25 @@ public class CreatePanel extends javax.swing.JPanel {
         // TODO Send EAC privateKey.
     }//GEN-LAST:event_EACPrivButtonActionPerformed
 
+    
+    public MRZInfo parseMRZ(){
+        
+        Calendar cal = Calendar.getInstance();
+        
+        return new MRZInfo("P", this.EmitCombo.getItemAt(this.EmitCombo.getSelectedIndex()).trim().substring(0, 3),
+                    this.TextFieldNome.getText().trim().toUpperCase(),
+                    this.TextFieldSobreNome.getText().trim().toUpperCase(),
+                    this.PassportNumber.getText().trim().toUpperCase(),
+                    this.NacCombo.getItemAt(this.NacCombo.getSelectedIndex()).trim().substring(0, 3),
+                    this.YearBox.getItemAt(this.YearBox.getSelectedIndex()).trim().substring(2)
+                    + (this.MonthBox.getSelectedIndex() < 9 ? "0" + (this.MonthBox.getSelectedIndex() + 1) : (this.MonthBox.getSelectedIndex() + 1))
+                    + (this.DayBox.getSelectedIndex() < 9 ? "0" + (this.DayBox.getSelectedIndex() + 1) : (this.DayBox.getSelectedIndex() + 1)),
+                    this.SexBox.getSelectedIndex() == 0 ? Gender.MALE : (this.SexBox.getSelectedIndex() == 1 ? Gender.FEMALE : Gender.UNSPECIFIED),
+                    (cal.get(Calendar.YEAR) + (int) valSpinner.getValue() + "").substring(2)
+                    + ((cal.get(Calendar.MONTH) + 1) <= 9 ? "0" + (cal.get(Calendar.MONTH) + 1) : (cal.get(Calendar.MONTH) + 1))
+                    + ((cal.get(Calendar.DAY_OF_MONTH)) <= 9 ? "0" + (cal.get(Calendar.DAY_OF_MONTH)) : (cal.get(Calendar.DAY_OF_MONTH))),
+                    this.CPFField.getText().trim());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField CPFField;

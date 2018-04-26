@@ -1,59 +1,109 @@
-\documentclass{article}
+\documentclass[12pt]{article}
 
 \usepackage[utf8]{inputenc}
 \usepackage{url}
 \usepackage{amsmath}
 \usepackage{graphicx}
+\usepackage{geometry}
 
-\title{Desenvolvimento de sistema de coleta de dados e emissão de passaportes na plataforma Javacard \\
-		\large Jean Everson Martina, Dr}
-\date{11-9-2017}
-\author{Luca Fachini Campelli}
+\geometry{
+a4paper,
+left=30mm,
+right=20mm,
+top=30mm,
+bottom=20mm,
+}
 
 \begin{document}
 
 	\pagenumbering{gobble}
-	\maketitle
+	\begin{center}
+
+		{\LARGE Universidade Federal de Santa Catarina \par}
+		\vspace {2cm}
+		
+		Ciências da Computação
+		\vspace{2cm}
+
+		Luca Fachini Campelli
+		\vspace {4cm}
+
+		\textbf{DESENVOLVIMENTO DE UM APLICAÇÃO PARA COLETA DE DADOS \\
+				E EMISSÃO DE PASSAPORTES ELETRÔNICOS NA PLATAFORMA JAVACARD}
+		\vspace {10cm}
+		
+		Florianópolis/SC \\
+
+		2018
+	\end{center}
+
 	\newpage
 	\begin{center}
-		\large Desenvolvimento de sistema de coleta de dados e emissão de passaportes na plataforma Javacard \\
-		\small Trabalho de conclusão de Curso - Graduação para o curso de Ciências da Computação 
+		Luca Fachini Campelli
+		\vspace{2cm}
+		
+		\textbf{\large DESENVOLVIMENTO DE UM APLICAÇÃO PARA COLETA DE DADOS \\
+				E EMISSÃO DE PASSAPORTES ELETRÔNICOS NA PLATAFORMA JAVACARD}
+		\vspace{2cm}
 
-Orientador: Jean Everson Martina, Dr
+		\hfill \textbf{Trabalho de Conclusão de Curso \\}
+		\hfill \textbf{para a graduação no curso de\\}
+		\hfill \textbf{Ciências \hspace{18pt} da \hspace{18pt} Computação \\}
+		\hfill \textbf{UFSC  \hspace{60pt}}
+
+		\vspace{1cm}
+
+		\hfill Florianópolis, 2018
+
 	\end{center}
+
 	\newpage
+
+	\paragraph{\large Resumo}
+		\begin{flushleft}
+
+			\hspace{2cm} Com a preocupação com a segurança em todas as áreas, a identificação correta e segura das credenciais de uma pessoa se torna de extrema importância. A necessidade de vários documentos diferentes para as mais variadas funções faz surgir vários problemas, desde falsificação e roubo, até simples desorganização e perda.
+O maior exemplo da necessidade dos mais variados documentos é em viagens internacionais. Nelas são necessárias diversas etapas até que se confirme a identidade do viajante afim de evitar falsificações, e outros tipos de ameaça, sendo o mais importante dos documentos o passaporte.\\
+O intuito deste trabalho é criar uma infra-estrutura para emissão de passaportes eletrônicos na plataforma Javacard, baseado no padrão ICAO 9303 \cite{ICAO}, tendo em mente a segurança das informações. O sistema de emissão deverá prover um aplicativo que colete as informações do usuário, e crie um cartão dentro de uma das 5 possibilidades existentes e descritas no trabalho de conclusão de curso \cite{SASSO}.
+Este cartão deve possuir todas as informações de identificação da pessoa, sendo desnecessário outro documento de identificação promovendo a idéia de cadastro único. 
+O projeto será efetuado juntamente com o LabSec e o professor responsável, com a utilização da biblioteca JMRTD \cite{JMRTD}, que será adaptada para os fins deste projeto, e projetos anteriores do LabSec que servirão de base para desenvolvimento do produto final. 
+	\vspace{1cm}
+
+Palavras-chave: Javacard, Passaporte,JMRTD, Segurança, Identidade, Digital, Cadastro Unico
+
+		\end{flushleft}
+
+
+	\paragraph{\large Abstract}
+		\begin{flushleft}
+
+			Dat stuff up thea
+
+		\end{flushleft}
+	
 	\newpage
+
 	\pagenumbering{arabic}
 	\tableofcontents
 	\newpage
 	
 	\section{Introdução}
 		\begin{flushleft}
-		Com a preocupação com a segurança em todas as áreas, a identificação
-correta e segura das credenciais de uma pessoa se torna de extrema importância.
-Com a necessidade de vários documentos diferentes para as mais variadas
-funções, surgem vários problemas, desde falsificação e roubo, até simples
-desorganização.\\
-	O intuito deste trabalho é criar uma infra-estrutura para emissão de passaportes
-eletrônicos na plataforma Javacard, baseado no padrão ICAO 9303 \cite{ICAO}, tendo em
-mente a segurança das informações. O sistema de emissão deverá prover um
-aplicativo que colete os dados e produza um cartão funcional
-Este cartão deve possuir todas as informações de identificação da pessoa,
-sendo desnecessário outro documento de identificação promovendo a idéia de
-cadastro único.\\
-O projeto será efetuado juntamente com o LabSec e o professor responsável,
-com a utilização do aplicativo JMRTD\cite{JMRTDSite}, que será adaptado para os fins
-deste projeto, e projetos anteriores do LabSec que servirão de base para
-desenvolvimento do produto final.
+
+			\hspace{2cm}Com o aumento do compartilhamento de dados entre instituições de um mesmo grupo, a necessidade de segurança aumenta conforme o tamanho do grupo aumenta e a necessidade de confirmar a identidade de um usuário, para que não haja abuso dos recursos nem acesso irrestito aos dados se torna cada vez mais importante. Assim, cada vez mais cresce a quantidade de documentos necessários para que se confirme a identidade do usuário, como CPF, RG, CNH, Passaporte, e biometrias digitais que todos ficam armazenados em documentos físicos e separados, aumentando a quantidade de itens que uma pessoa tem que carregar, e aumentando o tempo para resgatar estas informações e conferir com o usuário. \\
+Este trabalho visa o desenvolvimento de um sistema que controle a emissão de passaportes universitários eletrônicos baseado no padrão ICAO 9303, na plataforma Javacard \cite{JAVACHEN}. Este sistema deverá englobar todas as necessidade documentais para a identificação correta e segura do usuário, para agilizar processos de identificação biométrica. Ele deve coletar os dados do usuário como digitais, assinatura digitalizada, nome, e dados de identidade para a criação de um cartão Javacard eletrônico seguro, dentro dos vários modelos possíveis. Para tal serão utilizadas técnicas de criptografia para assegurar uma comunicação segura com o cartão, e seu funcionamento adequado. À seguir, serão discutidos alguns tópicos necessários ao entendimento destes conceitos.
+
+
 		\end{flushleft}
 
+	\section{O que é segurança computacional?}
+		\begin{flushleft}
 
+		\hspace{2cm} Segurança computacional engloba todas as áres de pesquisa relacionadas a manter algum tipo de informação segura, seja ela uma senha, listas de cadastros, um banco de dados, documentos ou uma receita de bolo. As pesquisas relacionadas a segurança computacional, trabalham para proteger estas informaçôes de pessoas que as poderiam utilizar para maus fins, seja impedindo que elas sejam obtidas ou entendidas por outras pessoas, ou garantindo que uma informação não foi alterada antes de ser entregue ao destinatário. As próximas seções deste documento explicam certos campos desta área que serão necessários ao entendimento do leitor:
 
+		\end{flushleft}
 
-
-
-
-	\renewcommand{\refname{\vskip -1cm}}
+	%\renewcommand{\refname{\vskip -1cm}}
 	\section{Referências}
 		\bibliography{TCC}
 		\bibliographystyle{plain}

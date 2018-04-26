@@ -11,5 +11,5 @@ package util;
  * @author luca
  */
 public class GlobalFlags {
-    public static boolean DEBUG = false;
+    public static boolean DEBUG = true;
 }

@@ -43,12 +43,13 @@ public class ControlledDialog extends JFrame {
      */
     private ControlledDialog(String message, String name) {
         initComponents();
-        //this.jLabel1.setText(message);
+        this.jLabel1.setText(message);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.setTitle(name);
 
         this.setVisible(true);
+
     }
 
     /**

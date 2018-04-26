@@ -17,6 +17,8 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import myjmrtdcardapplication.CardReader;
 import org.jmrtd.BACKey;
+import org.jmrtd.lds.SODFile;
+import org.jmrtd.lds.icao.COMFile;
 import org.jmrtd.lds.icao.MRZInfo;
 import org.jmrtd.lds.iso19794.FingerInfo;
 
@@ -24,7 +26,7 @@ import org.jmrtd.lds.iso19794.FingerInfo;
  *
  * @author luca
  */
-public class VerifyPanel extends javax.swing.JPanel implements Runnable{
+public class VerifyPanel extends javax.swing.JPanel implements Runnable {
 
     private JFrame container;
     public String DOCUMENTNUMBER = ""; //"123456789"; //RG - requerido 9digitos
@@ -40,11 +42,11 @@ public class VerifyPanel extends javax.swing.JPanel implements Runnable{
      */
     public VerifyPanel(JFrame container) {
         initComponents();
-        
+
         this.container = container;
-        
-        new BACFrame(this);        
-        
+
+        new BACFrame(this);
+
         container.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
@@ -66,53 +68,68 @@ public class VerifyPanel extends javax.swing.JPanel implements Runnable{
         });
 
     }
-    
-    protected void set(String DocNum, String birth, String exp){
+
+    protected void set(String DocNum, String birth, String exp) {
         this.DOCUMENTNUMBER = DocNum;
         this.DATEOFBIRTH = birth;
         this.DATEOFEXPIRY = exp;
-        
+
         readThread = new Thread(this);
         readThread.start();
-        
+
     }
 
+    //Check ComFile e ver o que tem nele em vez de checar no método read
     public void run() {
         try {
             isReading = true;
             container.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-            
+
             CardReader reader = new CardReader();
             BACKey key = new BACKey(DOCUMENTNUMBER, DATEOFBIRTH, DATEOFEXPIRY);
-            reader.doSecurity(key);
-            MRZInfo info = reader.readDG1();
 
-            DocNumLabel.setText(info.getDocumentNumber());
-            NameLabel.setText(info.getPrimaryIdentifier());
-            SurLabel.setText(info.getSecondaryIdentifier().replace("<", " "));
-            SexLabel.setText(info.getGender().toString());
-            NascLabel.setText(info.getNationality());
-            EmitLabel.setText(info.getIssuingState());
-            
-            BirthLabel.setText(formatDateUStoW(info.getDateOfBirth()));  //<<Formatar
-            ExpiryLabel.setText(formatDateUStoW(info.getDateOfExpiry()));
+            reader.doBAC(key);
 
-            CPFLabel.setText(info.getPersonalNumber());
+            COMFile com = reader.readCOM();
 
-            picture = reader.readDG2();
-            fingers = reader.readDG3();
-            
-            JOptionPane.showMessageDialog(null,"Finished");
-            
+            SODFile sod = reader.readSOD();
+
+            if (com.getTagList()[1] != 0) {
+                MRZInfo info = reader.readDG1();
+
+                DocNumLabel.setText(info.getDocumentNumber());
+                NameLabel.setText(info.getPrimaryIdentifier());
+                SurLabel.setText(info.getSecondaryIdentifier().replace("<", " "));
+                SexLabel.setText(info.getGender().toString());
+                NascLabel.setText(info.getNationality());
+                EmitLabel.setText(info.getIssuingState());
+
+                BirthLabel.setText(formatDateUStoW(info.getDateOfBirth()));  //<<Formatar
+                ExpiryLabel.setText(formatDateUStoW(info.getDateOfExpiry()));
+
+                CPFLabel.setText(info.getPersonalNumber());
+
+            }
+            if (com.getTagList()[2] != 0) {
+                picture = reader.readDG2();
+            }
+            if (com.getTagList()[3] != 0) {
+                fingers = reader.readDG3();
+            }
+
+            reader.executeSecurityProtocols(com, sod);
+
+            System.out.println(sod);
+
+            JOptionPane.showMessageDialog(null, "Finished");
+
             container.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             isReading = false;
-            
-            
 
         } catch (Exception ex) {
             Logger.getLogger(VerifyPanel.class.getName()).log(Level.SEVERE, null, ex);
             isReading = false;
-            JOptionPane.showMessageDialog(null, "Wrong BAC entry");
+            JOptionPane.showMessageDialog(null, "Error in reading");
             container.dispose();
         }
 
@@ -321,40 +338,43 @@ public class VerifyPanel extends javax.swing.JPanel implements Runnable{
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if(!isReading)
+        if (!isReading) {
             this.container.dispose();
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        if(!isReading)
+        if (!isReading) {
             this.container.dispose();
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         new FingerPrintVerification(fingers);
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    public void close(){
-        if(!isReading)
+    public void close() {
+        if (!isReading) {
             this.container.dispose();
+        }
     }
 
-    private String formatDateUStoW(String yymmdd){
+    private String formatDateUStoW(String yymmdd) {
         String res = "";
         Calendar cal = Calendar.getInstance();
-        
-        String year = yymmdd.substring(4);
+
+        String year = yymmdd.substring(0,2);
         String month = yymmdd.substring(2, 4);
-        String day = yymmdd.substring(0,2);
-        if(Integer.parseInt(year) > cal.get(Calendar.YEAR) - 2000){
+        String day = yymmdd.substring(4);
+        if (Integer.parseInt(year) > cal.get(Calendar.YEAR) - 2000) {
             year = "19" + year;
         } else {
             year = "20" + year;
         }
-        
+
         return day + " / " + month + " / " + year;
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel BirthLabel;
     private javax.swing.JLabel CPFLabel;

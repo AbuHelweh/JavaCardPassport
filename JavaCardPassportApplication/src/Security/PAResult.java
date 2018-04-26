@@ -29,9 +29,13 @@ public class PAResult {
         return checks;
     }
     
+    public boolean veredict(){
+        return ValidSOD;
+    }
+    
     public String toString(){
         
-        String res = "SOD: " + (ValidSOD? "Valid" : "Invalid");
+        String res = "SOD: " + (ValidSOD? "Valid" : "Invalid") + System.lineSeparator();
         
         for(Integer i = 0; i < checks.size(); i++){
             if(checks.containsKey(i)){

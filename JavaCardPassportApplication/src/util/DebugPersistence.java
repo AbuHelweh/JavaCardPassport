@@ -29,7 +29,7 @@ public class DebugPersistence {
     private DebugPersistence() {
         try {
             KeyPairGenerator gen = KeyPairGenerator.getInstance("ECDH", "BC");
-            gen.initialize(ECNamedCurveTable.getParameterSpec("prime256v1"));
+            gen.initialize(ECNamedCurveTable.getParameterSpec("c2tnb191v3"));//"prime256v1"));
             DHKey = gen.genKeyPair();
         } catch (Exception e) {
             e.printStackTrace();
@@ -91,6 +91,7 @@ public class DebugPersistence {
         if (ECKeyPair != null) {
             return ECKeyPair;
         }
+        
         System.out.println("null terminal pair");
         return null;
     }

@@ -5,10 +5,21 @@
  */
 package Security;
 
+import java.io.IOException;
+import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.PublicKey;
+import java.security.SignatureException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateExpiredException;
+import java.security.cert.CertificateNotYetValidException;
+import java.security.cert.X509Certificate;
+import java.util.Set;
 import myjmrtdcardapplication.CardReader;
 import net.sf.scuba.smartcards.CardServiceException;
 import org.bouncycastle.util.Arrays;
@@ -24,6 +35,7 @@ import org.jmrtd.lds.icao.DG14File;
 import org.jmrtd.protocol.AAResult;
 import org.jmrtd.protocol.BACResult;
 import org.jmrtd.protocol.CAResult;
+import util.MyCertificateFactory;
 
 /**
  *
@@ -50,9 +62,10 @@ public class SecurityProtocols {
 
     /**
      * Handler for BAC Protocol
+     *
      * @param key
      * @return
-     * @throws CardServiceException 
+     * @throws CardServiceException
      */
     public BACResult doBAC(BACKeySpec key) throws CardServiceException {
         return service.doBAC(key);
@@ -60,26 +73,53 @@ public class SecurityProtocols {
 
     /**
      * Does the Passive Authentication Protocol for validating data authenticity
-     * It first checks the certificate in SOD File for its validity
-     * Then checks the hashes in the SOD with the hashes from the files read and compares them for structural changes
+     * It first checks the certificate in SOD File for its validity Then checks
+     * the hashes in the SOD with the hashes from the files read and compares
+     * them for structural changes
+     *
      * @param com
      * @param sod
      * @return
-     * @throws NoSuchAlgorithmException 
+     * @throws NoSuchAlgorithmException
      */
-    public PAResult doPA(COMFile com, SODFile sod) throws NoSuchAlgorithmException {
+    public PAResult doPA(COMFile com, SODFile sod) throws NoSuchAlgorithmException, CardServiceException, IOException, CertificateException {
         //Certify SOD File with certificate
-
+        
         boolean SODValidity = true;
+
+        CertificateVerificationResult certCheck = checkForCertificateValidity(sod.getDocSigningCertificate());
+
+        if (com == null) {
+            System.out.println("PA COM NULL");
+            return null;
+        }
+
+        if (sod == null) {
+            System.out.println("PA SOD NULL");
+            return null;
+        }
+
         //Certify files with hashes
         HashMap<Integer, Boolean> result = new HashMap();
-        HashMap<Integer, byte[]> sodHashes = (HashMap) sod.getDataGroupHashes();
-        int[] tags = {LDSFile.EF_DG1_TAG, LDSFile.EF_DG2_TAG, LDSFile.EF_DG3_TAG, LDSFile.EF_DG4_TAG, LDSFile.EF_DG5_TAG, LDSFile.EF_DG6_TAG, LDSFile.EF_DG7_TAG, LDSFile.EF_DG8_TAG, LDSFile.EF_DG9_TAG, LDSFile.EF_DG10_TAG, LDSFile.EF_DG11_TAG, LDSFile.EF_DG12_TAG, LDSFile.EF_DG13_TAG, LDSFile.EF_DG14_TAG, LDSFile.EF_DG15_TAG, LDSFile.EF_DG16_TAG};
+        Map<Integer, byte[]> sodHashes = sod.getDataGroupHashes();
+        int[] tags = {LDSFile.EF_COM_TAG, LDSFile.EF_DG1_TAG, LDSFile.EF_DG2_TAG, LDSFile.EF_DG3_TAG, LDSFile.EF_DG4_TAG, LDSFile.EF_DG5_TAG, LDSFile.EF_DG6_TAG, LDSFile.EF_DG7_TAG, LDSFile.EF_DG8_TAG, LDSFile.EF_DG9_TAG, LDSFile.EF_DG10_TAG, LDSFile.EF_DG11_TAG, LDSFile.EF_DG12_TAG, LDSFile.EF_DG13_TAG, LDSFile.EF_DG14_TAG, LDSFile.EF_DG15_TAG, LDSFile.EF_DG16_TAG};
 
         int[] comtags = com.getTagList();
         byte[] currentHash;
 
-        for (int i = 0; i < tags.length; i++) {
+        if (Arrays.contains(comtags, tags[0])) {
+            currentHash = MessageDigest.getInstance(digestAlgorithm).digest(reader.readCOM().getEncoded());
+
+            if (java.util.Arrays.equals(currentHash, sodHashes.get(0))) {
+                result.put(0, Boolean.TRUE);
+            } else {
+                result.put(0, Boolean.FALSE);
+                SODValidity = false;
+            }
+        }
+
+        for (int i = 1; i < tags.length; i++) {
+
             if (Arrays.contains(comtags, tags[i])) {
                 currentHash = MessageDigest.getInstance(digestAlgorithm).digest(reader.getDGFile(i).getEncoded());
 
@@ -92,44 +132,55 @@ public class SecurityProtocols {
             }
         }
 
-        return new PAResult(SODValidity, result);
+        return new PAResult(SODValidity && certCheck.isValid(), result);
     }
-    
+
     /**
-     * Handler for the Extended Access Control Protocol
-     * It consists of the Card Authentication and Terminal Authentication Protocols
-     * 
-     * @return 
+     * Handler for the Extended Access Control Protocol It consists of the Card
+     * Authentication and Terminal Authentication Protocols
+     *
+     * @return
      */
-    public EACResult doEAC(DG14File dg14) throws CardServiceException, Exception{
-        
+    public EACResult doEAC(DG14File dg14) throws CardServiceException, Exception {
+
         ChipAuthenticationInfo chipinfo = null;
         ChipAuthenticationPublicKeyInfo chipauthinfo = null;
-        
+
         Collection<SecurityInfo> infos = dg14.getSecurityInfos();
-        for(SecurityInfo i : infos){
-            if(i instanceof ChipAuthenticationInfo){
-                chipinfo = (ChipAuthenticationInfo)i;
+        for (SecurityInfo i : infos) {
+            if (i instanceof ChipAuthenticationInfo) {
+                chipinfo = (ChipAuthenticationInfo) i;
             }
-            if(i instanceof ChipAuthenticationPublicKeyInfo){
+            if (i instanceof ChipAuthenticationPublicKeyInfo) {
                 chipauthinfo = (ChipAuthenticationPublicKeyInfo) i;
             }
         }
-        
-        if(chipinfo == null || chipauthinfo == null){
+
+        if (chipinfo == null || chipauthinfo == null) {
             throw new Exception("dg14 file empty");
         }
-        
+
         CAResult cares = service.doCA(chipauthinfo.getKeyId(), chipinfo.getObjectIdentifier(), SecurityInfo.ID_PK_ECDH, chipauthinfo.getSubjectPublicKey());
         System.out.println(cares);
         //TAResult tares = service.doTA(caReference, terminalCertificates, terminalKey, taAlg, cares, DOCUMENTNUMBER);
-        
-        return new EACResult(null,null);
+
+        return new EACResult(null, null);
     }
-    
-    public AAResult doAA(){
+
+    public AAResult doAA() {
         //return service.doAA(publicKey, digestAlgorithm, digestAlgorithm, challenge);
         return null;
+    }
+
+    public CertificateVerificationResult checkForCertificateValidity(X509Certificate cert) {
+        try {
+            Set<X509Certificate> additionalCerts = MyCertificateFactory.getInstance().generateTestCertificateChain();
+
+            return new CertificateVerificationResult(CertificateVerifier.verifyCertificate(cert, additionalCerts));
+        }catch (Exception e){
+            e.printStackTrace();
+            return new CertificateVerificationResult(e);
+        }
     }
 
 }

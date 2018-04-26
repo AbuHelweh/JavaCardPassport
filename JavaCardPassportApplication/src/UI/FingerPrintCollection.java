@@ -12,11 +12,14 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Scanner;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -29,6 +32,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.core.MatOfInt;
 import org.opencv.imgcodecs.Imgcodecs;
+import util.ControlledDialog;
 
 /**
  *
@@ -52,11 +56,11 @@ public class FingerPrintCollection extends javax.swing.JFrame {
         panels[2] = Middle;
         panels[3] = Ring;
         panels[4] = Little;
-        
-        for(JPanel p : panels){
+
+        for (JPanel p : panels) {
             p.setBorder(BorderFactory.createLineBorder(Color.black));
         }
-        
+
         this.setVisible(true);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -95,14 +99,14 @@ public class FingerPrintCollection extends javax.swing.JFrame {
             });
 
         }
-        
-        java.awt.EventQueue.invokeLater(new Runnable(){
+
+        java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
-            public void run(){
+            public void run() {
                 updateImages();
             }
         });
-        
+
     }
 
     public void mouseHandler(MouseEvent e, int finger) {
@@ -113,7 +117,7 @@ public class FingerPrintCollection extends javax.swing.JFrame {
             if (leftHand) {
                 offset = 5;
             }
-            
+
             FingerInfo f; //um dedo
             ArrayList<FingerImageInfo> fiil = new ArrayList();
             FingerImageInfo fii;
@@ -182,14 +186,26 @@ public class FingerPrintCollection extends javax.swing.JFrame {
         //Os codigos dos dedos no JMRTD comecam no dedao direito com 1 e vao ate o mindinho esquerdo com 10
         try {
 
+            ControlledDialog.showMessageDialog("", "Escaneie sua digital agora");
+            
             //Talvez salvar as imagens no banco de dados seja uma boa ideia depois
-            new Thread(
-                new Runnable() {
-                    public void run() {
-                        new FPrintController().scanImage(); //Mesmo numa thread o programa inteiro para para a digital... deve ser algo do libfprint
+            Thread t1 = new Thread(
+                    new Runnable() {
+                public void run() {
+                    try {
+                        new FPrintController().scanImage();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
-            ).run();
+            }
+            );
+
+            t1.run();
+            
+            
+
+            ControlledDialog.closeMessageDialog();
 
             //-------------------- Leitura e conversão da imagem, tá lindo e maravilhoso nao alterar ---------------------------------
             byte[] img = FileUtils.readFileToByteArray(new File("finger_standardized.pgm")); //<< Lê a imagem direto como byteArray
@@ -204,7 +220,7 @@ public class FingerPrintCollection extends javax.swing.JFrame {
             byte[] imgJPG = FileUtils.readFileToByteArray(new File(finger + ".jpg")); //<< Lê a imagem JPG direto como byteArray
 
             System.out.println(imgJPG.length);
-            
+
             //------------------- Fim leitura da imagem
             return new FingerImageInfo(finger + 1,
                     1, 1, 100, //view count, view number, quality%

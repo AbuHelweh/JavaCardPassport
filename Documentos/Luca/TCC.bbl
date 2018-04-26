@@ -1,16 +1,30 @@
 \begin{thebibliography}{1}
 
+\bibitem{JAVACHEN}
+Zhiqun CHEN.
+\newblock {\em Java Card™ Technology for Smart Cards : architecture and
+  programmer’s guide}.
+\newblock Addison-Wesley, England, UK, 2000.
+
 \bibitem{ICAO}
-ICAO.
+International Civil Aviation~Organization ICAO.
 \newblock Icao 9303: Machine readable travel documents.
 \newblock
   \url{https://www.icao.int/publications/pages/publication.aspx?docnum=9303}.
-\newblock Accessed: 11-09-2017.
+\newblock Accessed: 13-04-2018.
 
-\bibitem{JMRTDSite}
-Martin Oostdijk.
+\bibitem{JMRTD}
+Martin OOSTDIJK.
 \newblock Jmrtd.
 \newblock \url{https://www.jmrtd.org}.
-\newblock Accessed: 11-09-2017.
+\newblock Accessed: 13-04-2018.
+
+\bibitem{SASSO}
+Felipe SASSO.
+\newblock Idedu: Proposta de um cartão de identificação acadêmico baseado
+  no padrão icao 9303.
+\newblock
+  \url{https://docs.google.com/document/d/15Jd3IzxCOFT7Vi-mvTHSbRyRPQeikQoldCGfVxTFUMU/edit}.
+\newblock Accessed: 31-07-2017.
 
 \end{thebibliography}

@@ -11,12 +11,14 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.security.GeneralSecurityException;
+import java.security.KeyStore;
 import java.security.MessageDigest;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Security;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,8 +26,6 @@ import javax.imageio.ImageIO;
 import javax.smartcardio.CardTerminal;
 import javax.smartcardio.TerminalFactory;
 import javax.swing.JOptionPane;
-import jnitestfingerprint.FPrintController;
-import static myjmrtdcardapplication.CardCom.DOCUMENTNUMBER;
 import net.sf.scuba.data.Gender;
 import net.sf.scuba.smartcards.CardServiceException;
 import net.sf.scuba.smartcards.TerminalCardService;
@@ -46,11 +46,8 @@ import org.jmrtd.lds.icao.DG3File;
 import org.jmrtd.lds.icao.MRZInfo;
 import org.jmrtd.lds.iso19794.FaceImageInfo;
 import org.jmrtd.lds.iso19794.FaceInfo;
-import org.jmrtd.lds.iso19794.FingerImageInfo;
 import org.jmrtd.lds.iso19794.FingerInfo;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfInt;
-import org.opencv.imgcodecs.Imgcodecs;
+import util.MyCertificateFactory;
 
 /**
  *
@@ -62,12 +59,12 @@ public class CardSender {
     PassportPersoService perso;
 
     MessageDigest digest;
-    HashMap<Integer, byte[]> sodHashes; //Doc 7 part 2.1 "A hash for each Data Group in use SHALL be stored in the Document Security Object (EF.SOD)"
-    int[] tagList = new int[17];
+    HashMap<Integer, byte[]> dataGroupHashes; //Doc 7 part 2.1 "A hash for each Data Group in use SHALL be stored in the Document Security Object (EF.SOD)"
+    int[] dataGroupComTagList = new int[17];
 
     public CardSender() {
 
-        sodHashes = new HashMap();
+        dataGroupHashes = new HashMap();
 
         try {
 
@@ -141,22 +138,24 @@ public class CardSender {
      */
     public void SendCOM() throws CardServiceException {
 
-        tagList[0] = LDSFile.EF_COM_TAG;
+        dataGroupComTagList[0] = LDSFile.EF_COM_TAG;
 
-        tagList[4] = 0;//LDSFile.EF_DG4_TAG;
-        tagList[5] = 0;//LDSFile.EF_DG5_TAG;
-        tagList[6] = 0;//LDSFile.EF_DG6_TAG;
-        tagList[7] = 0;//LDSFile.EF_DG7_TAG;
-        tagList[8] = 0;//LDSFile.EF_DG8_TAG;
-        tagList[9] = 0;//LDSFile.EF_DG9_TAG;
-        tagList[10] = 0;//LDSFile.EF_DG10_TAG;
-        tagList[11] = 0;//LDSFile.EF_DG11_TAG;
-        tagList[12] = 0;//LDSFile.EF_DG12_TAG;
-        tagList[13] = 0;//LDSFile.EF_DG13_TAG;
+        dataGroupComTagList[4] = 0;//LDSFile.EF_DG4_TAG;
+        dataGroupComTagList[5] = 0;//LDSFile.EF_DG5_TAG;
+        dataGroupComTagList[6] = 0;//LDSFile.EF_DG6_TAG;
+        dataGroupComTagList[7] = 0;//LDSFile.EF_DG7_TAG;
+        dataGroupComTagList[8] = 0;//LDSFile.EF_DG8_TAG;
+        dataGroupComTagList[9] = 0;//LDSFile.EF_DG9_TAG;
+        dataGroupComTagList[10] = 0;//LDSFile.EF_DG10_TAG;
+        dataGroupComTagList[11] = 0;//LDSFile.EF_DG11_TAG;
+        dataGroupComTagList[12] = 0;//LDSFile.EF_DG12_TAG;
+        dataGroupComTagList[13] = 0;//LDSFile.EF_DG13_TAG;
 
-        tagList[15] = 0;//LDSFile.EF_DG15_TAG;
+        dataGroupComTagList[15] = 0;//LDSFile.EF_DG15_TAG;
 
-        COMFile com = new COMFile("01.08", "08.00.00", tagList); //LDS Version and UTF version
+        COMFile com = new COMFile("01.08", "08.00.00", dataGroupComTagList); //LDS Version and UTF version
+
+        dataGroupHashes.put(0, digest.digest(com.getEncoded()));
 
         if (!perso.isOpen()) {
             perso.open();
@@ -193,8 +192,8 @@ public class CardSender {
         System.out.println("Enviando arquivo DG1");
         perso.writeFile(service.EF_DG1, new ByteArrayInputStream(dg1.getEncoded()));
 
-        sodHashes.put(1, digest.digest(dg1.getEncoded()));
-        tagList[1] = LDSFile.EF_DG1_TAG;
+        dataGroupHashes.put(1, digest.digest(dg1.getEncoded()));
+        dataGroupComTagList[1] = LDSFile.EF_DG1_TAG;
     }
 
     /**
@@ -259,8 +258,8 @@ public class CardSender {
         System.out.println("Enviando arquivo DG2");
         perso.writeFile(service.EF_DG2, new ByteArrayInputStream(dg2.getEncoded()));
 
-        sodHashes.put(2, digest.digest(dg2.getEncoded()));
-        tagList[2] = LDSFile.EF_DG2_TAG;
+        dataGroupHashes.put(2, digest.digest(dg2.getEncoded()));
+        dataGroupComTagList[2] = LDSFile.EF_DG2_TAG;
     }
 
     /**
@@ -272,10 +271,10 @@ public class CardSender {
      */
     public void SendDG3(FingerInfo[] fingers) throws IOException, CardServiceException {
 
-        if(fingers == null){
+        if (fingers[0] == null) {
             return;
         }
-        
+
         ArrayList<FingerInfo> fingerInfos = new ArrayList<>();
 
         /*
@@ -283,9 +282,9 @@ public class CardSender {
             if(fingerInfo != null)
                 fingerInfos.add(fingerInfo);
         }
-        */
+         */
         fingerInfos.add(fingers[0]);
-        
+
         DG3File dg3 = new DG3File(fingerInfos);
 
         if (!perso.isOpen()) {
@@ -298,8 +297,8 @@ public class CardSender {
         System.out.println("Enviando arquivo DG3");
         perso.writeFile(service.EF_DG3, new ByteArrayInputStream(dg3.getEncoded()));
 
-        sodHashes.put(3, digest.digest(dg3.getEncoded()));
-        tagList[3] = LDSFile.EF_DG3_TAG;
+        dataGroupHashes.put(3, digest.digest(dg3.getEncoded()));
+        dataGroupComTagList[3] = LDSFile.EF_DG3_TAG;
     }
 
     /**
@@ -332,19 +331,24 @@ public class CardSender {
         System.out.println("Enviando arquivo DG14");
         perso.writeFile(service.EF_DG14, new ByteArrayInputStream(dg14.getEncoded()));
 
-        sodHashes.put(14, digest.digest(dg14.getEncoded()));
-        tagList[14] = LDSFile.EF_DG14_TAG;
+        dataGroupHashes.put(14, digest.digest(dg14.getEncoded()));
+        dataGroupComTagList[14] = LDSFile.EF_DG14_TAG;
     }
 
-    public void sendSOD() throws GeneralSecurityException {
-        // Establish digestAlgorithm -> SHA256?
-        // Establish digestEncryptionAlgorithm
-        // Hashes ok
-        //PrivateKey to sign the data... wtf?
+    public void sendSOD() throws Exception {
+        //PrivateKey to sign the data = Private key do Certificado?
         //Document Signer Certificate
 
-        PrivateKey key = DebugPersistence.getInstance().getECPair().getPrivate();
+        X509Certificate docSignCert = MyCertificateFactory.getInstance().generateTestSignedX509Certificate();
 
+        KeyStore ks = KeyStore.getInstance("JKS");
+        String pw = "123456";
+        FileInputStream fis = new FileInputStream("/home/" + System.getProperty("user.name") + "/workspace/JavaCardPassport/Documentos/mykeystore.ks");
+        ks.load(fis, pw.toCharArray());
+
+        PrivateKey key = (PrivateKey) ks.getKey("DocSignCertificate", pw.toCharArray());
+
+        /*
         sodHashes.put(4, null);
         sodHashes.put(5, null);
         sodHashes.put(6, null);
@@ -356,11 +360,20 @@ public class CardSender {
         sodHashes.put(12, null);
         sodHashes.put(13, null);
         sodHashes.put(15, null);
-        sodHashes.put(16, null);
+         */
+        System.out.println("Hashes.size " + dataGroupHashes.size());
+        SODFile sod = new SODFile("SHA-256", "SHA256withRSA", dataGroupHashes, key, docSignCert, "BC");
 
-        SODFile sod = new SODFile("SHA256", "SHA256withRSA", sodHashes, key, null);
+        if (!perso.isOpen()) {
+            perso.open();
+        }
 
-        tagList[16] = LDSFile.EF_SOD_TAG;
+        perso.createFile(service.EF_SOD, (short) sod.getEncoded().length);
+        perso.selectFile(service.EF_SOD);
+
+        System.out.println("Enviando arquivo SOD");
+
+        perso.writeFile(service.EF_SOD, new ByteArrayInputStream(sod.getEncoded()));
     }
 
     /**
@@ -371,9 +384,5 @@ public class CardSender {
     public void LockCard() throws CardServiceException {
         perso.lockApplet();
         perso.close();
-    }
-
-    private void doPA() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
