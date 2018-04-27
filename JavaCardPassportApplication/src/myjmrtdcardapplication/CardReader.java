@@ -37,6 +37,7 @@ import org.jmrtd.lds.icao.MRZInfo;
 import org.jmrtd.lds.iso19794.FaceImageInfo;
 import org.jmrtd.lds.iso19794.FingerInfo;
 import org.jmrtd.protocol.BACResult;
+import util.CardConnection;
 
 /**
  * TODO do PA and AA here before showing anything
@@ -52,31 +53,9 @@ public class CardReader {
 
     public CardReader() {
         try {
-            TerminalFactory terminal = TerminalFactory.getDefault();
-            //listam-se eles
-            List<CardTerminal> readers = terminal.terminals().list();
-            //escolhe-se a primeira
-            if (readers.isEmpty()) {
-                System.out.println("No Readers Found");
-                System.exit(-1);
-            }
-            CardTerminal reader = readers.get(0);
-            System.out.println("Reader: " + reader);
+            
+            service = CardConnection.connectPassportService();
 
-            System.out.println("Por favor insira um cartão");
-
-            for (int i = 0; i < 3 || !reader.isCardPresent(); i++) {
-                reader.waitForCardPresent(10000);
-                System.out.println("Cartão " + (reader.isCardPresent() ? "" : "não ") + "conectado");
-            }
-            if (reader.isCardPresent()) {
-                service = new PassportService(new TerminalCardService(reader));
-                service.open();
-                service.sendSelectApplet(false);
-                BouncyCastleProvider provider = new BouncyCastleProvider();
-                Security.addProvider(provider);
-
-            }
             files = new DataGroup[16];
         } catch (Exception e) {
             e.printStackTrace();

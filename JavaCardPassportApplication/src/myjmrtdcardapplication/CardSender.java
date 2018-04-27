@@ -47,6 +47,7 @@ import org.jmrtd.lds.icao.MRZInfo;
 import org.jmrtd.lds.iso19794.FaceImageInfo;
 import org.jmrtd.lds.iso19794.FaceInfo;
 import org.jmrtd.lds.iso19794.FingerInfo;
+import util.CardConnection;
 import util.MyCertificateFactory;
 
 /**
@@ -70,31 +71,8 @@ public class CardSender {
 
             digest = MessageDigest.getInstance("SHA-256");
 
-            //Encontra-se a factory
-            TerminalFactory terminal = TerminalFactory.getDefault();
-            //listam-se os terminais
-            List<CardTerminal> readers = terminal.terminals().list();
-            //escolhe-se o primeiro
-            CardTerminal reader = readers.get(0);
-            System.out.println("Reader: " + reader);
+            service = CardConnection.connectPassportService();
 
-            System.out.println("Por favor insira um cartão");
-
-            for (int i = 0; i < 3 || !reader.isCardPresent(); i++) {
-                reader.waitForCardPresent(10000);   //Se espera por um cartão
-                System.out.println("Cartão " + (reader.isCardPresent() ? "" : "não ") + "conectado");
-            }
-            if (reader.isCardPresent()) {
-                service = new PassportService(new TerminalCardService(reader)); //abre o processo do passaporte
-                service.open();
-
-                service.sendSelectApplet(false);    //envia o comando para se selecionar o aplicativo, PACE PODE SER FEITO ANTES PARA AUTENTICAR O CARTAO
-
-                perso = new PassportPersoService(service);  //abre o servico de edicao do cartao
-                BouncyCastleProvider provider = new BouncyCastleProvider();
-                Security.addProvider(provider);
-
-            }
         } catch (Exception e) {
             e.printStackTrace();
             if (e instanceof CardServiceException) {

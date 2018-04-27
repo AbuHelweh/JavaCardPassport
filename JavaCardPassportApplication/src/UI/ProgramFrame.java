@@ -7,8 +7,14 @@ package UI;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.smartcardio.CardException;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import util.CardConnection;
+import util.ControlledDialog;
+import util.GlobalFlags;
 
 /**
  *
@@ -21,11 +27,19 @@ public class ProgramFrame extends JFrame {
     public ProgramFrame(JFrame parent) {
         this.parent = parent;
         addWindowListener(new WindowAdapter() {
-            
+
             @Override
             public void windowClosed(WindowEvent e) {
-                //parent.setVisible(true);
-                //parent.setAlwaysOnTop(true);
+
+                Thread t = new Thread(new Runnable() {
+                    public void run() {
+
+                        CardConnection.closeConnection();
+
+                    }
+                });
+                t.start();
+
             }
         });
     }

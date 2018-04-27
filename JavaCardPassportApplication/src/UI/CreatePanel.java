@@ -121,6 +121,8 @@ public class CreatePanel extends javax.swing.JPanel {
         jPanel1.setBackground(Color.black);
 
         valSpinner.setModel(new SpinnerNumberModel(1, 1, 10, 1));
+        
+        
 
     }
 

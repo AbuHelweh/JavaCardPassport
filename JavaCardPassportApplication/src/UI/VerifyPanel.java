@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.smartcardio.CardException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import myjmrtdcardapplication.CardReader;
@@ -21,6 +22,9 @@ import org.jmrtd.lds.SODFile;
 import org.jmrtd.lds.icao.COMFile;
 import org.jmrtd.lds.icao.MRZInfo;
 import org.jmrtd.lds.iso19794.FingerInfo;
+import util.CardConnection;
+import util.ControlledDialog;
+import util.GlobalFlags;
 
 /**
  *
@@ -48,10 +52,6 @@ public class VerifyPanel extends javax.swing.JPanel implements Runnable {
         new BACFrame(this);
 
         container.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosed(WindowEvent e) {
-
-            }
 
             @Override
             public void windowActivated(WindowEvent e) {
@@ -363,7 +363,7 @@ public class VerifyPanel extends javax.swing.JPanel implements Runnable {
         String res = "";
         Calendar cal = Calendar.getInstance();
 
-        String year = yymmdd.substring(0,2);
+        String year = yymmdd.substring(0, 2);
         String month = yymmdd.substring(2, 4);
         String day = yymmdd.substring(4);
         if (Integer.parseInt(year) > cal.get(Calendar.YEAR) - 2000) {

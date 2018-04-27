@@ -35,6 +35,7 @@ public class ControlledDialog extends JFrame {
         actual.setTitle(name);
         actual.jLabel1.setText(message);
         actual.setVisible(true);
+        actual.repaint();
     }
 
     /**
@@ -80,7 +81,7 @@ public class ControlledDialog extends JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
