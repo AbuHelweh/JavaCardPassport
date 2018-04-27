@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Security;
+package Security.notMine;
 
 /**
  * This class wraps an exception that could be thrown during

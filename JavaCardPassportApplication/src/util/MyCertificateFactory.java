@@ -114,7 +114,7 @@ public class MyCertificateFactory {
     public KeyPair generateRSAKeyPair() throws NoSuchAlgorithmException {
         KeyPairGenerator gen = KeyPairGenerator.getInstance("RSA", bcProvider);
 
-        gen.initialize(1024);
+        gen.initialize(2048);
         KeyPair RSApair = gen.genKeyPair();
 
         return RSApair;
@@ -215,6 +215,10 @@ public class MyCertificateFactory {
         }
     }
 
+    /**
+     * DebugPurposes gera um certificado assinado pela corrente de certificados
+     * @return 
+     */
     public X509Certificate generateTestSignedX509Certificate() {
         try {
 
@@ -230,24 +234,21 @@ public class MyCertificateFactory {
                 return (X509Certificate) ks.getCertificate("DocSignCertificate");
             }
 
-            CertAndKeyGen certGen = new CertAndKeyGen("RSA", "SHA256WithRSA", "BC");
-
-            // generate it with 2048 bits
-            certGen.generate(2048);
+            KeyPair certGen = generateRSAKeyPair();
 
             // prepare the validity of the certificate
             long validSecs = (long) 365 * 24 * 60 * 60; // valid for one year
 
             X509Certificate cert = generateSignedX509Certificate(
-                    new X500Name("CN=intermidiate.labsec,O=LABSEC/UFSC,L=FLORIANOPOLIS,C=DE"),
+                    new X500Name("CN=card.labsec,O=LABSEC/UFSC,L=FLORIANOPOLIS,C=DE"),
                     validSecs,
-                    certGen.getPublicKey(),
+                    certGen.getPublic(),
                     lastCertificateChainPrivateKey,
                     "SHA256WithRSA");
 
-            lastCertificateChainPrivateKey = certGen.getPrivateKey();
+            lastCertificateChainPrivateKey = certGen.getPrivate();
 
-            ks.setKeyEntry("DocSignCertificate", certGen.getPrivateKey(), pw.toCharArray(),
+            ks.setKeyEntry("DocSignCertificate", certGen.getPrivate(), pw.toCharArray(),
                     new X509Certificate[]{cert});
 
             FileOutputStream fos = new FileOutputStream("/home/" + System.getProperty("user.name") + "/workspace/JavaCardPassport/Documentos/mykeystore.ks");
@@ -263,6 +264,11 @@ public class MyCertificateFactory {
         return null;
     }
 
+    /**
+     * gera um certificado auto assinado do jeito certo, sem gambiarra...
+     * @return
+     * @throws Exception 
+     */
     public X509Certificate generateSelfSignedX509Certificate() throws Exception {
 
         KeyStore ks = KeyStore.getInstance("JKS");
@@ -314,6 +320,12 @@ public class MyCertificateFactory {
         return null;
     }
 
+    /**
+     * Debug Purposes
+     * gera uma corrente de certificados.
+     * @return
+     * @throws Exception 
+     */
     public Set<X509Certificate> generateTestCertificateChain() throws Exception {
         KeyStore ks = KeyStore.getInstance("JKS");
         String pw = "123456";
@@ -325,10 +337,13 @@ public class MyCertificateFactory {
         CertAndKeyGen certGen = new CertAndKeyGen("RSA", "SHA256WithRSA", "BC");
         certGen.generate(2048);
         long validSecs = (long) 365 * 24 * 60 * 60;
+        
+        PrivateKey rootkey = null;
 
         if (ks.getCertificate("LabsecRootAnchor") != null) {
 
             cert = (X509Certificate) ks.getCertificate("LabsecRootAnchor");
+            rootkey = (PrivateKey) ks.getKey("LabsecRootAnchor", pw.toCharArray());
             lastCertificateChainPrivateKey = (PrivateKey) ks.getKey("LabsecRootAnchor", pw.toCharArray());
             certChain.add(cert);
 
@@ -336,6 +351,7 @@ public class MyCertificateFactory {
             cert = certGen.getSelfCertificate(
                     new X500Name("CN=root.labsec,O=LABSEC/UFSC,L=FLORIANOPOLIS,C=DE"), validSecs);
 
+            rootkey = certGen.getPrivateKey();
             lastCertificateChainPrivateKey = certGen.getPrivateKey();
 
             ks.setKeyEntry("LabsecRootAnchor", certGen.getPrivateKey(), pw.toCharArray(),
@@ -353,17 +369,46 @@ public class MyCertificateFactory {
 
             certGen = new CertAndKeyGen("RSA", "SHA256WithRSA", "BC");
             certGen.generate(2048);
+            
+            KeyPair kp = generateRSAKeyPair();
 
             cert = generateSignedX509Certificate(
                     new X500Name("CN=intermidiate.labsec,O=LABSEC/UFSC,L=FLORIANOPOLIS,C=DE"),
                     validSecs,
-                    certGen.getPublicKey(),
-                    lastCertificateChainPrivateKey,
+                    kp.getPublic(),
+                    rootkey,
                     "SHA256WithRSA");
 
-            lastCertificateChainPrivateKey = certGen.getPrivateKey();
+            lastCertificateChainPrivateKey = kp.getPrivate();
 
-            ks.setKeyEntry("LabsecIntermidiateAnchor", certGen.getPrivateKey(), pw.toCharArray(),
+            ks.setKeyEntry("LabsecIntermidiateAnchor", kp.getPrivate(), pw.toCharArray(),
+                    new X509Certificate[]{cert});
+
+            certChain.add(cert);
+        }
+        
+        if (ks.getCertificate("LabsecIntermidiateAnchor1") != null) {
+
+            cert = (X509Certificate) ks.getCertificate("LabsecIntermidiateAnchor1");
+            certChain.add(cert);
+
+        } else {
+
+            certGen = new CertAndKeyGen("RSA", "SHA256WithRSA", "BC");
+            certGen.generate(2048);
+            
+            KeyPair kp = generateRSAKeyPair();
+
+            cert = generateSignedX509Certificate(
+                    new X500Name("CN=intermidiate1.labsec,O=LABSEC/UFSC,L=FLORIANOPOLIS,C=DE"),
+                    validSecs,
+                    kp.getPublic(),
+                    rootkey,
+                    "SHA256WithRSA");
+
+            lastCertificateChainPrivateKey = kp.getPrivate();
+
+            ks.setKeyEntry("LabsecIntermidiateAnchor1", kp.getPrivate(), pw.toCharArray(),
                     new X509Certificate[]{cert});
 
             certChain.add(cert);

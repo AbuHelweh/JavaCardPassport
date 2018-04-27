@@ -6,18 +6,12 @@
 package Security;
 
 import java.io.IOException;
-import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.PublicKey;
-import java.security.SignatureException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.security.cert.CertificateException;
-import java.security.cert.CertificateExpiredException;
-import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
 import java.util.Set;
 import myjmrtdcardapplication.CardReader;
@@ -84,10 +78,16 @@ public class SecurityProtocols {
      */
     public PAResult doPA(COMFile com, SODFile sod) throws NoSuchAlgorithmException, CardServiceException, IOException, CertificateException {
         //Certify SOD File with certificate
-        
+
         boolean SODValidity = true;
 
-        CertificateVerificationResult certCheck = checkForCertificateValidity(sod.getDocSigningCertificate());
+        CertificateValidationResult certCheck = checkForCertificateValidity(sod.getDocSigningCertificate());
+
+        if (certCheck.isValid()) {
+            for (X509Certificate c : certCheck.getChain()) {
+                System.out.println(c.getIssuerX500Principal());
+            }
+        }
 
         if (com == null) {
             System.out.println("PA COM NULL");
@@ -172,14 +172,20 @@ public class SecurityProtocols {
         return null;
     }
 
-    public CertificateVerificationResult checkForCertificateValidity(X509Certificate cert) {
+    /**
+     * Confere a validade de um certificado
+     *
+     * @param cert
+     * @return
+     */
+    public CertificateValidationResult checkForCertificateValidity(X509Certificate cert) {
         try {
             Set<X509Certificate> additionalCerts = MyCertificateFactory.getInstance().generateTestCertificateChain();
 
-            return new CertificateVerificationResult(CertificateVerifier.verifyCertificate(cert, additionalCerts));
-        }catch (Exception e){
+            return CertificateValidator.validate(cert, additionalCerts);
+        } catch (Exception e) {
             e.printStackTrace();
-            return new CertificateVerificationResult(e);
+            return new CertificateValidationResult(e);
         }
     }
 

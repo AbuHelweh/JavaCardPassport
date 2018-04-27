@@ -11,7 +11,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * DebugPurposes
+ * Limpa a keystore para a correção de erros com os certificados criados.
  * @author luca
  */
 public class ClearKeyStore {

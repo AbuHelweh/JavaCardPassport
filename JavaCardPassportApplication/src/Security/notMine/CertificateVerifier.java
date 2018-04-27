@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Security;
+package Security.notMine;
 
 import java.security.GeneralSecurityException;
 import java.security.InvalidKeyException;
@@ -23,8 +23,11 @@ import java.security.cert.X509CertSelector;
 import java.security.cert.X509Certificate;
 import java.util.HashSet;
 import java.util.Set;
+import sun.security.util.Debug;
 
 /**
+ * Vou fazer eu mesmo essa verificação...
+ * 
  * Class for building a certification chain for given certificate and verifying
  * it. Relies on a set of root CA certificates and intermediate certificates
  * that will be used for building the certification chain. The verification
@@ -79,6 +82,7 @@ public class CertificateVerifier {
                 } else {
                     intermediateCerts.add(additionalCert);
                 }
+                System.out.println(additionalCert.getIssuerX500Principal());
             }
 
             // Attempt to build the certification chain and verify it
@@ -92,6 +96,7 @@ public class CertificateVerifier {
             // The chain is built and verified. Return it as a result
             return verifiedCertChain;
         } catch (CertPathBuilderException certPathEx) {
+            certPathEx.printStackTrace();
             throw new CertificateValidationException(
                     "Error building certification path: "
                     + cert.getSubjectX500Principal(), certPathEx);
@@ -143,7 +148,7 @@ public class CertificateVerifier {
         // Create the selector that specifies the starting certificate
         X509CertSelector selector = new X509CertSelector();
         selector.setCertificate(cert);
-
+        
         // Create the trust anchors (set of root CA certificates)
         Set<TrustAnchor> trustAnchors = new HashSet<TrustAnchor>();
         
