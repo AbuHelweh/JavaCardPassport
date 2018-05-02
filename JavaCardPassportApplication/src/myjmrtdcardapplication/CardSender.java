@@ -72,6 +72,8 @@ public class CardSender {
             digest = MessageDigest.getInstance("SHA-256");
 
             service = CardConnection.connectPassportService();
+            
+            perso = new PassportPersoService(service);
 
         } catch (Exception e) {
             e.printStackTrace();

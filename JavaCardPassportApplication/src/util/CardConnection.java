@@ -67,6 +67,9 @@ public class CardConnection {
 
     public static void closeConnection() {
 
+        
+        service.close();
+        
         try {
 
             if (reader.isCardPresent()) {
@@ -87,7 +90,6 @@ public class CardConnection {
             Logger.getLogger(VerifyPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        service.close();
         service = null;
 
     }
