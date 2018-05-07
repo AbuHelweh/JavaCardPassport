@@ -121,8 +121,6 @@ public class CreatePanel extends javax.swing.JPanel {
         jPanel1.setBackground(Color.black);
 
         valSpinner.setModel(new SpinnerNumberModel(1, 1, 10, 1));
-        
-        
 
     }
 
@@ -532,53 +530,63 @@ public class CreatePanel extends javax.swing.JPanel {
 
     private void OKButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OKButtonActionPerformed
 
-        boolean worked = true;
-        try {
-            
+        new Thread(new Runnable() {
+            public void run() {
 
-            System.out.println(this.YearBox.getItemAt(this.YearBox.getSelectedIndex()).trim().substring(2)
-                    + (this.MonthBox.getSelectedIndex() < 9 ? "0" + (this.MonthBox.getSelectedIndex() + 1) : (this.MonthBox.getSelectedIndex() + 1))
-                    + (this.DayBox.getSelectedIndex() < 9 ? "0" + (this.DayBox.getSelectedIndex() + 1) : (this.DayBox.getSelectedIndex() + 1)));
+                boolean worked = true;
+                try {
 
+                    System.out.println(YearBox.getItemAt(YearBox.getSelectedIndex()).trim().substring(2)
+                            + (MonthBox.getSelectedIndex() < 9 ? "0" + (MonthBox.getSelectedIndex() + 1) : (MonthBox.getSelectedIndex() + 1))
+                            + (DayBox.getSelectedIndex() < 9 ? "0" + (DayBox.getSelectedIndex() + 1) : (DayBox.getSelectedIndex() + 1)));
 
-            MRZInfo mrz = parseMRZ();
+                    MRZInfo mrz = parseMRZ();
 
-            System.out.println(mrz);
+                    System.out.println(mrz);
 
-            CardSender sender = new CardSender();
-            BACKey key = new BACKey(mrz.getDocumentNumber(), mrz.getDateOfBirth(), mrz.getDateOfExpiry());
-            sender.SendSecurityInfo(key, certificate);
-            
-            sender.SendDG1(mrz);
-            sender.SendDG2(chosenImage);
-            sender.SendDG3(fingers);
-            
-            //Certificado do cartão, provavelmente uma versao CV do certificado SOD
-            if (certificate != null) {
-                sender.SendDG14(DebugPersistence.getInstance().getDHKey().getPublic());
+                    CardSender sender = new CardSender();
+                    BACKey key = new BACKey(mrz.getDocumentNumber(), mrz.getDateOfBirth(), mrz.getDateOfExpiry());
+                    sender.SendSecurityInfo(key, certificate);
+
+                    sender.SendDG1(mrz);
+                    sender.SendDG2(chosenImage);
+                    sender.SendDG3(fingers);
+
+                    //Certificado do cartão, provavelmente uma versao CV do certificado SOD
+                    if (certificate != null) {
+                        sender.SendDG14(DebugPersistence.getInstance().getDHKey().getPublic());
+                    }
+
+                    sender.SendCOM();
+
+                    sender.sendSOD();  //needs X509 Certificate... WTF
+
+                    sender.LockCard();
+                } catch (Exception ex) {
+                    worked = false;
+                    JOptionPane.showMessageDialog(null, "A problem happened check debug status!");
+                    Logger.getLogger(CreatePanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                if (worked) {
+                    JOptionPane.showMessageDialog(null, "Card Successfully Uploaded!");
+                }
+                container.dispose();
+
             }
-                        
-            sender.SendCOM();
-            
-            sender.sendSOD();  //needs X509 Certificate... WTF
-
-            sender.LockCard();
-        } catch (Exception ex) {
-            worked = false;
-            JOptionPane.showMessageDialog(null, "A problem happened check debug status!");
-            Logger.getLogger(CreatePanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        if (worked) {
-            JOptionPane.showMessageDialog(null, "Card Successfully Uploaded!");
-        }
-        this.container.dispose();
-
+        }).start();
     }//GEN-LAST:event_OKButtonActionPerformed
 
     private void MonthBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MonthBoxActionPerformed
+        int dia = DayBox.getSelectedIndex();
         DayBox.removeAllItems();
         for (int i = 1; i <= this.getDays(); i++) {
             DayBox.addItem(i + "");
+        }
+
+        if (dia > DayBox.getItemCount() - 1) {
+            DayBox.setSelectedIndex(DayBox.getItemCount() - 1);
+        } else {
+            DayBox.setSelectedIndex(dia);
         }
     }//GEN-LAST:event_MonthBoxActionPerformed
 
@@ -608,24 +616,23 @@ public class CreatePanel extends javax.swing.JPanel {
         // TODO Send EAC privateKey.
     }//GEN-LAST:event_EACPrivButtonActionPerformed
 
-    
-    public MRZInfo parseMRZ(){
-        
+    public MRZInfo parseMRZ() {
+
         Calendar cal = Calendar.getInstance();
-        
+
         return new MRZInfo("P", this.EmitCombo.getItemAt(this.EmitCombo.getSelectedIndex()).trim().substring(0, 3),
-                    this.TextFieldNome.getText().trim().toUpperCase(),
-                    this.TextFieldSobreNome.getText().trim().toUpperCase(),
-                    this.PassportNumber.getText().trim().toUpperCase(),
-                    this.NacCombo.getItemAt(this.NacCombo.getSelectedIndex()).trim().substring(0, 3),
-                    this.YearBox.getItemAt(this.YearBox.getSelectedIndex()).trim().substring(2)
-                    + (this.MonthBox.getSelectedIndex() < 9 ? "0" + (this.MonthBox.getSelectedIndex() + 1) : (this.MonthBox.getSelectedIndex() + 1))
-                    + (this.DayBox.getSelectedIndex() < 9 ? "0" + (this.DayBox.getSelectedIndex() + 1) : (this.DayBox.getSelectedIndex() + 1)),
-                    this.SexBox.getSelectedIndex() == 0 ? Gender.MALE : (this.SexBox.getSelectedIndex() == 1 ? Gender.FEMALE : Gender.UNSPECIFIED),
-                    (cal.get(Calendar.YEAR) + (int) valSpinner.getValue() + "").substring(2)
-                    + ((cal.get(Calendar.MONTH) + 1) <= 9 ? "0" + (cal.get(Calendar.MONTH) + 1) : (cal.get(Calendar.MONTH) + 1))
-                    + ((cal.get(Calendar.DAY_OF_MONTH)) <= 9 ? "0" + (cal.get(Calendar.DAY_OF_MONTH)) : (cal.get(Calendar.DAY_OF_MONTH))),
-                    this.CPFField.getText().trim());
+                this.TextFieldNome.getText().trim().toUpperCase(),
+                this.TextFieldSobreNome.getText().trim().toUpperCase(),
+                this.PassportNumber.getText().trim().toUpperCase(),
+                this.NacCombo.getItemAt(this.NacCombo.getSelectedIndex()).trim().substring(0, 3),
+                this.YearBox.getItemAt(this.YearBox.getSelectedIndex()).trim().substring(2)
+                + (this.MonthBox.getSelectedIndex() < 9 ? "0" + (this.MonthBox.getSelectedIndex() + 1) : (this.MonthBox.getSelectedIndex() + 1))
+                + (this.DayBox.getSelectedIndex() < 9 ? "0" + (this.DayBox.getSelectedIndex() + 1) : (this.DayBox.getSelectedIndex() + 1)),
+                this.SexBox.getSelectedIndex() == 0 ? Gender.MALE : (this.SexBox.getSelectedIndex() == 1 ? Gender.FEMALE : Gender.UNSPECIFIED),
+                (cal.get(Calendar.YEAR) + (int) valSpinner.getValue() + "").substring(2)
+                + ((cal.get(Calendar.MONTH) + 1) <= 9 ? "0" + (cal.get(Calendar.MONTH) + 1) : (cal.get(Calendar.MONTH) + 1))
+                + ((cal.get(Calendar.DAY_OF_MONTH)) <= 9 ? "0" + (cal.get(Calendar.DAY_OF_MONTH)) : (cal.get(Calendar.DAY_OF_MONTH))),
+                this.CPFField.getText().trim());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

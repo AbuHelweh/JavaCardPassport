@@ -46,6 +46,8 @@ public class SecurityProtocols {
         if (Instance == null) {
             Instance = new SecurityProtocols(service, reader);
         }
+        Instance.service = service;
+        Instance.reader = reader;
         return Instance;
     }
 
@@ -62,6 +64,7 @@ public class SecurityProtocols {
      * @throws CardServiceException
      */
     public BACResult doBAC(BACKeySpec key) throws CardServiceException {
+        //System.out.println("service.doBac() " + service.hashCode());
         return service.doBAC(key);
     }
 

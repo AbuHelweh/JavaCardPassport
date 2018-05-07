@@ -6,17 +6,17 @@ Zhiqun CHEN.
   programmer’s guide}.
 \newblock Addison-Wesley, England, UK, 2000.
 
-\bibitem{ICAO}
-International Civil Aviation~Organization ICAO.
-\newblock Icao 9303: Machine readable travel documents.
-\newblock
-  \url{https://www.icao.int/publications/pages/publication.aspx?docnum=9303}.
-\newblock Accessed: 13-04-2018.
-
 \bibitem{JMRTD}
 Martin OOSTDIJK.
 \newblock Jmrtd.
 \newblock \url{https://www.jmrtd.org}.
+\newblock Accessed: 13-04-2018.
+
+\bibitem{ICAO}
+International Civil~Aviation Organization.
+\newblock Icao 9303: Machine readable travel documents.
+\newblock
+  \url{https://www.icao.int/publications/pages/publication.aspx?docnum=9303}.
 \newblock Accessed: 13-04-2018.
 
 \bibitem{SASSO}
@@ -26,5 +26,10 @@ Felipe SASSO.
 \newblock
   \url{https://docs.google.com/document/d/15Jd3IzxCOFT7Vi-mvTHSbRyRPQeikQoldCGfVxTFUMU/edit}.
 \newblock Accessed: 31-07-2017.
+
+\bibitem{STALLINS}
+William STALLINS.
+\newblock {\em Criptography and Network Security Principles and Practice}.
+\newblock Prentice Hall, ?, 2014.
 
 \end{thebibliography}

@@ -24,18 +24,20 @@ public class ControlledDialog extends JFrame {
         }
     }
 
-    public static void secret(){
-        actual = new ControlledDialog("debug", "test");
-    }
-    
     public static void showMessageDialog(String message, String name) {
         if (actual == null) {
             actual = new ControlledDialog(message, name);
         }
         actual.setTitle(name);
+        actual.setLocationRelativeTo(null);
         actual.jLabel1.setText(message);
+        new Thread(new Runnable() {
+            public void run() {
+                actual.repaint();
+            }
+        }).start();
         actual.setVisible(true);
-        actual.repaint();
+
     }
 
     /**

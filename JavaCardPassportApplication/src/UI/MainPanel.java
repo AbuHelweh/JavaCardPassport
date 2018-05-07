@@ -14,6 +14,7 @@ import javax.swing.JFrame;
 public class MainPanel extends javax.swing.JPanel {
 
     private JFrame frame;
+    public static boolean needsReset = false;
     
     /**
      * Creates new form MainPanel

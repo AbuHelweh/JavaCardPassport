@@ -51,26 +51,28 @@ public class CardReader {
     private COMFile COM = null;
     private PassportService service;
 
-    public CardReader() {
+    public CardReader() throws Exception {
         try {
             
             service = CardConnection.connectPassportService();
+            
 
             files = new DataGroup[16];
         } catch (Exception e) {
             e.printStackTrace();
+            throw e;
         }
     }
 
-    public void doBAC(BACKeySpec backey){
+    public void doBAC(BACKeySpec backey) throws CardServiceException{
         SecurityProtocols sec = SecurityProtocols.getInstance(service, this);
         System.out.println(backey);
         try {
             BACResult result = sec.doBAC(backey);
             System.out.println(result.toString());
-        } catch (Exception e) {
+        } catch (CardServiceException e) {
             System.out.println("BAC ERROR");
-            e.printStackTrace();
+            throw new CardServiceException(e.toString());
         }
     }
     

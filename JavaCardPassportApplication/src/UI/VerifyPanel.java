@@ -129,7 +129,8 @@ public class VerifyPanel extends javax.swing.JPanel implements Runnable {
         } catch (Exception ex) {
             Logger.getLogger(VerifyPanel.class.getName()).log(Level.SEVERE, null, ex);
             isReading = false;
-            JOptionPane.showMessageDialog(null, "Error in reading");
+            MainPanel.needsReset = true;
+            JOptionPane.showMessageDialog(null, "Error de leitura:" + System.lineSeparator() + ex.getMessage());
             container.dispose();
         }
 

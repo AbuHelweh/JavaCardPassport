@@ -18,7 +18,6 @@ import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
 import java.util.HashSet;
 import java.util.Set;
-import sun.security.x509.OIDMap;
 import util.GlobalFlags;
 
 /**

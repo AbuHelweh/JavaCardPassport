@@ -272,16 +272,32 @@ public class BACFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_BIRTHDAYBOXActionPerformed
 
     private void BIRTHMONTHBOXActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BIRTHMONTHBOXActionPerformed
+        
+        int dia = BIRTHDAYBOX.getSelectedIndex();
         BIRTHDAYBOX.removeAllItems();
         for (int i = 1; i <= this.getDays(BIRTHMONTHBOX); i++) {
             BIRTHDAYBOX.addItem(i + "");
         }
+        
+        if(dia > BIRTHDAYBOX.getItemCount()-1){
+            BIRTHDAYBOX.setSelectedIndex(BIRTHDAYBOX.getItemCount() -1);
+        } else {
+            BIRTHDAYBOX.setSelectedIndex(dia);
+        }
     }//GEN-LAST:event_BIRTHMONTHBOXActionPerformed
 
     private void EXPMONTHBOXActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EXPMONTHBOXActionPerformed
+        
+        int dia = EXPDAYBOX.getSelectedIndex();
         EXPDAYBOX.removeAllItems();
         for (int i = 1; i <= this.getDays(EXPMONTHBOX); i++) {
             EXPDAYBOX.addItem(i + "");
+        }
+        
+        if(dia > EXPDAYBOX.getItemCount()-1){
+            EXPDAYBOX.setSelectedIndex(EXPDAYBOX.getItemCount() -1);
+        } else {
+            EXPDAYBOX.setSelectedIndex(dia);
         }
     }//GEN-LAST:event_EXPMONTHBOXActionPerformed
 
