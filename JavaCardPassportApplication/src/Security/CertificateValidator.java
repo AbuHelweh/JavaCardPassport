@@ -44,12 +44,12 @@ public class CertificateValidator {
             return new CertificateValidationResult(e);
         }
 
-        Set<X509Certificate> chain = simpleCertificateChainBuilder(cert, additionalCerts, new HashSet<X509Certificate>());
+        Set<X509Certificate> chain = simpleCertificateChainBuilder(cert, additionalCerts);
 
         for (X509Certificate c : chain) {
             try {
                 CRLVerifier.verifyCertificateCRLs(c);   //Provavelmente só vai funcionar com certificado decente e não os de debug
-            } catch (CertificateValidationException e){
+            } catch (CertificateValidationException e) {
                 e.printStackTrace();
                 return new CertificateValidationResult(e);
             }
@@ -62,40 +62,51 @@ public class CertificateValidator {
         }
     }
 
-    public static Set<X509Certificate> simpleCertificateChainBuilder(X509Certificate cert, Set<X509Certificate> anchors, Set<X509Certificate> chain) {
+    //retirar recursão para fazer com que ele siga a lista
+    public static Set<X509Certificate> simpleCertificateChainBuilder(X509Certificate cert, Set<X509Certificate> certs) {
 
-        for (X509Certificate c : anchors) {
-            if (c == cert) {
-                if (GlobalFlags.DEBUG) {
-                    System.err.println("DEBUG: ClassValidator.class :: Same certificate compared:");
-                    System.err.println(cert.getIssuerX500Principal() + " :: " + c.getIssuerX500Principal());
+        Set<X509Certificate> chain = new HashSet();
+        X509Certificate current = null;
+        try {
+            for (X509Certificate c : certs) {
+                if (isSelfSigned(c)) {
+                    if (GlobalFlags.DEBUG) {
+                        System.err.println("Found Anchor " + c.getIssuerX500Principal());
+                    }
+                    current = c;
+                    chain.add(c);
+                    break;
                 }
-                continue;
             }
+            certs.remove(current);
 
-            try {
-                cert.verify(c.getPublicKey(), "BC");
-            } catch (Exception e) {
-                if (GlobalFlags.DEBUG) {
-                    System.err.println("DEBUG: ClassValidator.class :: " + e.getMessage());
-                    System.err.println(cert.getIssuerX500Principal() + " :: " + c.getIssuerX500Principal());
+            boolean ok = true;
+            while (ok) {
+                ok = false;
+
+                for (X509Certificate c : certs) {
+                    try {
+                        c.verify(current.getPublicKey(), "BC");
+                        if (GlobalFlags.DEBUG) {
+                            System.err.println("Verify " + c.getIssuerX500Principal() + " with " + current.getIssuerX500Principal());
+                        }
+                        current = c;
+                        chain.add(c);
+                        certs.remove(c);
+                        ok = true;
+                        break;
+                    } catch (Exception e) {
+                        if (GlobalFlags.DEBUG) {
+                            System.err.println("Failed " + c.getIssuerX500Principal() + " with " + current.getIssuerX500Principal());
+                        }
+                    }
                 }
-                continue;
+
             }
 
-            if (GlobalFlags.DEBUG) {
-                System.err.println("DEBUG: ClassValidator.class :: Match:");
-                System.err.println(cert.getIssuerX500Principal() + " :: " + c.getIssuerX500Principal());
-            }
-            //Detecção de ciclo
-            if (chain.contains(c)) {
-                return chain;
-            }
-            chain.add(c);
+        } catch (Exception e) {
 
-            return simpleCertificateChainBuilder(c, anchors, chain);
         }
-
         return chain;
     }
 

@@ -5,6 +5,7 @@
  */
 package UI;
 
+import util.FingerPrintCollection;
 import util.MyCertificateFactory;
 import util.DebugPersistence;
 import util.GlobalFlags;
@@ -32,6 +33,7 @@ import org.jmrtd.cert.CardVerifiableCertificate;
 import org.jmrtd.lds.icao.MRZInfo;
 import org.jmrtd.lds.iso19794.FingerInfo;
 import util.ControlledDialog;
+import util.ImageWorks;
 
 /**
  *
@@ -141,6 +143,8 @@ public class CreatePanel extends javax.swing.JPanel {
             }
 
             chosenImage = file;
+            
+            ImageWorks.extractPointsFromImageAndResolve(file);
 
         } else {
             ControlledDialog.showMessageDialog("Loading Camera", "Please Wait");
