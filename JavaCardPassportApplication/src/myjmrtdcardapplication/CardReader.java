@@ -14,28 +14,24 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.Security;
 import java.util.ArrayList;
-import java.util.List;
 import javax.imageio.ImageIO;
-import javax.smartcardio.CardTerminal;
-import javax.smartcardio.TerminalFactory;
 import javax.swing.JOptionPane;
 import net.sf.scuba.smartcards.CardServiceException;
-import net.sf.scuba.smartcards.TerminalCardService;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.jmrtd.BACKeySpec;
 import org.jmrtd.PassportService;
 import org.jmrtd.lds.DataGroup;
 import org.jmrtd.lds.SODFile;
 import org.jmrtd.lds.icao.COMFile;
 import org.jmrtd.lds.icao.DG14File;
+import org.jmrtd.lds.icao.DG15File;
 import org.jmrtd.lds.icao.DG1File;
 import org.jmrtd.lds.icao.DG2File;
 import org.jmrtd.lds.icao.DG3File;
 import org.jmrtd.lds.icao.MRZInfo;
 import org.jmrtd.lds.iso19794.FaceImageInfo;
 import org.jmrtd.lds.iso19794.FingerInfo;
+import org.jmrtd.protocol.AAResult;
 import org.jmrtd.protocol.BACResult;
 import util.CardConnection;
 
@@ -100,11 +96,22 @@ public class CardReader {
         try {
             DG14File dg14 = this.readDG14();
             if (dg14 != null) {
-                EACResult eacresult = sec.doEAC(dg14);
-                System.out.println(eacresult.toString());
+                EACResult eacres = sec.doEAC(dg14);
+                System.out.println(eacres.toString());
             }
         } catch (Exception e) {
             System.out.println("EAC ERROR");
+            e.printStackTrace();
+        }
+        
+        try{
+            DG15File dg15 = this.readDG15();
+            if(dg15 != null){
+                AAResult aares = sec.doAA(dg15);
+                System.out.println(aares);
+            }
+        } catch (Exception e){
+            System.out.println("AA ERROR");
             e.printStackTrace();
         }
 
@@ -238,6 +245,19 @@ public class CardReader {
         return null;
     }
 
+    public DG15File readDG15() throws IOException, CardServiceException{
+        InputStream dg15Input;
+        
+        if(canSelectFile(service.EF_DG15)) {
+            System.out.println("DG15 FILE PRESENT");
+            dg15Input = service.getInputStream(service.EF_DG15);
+            this.files[14] = new DG15File(dg15Input);
+            return (DG15File)this.files[14];
+        }
+        System.out.println("Não foi possivel acessar o arquivo DG15");
+        return null;
+    }
+    
     public SODFile readSOD() throws IOException, CardServiceException {
         InputStream SODInput;
 

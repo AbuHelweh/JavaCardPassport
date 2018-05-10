@@ -560,10 +560,12 @@ public class CreatePanel extends javax.swing.JPanel {
                     if (certificate != null) {
                         sender.SendDG14(DebugPersistence.getInstance().getDHKey().getPublic());
                     }
+                    
+                    sender.SendDG15();
 
                     sender.SendCOM();
 
-                    sender.sendSOD();  //needs X509 Certificate... WTF
+                    sender.sendSOD();
 
                     sender.LockCard();
                 } catch (Exception ex) {

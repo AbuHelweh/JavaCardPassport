@@ -8,11 +8,13 @@ package Security;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Random;
 import java.util.Set;
 import myjmrtdcardapplication.CardReader;
 import net.sf.scuba.smartcards.CardServiceException;
@@ -26,6 +28,7 @@ import org.jmrtd.lds.SODFile;
 import org.jmrtd.lds.SecurityInfo;
 import org.jmrtd.lds.icao.COMFile;
 import org.jmrtd.lds.icao.DG14File;
+import org.jmrtd.lds.icao.DG15File;
 import org.jmrtd.protocol.AAResult;
 import org.jmrtd.protocol.BACResult;
 import org.jmrtd.protocol.CAResult;
@@ -40,6 +43,7 @@ public class SecurityProtocols {
     private static SecurityProtocols Instance;
     private PassportService service;
     private String digestAlgorithm = "SHA-256";
+    private String sigAlg = "SHA256withRSA";
     private CardReader reader;
 
     public static SecurityProtocols getInstance(PassportService service, CardReader reader) {
@@ -164,15 +168,20 @@ public class SecurityProtocols {
         }
 
         CAResult cares = service.doCA(chipauthinfo.getKeyId(), chipinfo.getObjectIdentifier(), SecurityInfo.ID_PK_ECDH, chipauthinfo.getSubjectPublicKey());
-        System.out.println(cares);
         //TAResult tares = service.doTA(caReference, terminalCertificates, terminalKey, taAlg, cares, DOCUMENTNUMBER);
 
         return new EACResult(null, null);
     }
 
-    public AAResult doAA() {
-        //return service.doAA(publicKey, digestAlgorithm, digestAlgorithm, challenge);
-        return null;
+    public AAResult doAA(DG15File dg15) throws CardServiceException{
+        
+        PublicKey publicKey= dg15.getPublicKey();
+        byte[] challenge = new byte[8];
+        new Random().nextBytes(challenge);
+        
+        AAResult res = service.doAA(publicKey, digestAlgorithm, digestAlgorithm, challenge);
+        
+        return res;
     }
 
     /**

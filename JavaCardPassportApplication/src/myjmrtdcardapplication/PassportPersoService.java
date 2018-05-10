@@ -489,6 +489,9 @@ public class PassportPersoService extends CardService {
         if(response.equals("6a80")){
             response = "6A80: WRONG DATA";
         }
+        if(response.equals("6700")){
+            response = "6700: WRONG LENGTH";
+        }
         System.out.println(response);
     }
 }
