@@ -6,8 +6,10 @@
 package Security;
 
 import java.io.IOException;
+import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PublicKey;
 import java.util.Collection;
 import java.util.HashMap;
@@ -16,6 +18,10 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Random;
 import java.util.Set;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import myjmrtdcardapplication.CardReader;
 import net.sf.scuba.smartcards.CardServiceException;
 import org.bouncycastle.util.Arrays;
@@ -116,7 +122,6 @@ public class SecurityProtocols {
 
         if (Arrays.contains(comtags, tags[0])) {
             currentHash = MessageDigest.getInstance(digestAlgorithm).digest(reader.readCOM().getEncoded());
-
             if (java.util.Arrays.equals(currentHash, sodHashes.get(0))) {
                 result.put(0, Boolean.TRUE);
             } else {
@@ -173,14 +178,45 @@ public class SecurityProtocols {
         return new EACResult(null, null);
     }
 
-    public AAResult doAA(DG15File dg15) throws CardServiceException{
+    public AAResult doAA(DG15File dg15) throws CardServiceException, NoSuchAlgorithmException, NoSuchProviderException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+
+        PublicKey publicKey = dg15.getPublicKey();
+        byte[] challenge = new byte[]{0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08};
+        //new Random().nextBytes(challenge);
+
+        AAResult res = service.doAA(publicKey, digestAlgorithm, sigAlg, challenge);
+
+        StringBuilder sb = new StringBuilder();
+
+        Cipher rsaCiph = Cipher.getInstance("RSA", "BC"); //<<----- OK
+        rsaCiph.init(Cipher.DECRYPT_MODE, publicKey);
+
+        int index = 0;
         
-        PublicKey publicKey= dg15.getPublicKey();
-        byte[] challenge = new byte[8];
-        new Random().nextBytes(challenge);
+        byte[] ciph = rsaCiph.doFinal(res.getResponse());
         
-        AAResult res = service.doAA(publicKey, digestAlgorithm, digestAlgorithm, challenge);
-        
+        for (byte b : ciph) {  //<<------- OK
+            if (b != 0x00 && index != 0 && index != ciph.length-1) {
+                sb.append(String.format("%02X ", b));
+            }
+            index++;
+        }
+
+        StringBuilder sb1 = new StringBuilder();
+
+        byte[] c = new byte[114];
+
+        for (int i = 113; i > 113 - 8; i--) {
+            c[i] = challenge[i - 114 + 8];
+        }
+
+        for (byte b : MessageDigest.getInstance("SHA1").digest(c)) {  //<----- OK
+            sb1.append(String.format("%02X ", b));
+        }
+        System.out.println(sb);
+        System.out.println(sb1);
+        System.out.println(sb.toString().equals(sb1.toString()));
+
         return res;
     }
 
@@ -199,6 +235,12 @@ public class SecurityProtocols {
             e.printStackTrace();
             return new CertificateValidationResult(e);
         }
+    }
+
+    public void setAlgorithms(SODFile sod) {
+
+        digestAlgorithm = sod.getDigestAlgorithm();
+        sigAlg = sod.getDigestEncryptionAlgorithm();
     }
 
 }

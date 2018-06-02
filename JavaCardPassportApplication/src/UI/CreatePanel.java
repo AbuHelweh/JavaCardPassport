@@ -46,6 +46,7 @@ public class CreatePanel extends javax.swing.JPanel {
     private File chosenImage;
     private CardVerifiableCertificate certificate = null;
     private FingerInfo[] fingers = new FingerInfo[10]; //Ordenado de dedao a mindinho mao direita e esquerda
+    private boolean sending = false;
 
     /**
      * Creates new form CreatePanel
@@ -534,6 +535,10 @@ public class CreatePanel extends javax.swing.JPanel {
 
     private void OKButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OKButtonActionPerformed
 
+        if(sending){
+            return;
+        }
+        sending = true;
         new Thread(new Runnable() {
             public void run() {
 
@@ -575,6 +580,7 @@ public class CreatePanel extends javax.swing.JPanel {
                 }
                 if (worked) {
                     JOptionPane.showMessageDialog(null, "Card Successfully Uploaded!");
+                    sending = false;
                 }
                 container.dispose();
 

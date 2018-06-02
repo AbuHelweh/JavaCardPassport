@@ -35,6 +35,10 @@ JNIEXPORT jfloatArray JNICALL Java_stasmlib_StasmController_getImageFeaturePoint
         printf("Error in stasm_search_single: %s\n", stasm_lasterr());
         exit(1);
     }
+    
+    for (int i = 0; i < stasm_NLANDMARKS * 2; i++) {
+       printf("%f ",landmarks[i]);
+    }
 
     if (!foundface)
         printf("No face found in %s\n", path);
@@ -56,6 +60,8 @@ JNIEXPORT jfloatArray JNICALL Java_stasmlib_StasmController_getImageFeaturePoint
     for (int i = 0; i < stasm_NLANDMARKS * 2; i++) {
         body[i] = landmarks[i];
     }
+    
+    env->SetFloatArrayRegion(ret,0,stasm_NLANDMARKS * 2, body);
 
     return ret;
 

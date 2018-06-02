@@ -82,16 +82,7 @@ public class CardReader {
     public void executeSecurityProtocols(COMFile com, SODFile sod) {
         SecurityProtocols sec = SecurityProtocols.getInstance(service, this);
 
-        try {
-            PAResult pares = sec.doPA(com, sod);
-            System.out.println(pares.toString());
-            if(!pares.veredict()){
-                JOptionPane.showMessageDialog(null, "Falha na Autenticação Passiva, Cartão pode ter sido modificado");
-            }
-        } catch (Exception e) {
-            System.out.println("PA ERROR");
-            e.printStackTrace();
-        }
+        sec.setAlgorithms(sod);
 
         try {
             DG14File dg14 = this.readDG14();
@@ -112,6 +103,17 @@ public class CardReader {
             }
         } catch (Exception e){
             System.out.println("AA ERROR");
+            e.printStackTrace();
+        }
+        
+        try {
+            PAResult pares = sec.doPA(com, sod);
+            System.out.println(pares.toString());
+            if(!pares.veredict()){
+                JOptionPane.showMessageDialog(null, "Falha na Autenticação Passiva, Cartão pode ter sido modificado");
+            }
+        } catch (Exception e) {
+            System.out.println("PA ERROR");
             e.printStackTrace();
         }
 
@@ -277,7 +279,7 @@ public class CardReader {
     }
 
     public DataGroup getDGFile(int file) {
-        return files[file-1];
+        return this.files[file-1];
     }
 
 }

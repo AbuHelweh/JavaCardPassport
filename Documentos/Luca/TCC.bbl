@@ -1,10 +1,34 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
 \bibitem{JAVACHEN}
 Zhiqun CHEN.
 \newblock {\em Java Card™ Technology for Smart Cards : architecture and
   programmer’s guide}.
 \newblock Addison-Wesley, England, UK, 2000.
+
+\bibitem{ISO}
+ISO/IEC.
+\newblock Iso/iec 19794-5 biometrics.
+\newblock https://www.iso.org/standard/50867.html.
+\newblock Accessed: 23-05-2018.
+
+\bibitem{PRINT}
+LibFPrint.
+\newblock Libfprint.
+\newblock \url{https://www.freedesktop.org/wiki/Software/fprint/libfprint/ }.
+\newblock Accessed: 13-04-2018.
+
+\bibitem{STASM}
+S.~Milborrow and F.Nicolls.
+\newblock Active shape models with sift descriptors and mars.
+\newblock {\em VISAPP}, 2014.
+\newblock Accessed: 13-04-2018.
+
+\bibitem{BOUNCYCASTLE}
+The~Legion of~the Bouncy~Castle.
+\newblock Bouncy castle.
+\newblock \url{http://www.bouncycastle.org/java.html}.
+\newblock Accessed: 13-04-2018.
 
 \bibitem{JMRTD}
 Martin OOSTDIJK.
@@ -19,6 +43,12 @@ International Civil~Aviation Organization.
   \url{https://www.icao.int/publications/pages/publication.aspx?docnum=9303}.
 \newblock Accessed: 13-04-2018.
 
+\bibitem{EJBCA}
+PrimeKey.
+\newblock Ejbca open source pki certificate authority.
+\newblock \url{https://www.ejbca.org}.
+\newblock Accessed: 13-04-2018.
+
 \bibitem{SASSO}
 Felipe SASSO.
 \newblock Idedu: Proposta de um cartão de identificação acadêmico baseado
@@ -31,5 +61,17 @@ Felipe SASSO.
 William STALLINS.
 \newblock {\em Criptography and Network Security Principles and Practice}.
 \newblock Prentice Hall, ?, 2014.
+
+\bibitem{OPENCV}
+OpenCV Team.
+\newblock Opencv library.
+\newblock \url{https://opencv.org/}.
+\newblock Accessed: 13-04-2018.
+
+\bibitem{SCUBA}
+SCUBA Team.
+\newblock Smart card utilities for better access, project scuba.
+\newblock \url{http://scuba.sourceforge.net}.
+\newblock Accessed: 13-04-2018.
 
 \end{thebibliography}

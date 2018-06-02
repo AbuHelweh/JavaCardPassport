@@ -117,19 +117,19 @@ public class PassportPersoService extends CardService {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             TLVOutputStream tlvOut = new TLVOutputStream(out);
             tlvOut.writeTag(PRIVMODULUS_TAG);
-            tlvOut.writeTag(ASN1Constants.OCTET_STRING_TYPE_TAG);
+            //tlvOut.writeTag(ASN1Constants.OCTET_STRING_TYPE_TAG);
             tlvOut.writeValue(privModulus);
             tlvOut.writeValueEnd();
             /* PRIVMODULUS_TAG */
             out.flush();
             out.close();
             putData((byte) 0, PRIVMODULUS_TAG, out.toByteArray());
-
+            
             out.reset();
 
             tlvOut = new TLVOutputStream(out);
             tlvOut.writeTag(PRIVEXPONENT_TAG);
-            tlvOut.writeTag(ASN1Constants.OCTET_STRING_TYPE_TAG);
+            //tlvOut.writeTag(ASN1Constants.OCTET_STRING_TYPE_TAG);
             tlvOut.writeValue(privExponent);
             tlvOut.writeValueEnd();
             /* PRIVEXPONENT_TAG */

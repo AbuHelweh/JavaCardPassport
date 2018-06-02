@@ -3,44 +3,44 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: TCC.aux
 The style file: plain.bst
 Database file #1: TCC.bib
-You've used 5 entries,
+You've used 12 entries,
             2118 wiz_defined-function locations,
-            526 strings with 4684 characters,
-and the built_in function-call counts, 1097 in all, are:
-= -- 103
-> -- 35
+            562 strings with 5366 characters,
+and the built_in function-call counts, 2626 in all, are:
+= -- 254
+> -- 90
 < -- 0
-+ -- 15
-- -- 10
-* -- 35
-:= -- 195
-add.period$ -- 18
-call.type$ -- 5
-change.case$ -- 18
++ -- 38
+- -- 26
+* -- 77
+:= -- 460
+add.period$ -- 46
+call.type$ -- 12
+change.case$ -- 47
 chr.to.int$ -- 0
-cite$ -- 5
-duplicate$ -- 45
-empty$ -- 111
-format.name$ -- 10
-if$ -- 236
+cite$ -- 12
+duplicate$ -- 97
+empty$ -- 260
+format.name$ -- 26
+if$ -- 568
 int.to.chr$ -- 0
-int.to.str$ -- 5
-missing$ -- 4
-newline$ -- 31
-num.names$ -- 10
-pop$ -- 44
+int.to.str$ -- 12
+missing$ -- 5
+newline$ -- 73
+num.names$ -- 24
+pop$ -- 108
 preamble$ -- 1
-purify$ -- 15
+purify$ -- 37
 quote$ -- 0
-skip$ -- 27
+skip$ -- 64
 stack$ -- 0
-substring$ -- 25
-swap$ -- 5
+substring$ -- 60
+swap$ -- 12
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 16
+type$ -- 44
 warning$ -- 0
-while$ -- 10
-width$ -- 6
-write$ -- 57
+while$ -- 24
+width$ -- 14
+write$ -- 135

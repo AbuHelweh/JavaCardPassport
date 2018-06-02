@@ -37,7 +37,7 @@ public class PAResult {
         
         String res = "SOD: " + (ValidSOD? "Valid" : "Invalid") + System.lineSeparator();
         
-        for(Integer i = 0; i < checks.size(); i++){
+        for(Integer i = 0; i < 16; i++){
             if(checks.containsKey(i)){
                 res += "DG"+ i + " " + checks.get(i) + System.lineSeparator();
             }
