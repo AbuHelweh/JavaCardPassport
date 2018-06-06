@@ -6,14 +6,22 @@
 package Security;
 
 import java.io.IOException;
+import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.PublicKey;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Random;
 import java.util.Set;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import myjmrtdcardapplication.CardReader;
 import net.sf.scuba.smartcards.CardServiceException;
 import org.bouncycastle.util.Arrays;
@@ -26,6 +34,7 @@ import org.jmrtd.lds.SODFile;
 import org.jmrtd.lds.SecurityInfo;
 import org.jmrtd.lds.icao.COMFile;
 import org.jmrtd.lds.icao.DG14File;
+import org.jmrtd.lds.icao.DG15File;
 import org.jmrtd.protocol.AAResult;
 import org.jmrtd.protocol.BACResult;
 import org.jmrtd.protocol.CAResult;
@@ -40,6 +49,7 @@ public class SecurityProtocols {
     private static SecurityProtocols Instance;
     private PassportService service;
     private String digestAlgorithm = "SHA-256";
+    private String sigAlg = "SHA256withRSA";
     private CardReader reader;
 
     public static SecurityProtocols getInstance(PassportService service, CardReader reader) {
@@ -112,7 +122,6 @@ public class SecurityProtocols {
 
         if (Arrays.contains(comtags, tags[0])) {
             currentHash = MessageDigest.getInstance(digestAlgorithm).digest(reader.readCOM().getEncoded());
-
             if (java.util.Arrays.equals(currentHash, sodHashes.get(0))) {
                 result.put(0, Boolean.TRUE);
             } else {
@@ -164,15 +173,53 @@ public class SecurityProtocols {
         }
 
         CAResult cares = service.doCA(chipauthinfo.getKeyId(), chipinfo.getObjectIdentifier(), SecurityInfo.ID_PK_ECDH, chipauthinfo.getSubjectPublicKey());
-        System.out.println(cares);
         //TAResult tares = service.doTA(caReference, terminalCertificates, terminalKey, taAlg, cares, DOCUMENTNUMBER);
 
         return new EACResult(null, null);
     }
 
-    public AAResult doAA() {
-        //return service.doAA(publicKey, digestAlgorithm, digestAlgorithm, challenge);
-        return null;
+    public Security.AAResult doAA(DG15File dg15) throws CardServiceException, NoSuchAlgorithmException, NoSuchProviderException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+
+        PublicKey publicKey = dg15.getPublicKey();
+        byte[] challenge = new byte[8];
+        new Random().nextBytes(challenge);
+        // new byte[]{0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08};
+
+        AAResult res = service.doAA(publicKey, "SHA1", "SHA1withRSA", challenge);
+
+        StringBuilder sb = new StringBuilder();
+
+        Cipher rsaCiph = Cipher.getInstance("RSA", "BC"); //<<----- OK
+        rsaCiph.init(Cipher.DECRYPT_MODE, publicKey);
+
+        int index = 0;
+        
+        byte[] ciph = rsaCiph.doFinal(res.getResponse());
+        
+        for (byte b : ciph) {  //<<------- OK
+            if (b != 0x00 && index != 0 && index != ciph.length-1) {
+                sb.append(String.format("%02X ", b));
+            }
+            index++;
+        }
+
+        StringBuilder sb1 = new StringBuilder();
+
+        byte[] c = new byte[114];
+
+        for (int i = 113; i > 113 - 8; i--) {
+            c[i] = challenge[i - 114 + 8];
+        }
+
+        for (byte b : MessageDigest.getInstance("SHA1").digest(c)) {  //<----- OK
+            sb1.append(String.format("%02X ", b));
+        }
+        System.out.println(sb);
+        System.out.println(sb1);
+        boolean result = sb.toString().equals(sb1.toString());
+        System.out.println(result);
+
+        return new Security.AAResult(res.getPublicKey(),res.getDigestAlgorithm(),res.getSignatureAlgorithm(),res.getChallenge(),res.getResponse(),result);
     }
 
     /**
@@ -190,6 +237,12 @@ public class SecurityProtocols {
             e.printStackTrace();
             return new CertificateValidationResult(e);
         }
+    }
+
+    public void setAlgorithms(SODFile sod) {
+
+        digestAlgorithm = sod.getDigestAlgorithm();
+        sigAlg = sod.getDigestEncryptionAlgorithm();
     }
 
 }

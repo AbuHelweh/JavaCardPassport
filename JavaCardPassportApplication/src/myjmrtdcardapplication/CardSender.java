@@ -13,23 +13,19 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.security.KeyStore;
 import java.security.MessageDigest;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.Security;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import javax.imageio.ImageIO;
-import javax.smartcardio.CardTerminal;
-import javax.smartcardio.TerminalFactory;
 import javax.swing.JOptionPane;
 import net.sf.scuba.data.Gender;
 import net.sf.scuba.smartcards.CardServiceException;
-import net.sf.scuba.smartcards.TerminalCardService;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.jmrtd.BACKeySpec;
 import org.jmrtd.PassportService;
 import org.jmrtd.cert.CardVerifiableCertificate;
@@ -40,12 +36,14 @@ import org.jmrtd.lds.SODFile;
 import org.jmrtd.lds.SecurityInfo;
 import org.jmrtd.lds.icao.COMFile;
 import org.jmrtd.lds.icao.DG14File;
+import org.jmrtd.lds.icao.DG15File;
 import org.jmrtd.lds.icao.DG1File;
 import org.jmrtd.lds.icao.DG2File;
 import org.jmrtd.lds.icao.DG3File;
 import org.jmrtd.lds.icao.MRZInfo;
 import org.jmrtd.lds.iso19794.FaceImageInfo;
 import org.jmrtd.lds.iso19794.FaceInfo;
+import org.jmrtd.lds.iso19794.FingerImageInfo;
 import org.jmrtd.lds.iso19794.FingerInfo;
 import util.CardConnection;
 import util.MyCertificateFactory;
@@ -72,7 +70,7 @@ public class CardSender {
             digest = MessageDigest.getInstance("SHA-256");
 
             service = CardConnection.connectPassportService();
-            
+
             perso = new PassportPersoService(service);
 
         } catch (Exception e) {
@@ -90,7 +88,7 @@ public class CardSender {
      * @param backey - chave bac gerada das informacoes postas no MRZ
      * @throws CardServiceException
      */
-    public void SendSecurityInfo(BACKeySpec backey, CardVerifiableCertificate certificate) throws CardServiceException {
+    public void SendSecurityInfo(BACKeySpec backey, CardVerifiableCertificate certificate) throws Exception {
         if (!perso.isOpen()) {
             perso.open();
         }
@@ -107,7 +105,6 @@ public class CardSender {
         System.out.println("Sending BAC");
         perso.setBAC(backey.getDocumentNumber(), backey.getDateOfBirth(), backey.getDateOfExpiry());
 
-        //doSecurity(backey);
     }
 
     /**
@@ -130,8 +127,6 @@ public class CardSender {
         dataGroupComTagList[11] = 0;//LDSFile.EF_DG11_TAG;
         dataGroupComTagList[12] = 0;//LDSFile.EF_DG12_TAG;
         dataGroupComTagList[13] = 0;//LDSFile.EF_DG13_TAG;
-
-        dataGroupComTagList[15] = 0;//LDSFile.EF_DG15_TAG;
 
         COMFile com = new COMFile("01.08", "08.00.00", dataGroupComTagList); //LDS Version and UTF version
 
@@ -251,19 +246,16 @@ public class CardSender {
      */
     public void SendDG3(FingerInfo[] fingers) throws IOException, CardServiceException {
 
-        if (fingers[0] == null) {
-            return;
-        }
 
         ArrayList<FingerInfo> fingerInfos = new ArrayList<>();
 
-        /*
+
         for (FingerInfo fingerInfo : fingers) {
-            if(fingerInfo != null)
+            if(fingerInfo != null){
                 fingerInfos.add(fingerInfo);
+            }
         }
-         */
-        fingerInfos.add(fingers[0]);
+
 
         DG3File dg3 = new DG3File(fingerInfos);
 
@@ -315,6 +307,25 @@ public class CardSender {
         dataGroupComTagList[14] = LDSFile.EF_DG14_TAG;
     }
 
+    public void SendDG15() throws Exception {
+        KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+        keyGen.initialize(1024);
+        KeyPair aapair = keyGen.genKeyPair();
+        DG15File dg15 = new DG15File(aapair.getPublic());
+
+        System.out.println("Enviando informações para AA");
+        perso.putPrivateKey(aapair.getPrivate());
+
+        perso.createFile(service.EF_DG15, (short) dg15.getEncoded().length);
+        perso.selectFile(service.EF_DG15);
+
+        System.out.println("Enviando arquivo DG15");
+        perso.writeFile(service.EF_DG15, new ByteArrayInputStream(dg15.getEncoded()));
+
+        dataGroupHashes.put(15, digest.digest(dg15.getEncoded()));
+        dataGroupComTagList[15] = LDSFile.EF_DG15_TAG;//LDSFile.EF_DG15_TAG;
+    }
+
     public void sendSOD() throws Exception {
         //PrivateKey to sign the data = Private key do Certificado?
         //Document Signer Certificate
@@ -339,7 +350,7 @@ public class CardSender {
         sodHashes.put(11, null);
         sodHashes.put(12, null);
         sodHashes.put(13, null);
-        sodHashes.put(15, null);
+
          */
         System.out.println("Hashes.size " + dataGroupHashes.size());
         SODFile sod = new SODFile("SHA-256", "SHA256withRSA", dataGroupHashes, key, docSignCert, "BC");

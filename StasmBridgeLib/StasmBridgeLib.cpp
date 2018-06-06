@@ -56,6 +56,8 @@ JNIEXPORT jfloatArray JNICALL Java_stasmlib_StasmController_getImageFeaturePoint
     for (int i = 0; i < stasm_NLANDMARKS * 2; i++) {
         body[i] = landmarks[i];
     }
+    
+    env->SetFloatArrayRegion(ret,0,stasm_NLANDMARKS * 2, body);
 
     return ret;
 

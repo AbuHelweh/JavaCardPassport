@@ -46,6 +46,7 @@ public class CreatePanel extends javax.swing.JPanel {
     private File chosenImage;
     private CardVerifiableCertificate certificate = null;
     private FingerInfo[] fingers = new FingerInfo[10]; //Ordenado de dedao a mindinho mao direita e esquerda
+    private boolean sending = false;
 
     /**
      * Creates new form CreatePanel
@@ -529,11 +530,18 @@ public class CreatePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_TextFieldNomeActionPerformed
 
     private void CancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelButtonActionPerformed
+        if(sending){
+            return;
+        }
         container.dispose();
     }//GEN-LAST:event_CancelButtonActionPerformed
 
     private void OKButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OKButtonActionPerformed
 
+        if(sending){
+            return;
+        }
+        sending = true;
         new Thread(new Runnable() {
             public void run() {
 
@@ -560,12 +568,16 @@ public class CreatePanel extends javax.swing.JPanel {
                     if (certificate != null) {
                         sender.SendDG14(DebugPersistence.getInstance().getDHKey().getPublic());
                     }
+                    
+                    sender.SendDG15();
 
                     sender.SendCOM();
 
-                    sender.sendSOD();  //needs X509 Certificate... WTF
+                    sender.sendSOD();
 
                     sender.LockCard();
+                    
+                    sending = false;
                 } catch (Exception ex) {
                     worked = false;
                     JOptionPane.showMessageDialog(null, "A problem happened check debug status!");
@@ -573,6 +585,7 @@ public class CreatePanel extends javax.swing.JPanel {
                 }
                 if (worked) {
                     JOptionPane.showMessageDialog(null, "Card Successfully Uploaded!");
+                    sending = false;
                 }
                 container.dispose();
 

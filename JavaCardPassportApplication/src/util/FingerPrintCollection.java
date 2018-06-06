@@ -187,24 +187,14 @@ public class FingerPrintCollection extends javax.swing.JFrame {
         //Os codigos dos dedos no JMRTD comecam no dedao direito com 1 e vao ate o mindinho esquerdo com 10
         try {
 
-            ControlledDialog.showMessageDialog("", "Escaneie sua digital agora");
-            
-            //Talvez salvar as imagens no banco de dados seja uma boa ideia depois
-            Thread t1 = new Thread(
-                    new Runnable() {
+            new Thread(new Runnable() {
                 public void run() {
-                    try {
-                        new FPrintController().scanImage();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    ControlledDialog.showMessageDialog("Escaneie sua digital agora", "Escaneie sua digital agora");
                 }
-            }
-            );
+            }).start();
 
-            t1.run();
-            
-            
+            //Talvez salvar as imagens no banco de dados seja uma boa ideia depois
+            new FPrintController().scanImage();
 
             ControlledDialog.closeMessageDialog();
 

@@ -14,12 +14,15 @@ import org.jmrtd.lds.iso19794.FaceImageInfo.FeaturePoint;
  * @author luca
  */
 public class ImageWorks {
+
     /**
      * TODO
+     *
      * @param a
      * @param b
      * @return percentage of certainty
      */
+
     public static float matchImageFeaturePoints(FaceImageInfo.FeaturePoint[] a, FaceImageInfo.FeaturePoint[] b){
         ///////////////////////////////A
         //Sombrancelhas:
@@ -76,28 +79,32 @@ public class ImageWorks {
         
         //Média de B:
         
-        
-        
         return 0.0f;
+        
     }
-    
+
     /**
-     * Utiliza o Stasm para extrair os pontos de controle da Imagem e resolvelos para dentro do padrão.
-     * @param file  - Image alvo
-     * @return  -- pontos de controle resolvidos no padrao ICAO9303//TODO: Extrai features e organiza elas conforme ISO
+     * Utiliza o Stasm para extrair os pontos de controle da Imagem e resolvelos
+     * para dentro do padrão.
+     *
+     * @param file - Image alvo
+     * @return -- pontos de controle resolvidos no padrao ICAO9303//TODO: Extrai
+     * features e organiza elas conforme ISO
      */
-    public static FaceImageInfo.FeaturePoint[] extractPointsFromImageAndResolve(File file){
+    public static FaceImageInfo.FeaturePoint[] extractPointsFromImageAndResolve(File file) {
         //Reconhecimento facial
         float[] extractedFeatures = new stasmlib.StasmController().getImageFeaturePoints(file.getPath());
 
         FaceImageInfo.FeaturePoint[] fps = resolveFPS(extractedFeatures);
-        
+
         return fps;
     }
-    
+
     /**
      * Resolve os pontos faciais do Stasm para o padrao ICAO9303
-     * @param fs pontos faciais do Stasm, tamanho = 2 * numero de pontos, cada par forma uma coordenada x y para o ponto facial
+     *
+     * @param fs pontos faciais do Stasm, tamanho = 2 * numero de pontos, cada
+     * par forma uma coordenada x y para o ponto facial
      * @return os feature points do JMRTD
      */
     private static FaceImageInfo.FeaturePoint[] resolveFPS(float[] fs) {
@@ -125,7 +132,7 @@ public class ImageWorks {
         fps[17] = new FaceImageInfo.FeaturePoint(type, 3, 9, (int) fs[92], (int) fs[93]);       //Palpebra Inferior Esquerda
         fps[18] = new FaceImageInfo.FeaturePoint(type, 3, 10, (int) fs[72], (int) fs[73]);      //Palpebra Inferior Direita
         fps[19] = new FaceImageInfo.FeaturePoint(type, 3, 11, (int) fs[80], (int) fs[81]);      //Canto Interno Olho Esquerdo
-       
+
         fps[20] = new FaceImageInfo.FeaturePoint(type, 3, 12, (int) fs[68], (int) fs[69]);      //Canto Externo Olho Direito
 
         fps[21] = new FaceImageInfo.FeaturePoint(type, 4, 1, (int) fs[44], (int) fs[45]);       //Canto Interno Sobrancelha Esquerda
@@ -170,6 +177,15 @@ public class ImageWorks {
         fps[54] = new FaceImageInfo.FeaturePoint(type, 12, 2, (int) (fs[64] + fs[72] + fs[60] + fs[68]) / 4, (int) (fs[65] + fs[73] + fs[61] + fs[69]) / 4);    //Centro do Olho Direito
         fps[55] = new FaceImageInfo.FeaturePoint(type, 12, 3, (int) fs[106], (int) fs[107]);    //Narina Esquerda
         fps[56] = new FaceImageInfo.FeaturePoint(type, 12, 4, (int) fs[102], (int) fs[104]);    //Narina Direita
+
+        if (GlobalFlags.DEBUG) {
+            int i = 0;
+            for (FaceImageInfo.FeaturePoint fp : fps) {
+
+                System.out.println("FP " + i + " : " + fp.getX() + ", " + fp.getY());
+                i++;
+            }
+        }
 
         return fps;
     }
