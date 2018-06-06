@@ -35,7 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/_ext/e699828c/StasmBridgeLib.o
+	${OBJECTDIR}/StasmBridgeLib.o
 
 
 # C Compiler Flags
@@ -62,10 +62,10 @@ dist/StasmBridgeLib.so: ${OBJECTFILES}
 	${MKDIR} -p dist
 	${LINK.cc} -o dist/StasmBridgeLib.so ${OBJECTFILES} ${LDLIBSOPTIONS} --verbose -shared -fPIC
 
-${OBJECTDIR}/_ext/e699828c/StasmBridgeLib.o: /home/luca/workspace/JavaCardPassport/StasmBridgeLib/StasmBridgeLib.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/e699828c
+${OBJECTDIR}/StasmBridgeLib.o: StasmBridgeLib.cpp 
+	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/home/luca/Documents/TCC/jdk1.8.0_131/include -I/home/luca/Documents/TCC/jdk1.8.0_131/include/linux -I/home/luca/workspace/JavaCardPassport/Libs/Downloads/stasm4.1.0/stasm -I/home/luca/workspace/JavaCardPassport/Libs/Downloads/stasm4.1.0/stasm/MOD_1 -I/home/luca/workspace/JavaCardPassport/Libs/Downloads/stasm4.1.0/Build1 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e699828c/StasmBridgeLib.o /home/luca/workspace/JavaCardPassport/StasmBridgeLib/StasmBridgeLib.cpp
+	$(COMPILE.cc) -g -I../Libs/Downloads/jdk1.8.0_131/include -I../Libs/Downloads/jdk1.8.0_131/include/linux -I../Libs/Downloads/stasm4.1.0/stasm -I../Libs/Downloads/stasm4.1.0/stasm/MOD_1 -I../Libs/Downloads/stasm4.1.0/Build1 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/StasmBridgeLib.o StasmBridgeLib.cpp
 
 # Subprojects
 .build-subprojects:

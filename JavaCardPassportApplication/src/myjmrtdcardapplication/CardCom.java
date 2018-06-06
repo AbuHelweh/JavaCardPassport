@@ -116,7 +116,7 @@ public class CardCom {
         //as keys são key para terminal e PassportKey para passaporte
         ks = KeyStore.getInstance("JKS");
         String pw = "123456";
-        FileInputStream fis = new FileInputStream("/home/" + System.getProperty("user.name") + "/workspace/JavaCardPassport/Documentos/mykeystore.ks");
+        FileInputStream fis = new FileInputStream("/home/" + System.getProperty("user.name") + "/TCC/JavaCardPassport/Documentos/mykeystore.ks");
         ks.load(fis, pw.toCharArray());
 
         key = new BACKey(DOCUMENTNUMBER, DATEOFBIRTH, DATEOFEXPIRY);

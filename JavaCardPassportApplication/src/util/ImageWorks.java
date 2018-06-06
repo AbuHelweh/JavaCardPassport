@@ -7,6 +7,7 @@ package util;
 
 import java.io.File;
 import org.jmrtd.lds.iso19794.FaceImageInfo;
+import org.jmrtd.lds.iso19794.FaceImageInfo.FeaturePoint;
 
 /**
  *
@@ -20,6 +21,63 @@ public class ImageWorks {
      * @return percentage of certainty
      */
     public static float matchImageFeaturePoints(FaceImageInfo.FeaturePoint[] a, FaceImageInfo.FeaturePoint[] b){
+        ///////////////////////////////A
+        //Sombrancelhas:
+        FeaturePoint a21  = a[21];
+        FeaturePoint a22  = a[22];
+        //Olho A:
+        FeaturePoint a34  = a[34];
+        FeaturePoint a30  = a[30];
+        FeaturePoint a40  = a[40];
+        FeaturePoint a44  = a[44];
+        //Nariz A:
+        FeaturePoint a58  = a[58];
+        FeaturePoint a54  = a[54];
+        FeaturePoint a56  = a[56];
+        //Boca A:
+        FeaturePoint a59  = a[59];
+        FeaturePoint a65  = a[65];
+        ////////////////////////////////B
+        //Sombrancelhas B:
+        FeaturePoint b21  = b[21];
+        FeaturePoint b22  = b[22];
+        //Olho B:
+        FeaturePoint b34  = b[34];
+        FeaturePoint b30  = b[30];
+        FeaturePoint b40  = b[40];
+        FeaturePoint b44  = b[44];
+        //Nariz B:
+        FeaturePoint b58  = b[58];
+        FeaturePoint b54  = b[54];
+        FeaturePoint b56  = b[56];
+        //Boca B:
+        FeaturePoint b59  = b[59];
+        FeaturePoint b65  = b[65];
+        
+        double mediaA = 0.0;
+        double mediaB = 0.0;
+        double multiplicadorA = 0.0;
+        double multiplicadorB = 0.0;
+        
+        //Concertanto possíveis distorções de tamanho com uso de multiplicadores:
+        if(a22.getX() - a21.getX() >= b22.getX() - b21.getX()){ //Se a maior ou igual que b
+            multiplicadorA = (b22.getX() - b21.getX())/(a22.getX() - a21.getX());//Mult = b/a
+        }else{
+            multiplicadorB = (a22.getX() - a21.getX())/(b22.getX() - b21.getX());//Mult = a/b
+        }
+        
+        //Calculando médias:
+        
+        //Média de A:
+        //Olhos:
+        mediaA += Math.sqrt(Math.pow(a30.getX() - a34.getX(), 2) + (Math.pow(a30.getY() - a34.getY(), 2))) * multiplicadorA;
+        //Nariz:
+        //Boca:
+        
+        //Média de B:
+        
+        
+        
         return 0.0f;
     }
     
