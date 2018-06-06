@@ -40,7 +40,7 @@ public class VerifyPanel extends javax.swing.JPanel implements Runnable {
     private BufferedImage picture;
     Thread readThread;
     private boolean isReading = false;
-    private ArrayList<FingerInfo> fingers;
+    private FingerInfo[] fingers;
 
     /**
      * Creates new form VerifyPanel
@@ -67,6 +67,8 @@ public class VerifyPanel extends javax.swing.JPanel implements Runnable {
             }
 
         });
+        
+        fingers = new FingerInfo[10];
 
     }
 
@@ -115,7 +117,9 @@ public class VerifyPanel extends javax.swing.JPanel implements Runnable {
                 picture = reader.readDG2();
             }
             if (com.getTagList()[3] != 0) {
-                fingers = reader.readDG3();
+                for(FingerInfo f : reader.readDG3()){
+                    fingers[f.getFingerImageInfos().get(0).getPosition() -1] = f;
+                }
             }
 
             reader.executeSecurityProtocols(com, sod);

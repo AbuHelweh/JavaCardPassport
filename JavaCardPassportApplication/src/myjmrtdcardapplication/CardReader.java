@@ -31,7 +31,6 @@ import org.jmrtd.lds.icao.DG3File;
 import org.jmrtd.lds.icao.MRZInfo;
 import org.jmrtd.lds.iso19794.FaceImageInfo;
 import org.jmrtd.lds.iso19794.FingerInfo;
-import org.jmrtd.protocol.AAResult;
 import org.jmrtd.protocol.BACResult;
 import util.CardConnection;
 
@@ -98,8 +97,11 @@ public class CardReader {
         try{
             DG15File dg15 = this.readDG15();
             if(dg15 != null){
-                AAResult aares = sec.doAA(dg15);
+                Security.AAResult aares = sec.doAA(dg15);
                 System.out.println(aares);
+                if(!aares.getResult()){
+                    JOptionPane.showMessageDialog(null, "Falha na Autenticação Ativa, Cartão Inválido");
+                }
             }
         } catch (Exception e){
             System.out.println("AA ERROR");
@@ -110,7 +112,7 @@ public class CardReader {
             PAResult pares = sec.doPA(com, sod);
             System.out.println(pares.toString());
             if(!pares.veredict()){
-                JOptionPane.showMessageDialog(null, "Falha na Autenticação Passiva, Cartão pode ter sido modificado");
+                JOptionPane.showMessageDialog(null, "Falha na Autenticação Passiva, Cartão Modificado");
             }
         } catch (Exception e) {
             System.out.println("PA ERROR");

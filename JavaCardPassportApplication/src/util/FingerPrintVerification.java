@@ -47,10 +47,10 @@ public class FingerPrintVerification extends javax.swing.JFrame {
     /**
      * Creates new form FingerPrintVerification
      */
-    public FingerPrintVerification(ArrayList<FingerInfo> fingers) {
+    public FingerPrintVerification(FingerInfo[] fingers) {
         initComponents();
 
-        this.fingers = fingers.toArray(this.fingers);
+        this.fingers = fingers;
        
         panels[0] = Thumb;
         panels[1] = Pointer;
@@ -146,7 +146,7 @@ public class FingerPrintVerification extends javax.swing.JFrame {
                 imgchar[i] = (char) (imgPGM[i] & 0xFF);     //Converte para char
             }
             
-            //------------------------------------FIM----------------------------------
+            //------------------------------------FIM DA CONVERSÃO----------------------------------
             
             boolean match;
             

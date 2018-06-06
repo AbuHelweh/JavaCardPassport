@@ -43,6 +43,7 @@ import org.jmrtd.lds.icao.DG3File;
 import org.jmrtd.lds.icao.MRZInfo;
 import org.jmrtd.lds.iso19794.FaceImageInfo;
 import org.jmrtd.lds.iso19794.FaceInfo;
+import org.jmrtd.lds.iso19794.FingerImageInfo;
 import org.jmrtd.lds.iso19794.FingerInfo;
 import util.CardConnection;
 import util.MyCertificateFactory;
@@ -245,19 +246,16 @@ public class CardSender {
      */
     public void SendDG3(FingerInfo[] fingers) throws IOException, CardServiceException {
 
-        if (fingers[0] == null) {
-            return;
-        }
 
         ArrayList<FingerInfo> fingerInfos = new ArrayList<>();
 
-        /*
+
         for (FingerInfo fingerInfo : fingers) {
-            if(fingerInfo != null)
+            if(fingerInfo != null){
                 fingerInfos.add(fingerInfo);
+            }
         }
-         */
-        fingerInfos.add(fingers[0]);
+
 
         DG3File dg3 = new DG3File(fingerInfos);
 

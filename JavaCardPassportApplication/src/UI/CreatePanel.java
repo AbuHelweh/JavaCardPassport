@@ -530,6 +530,9 @@ public class CreatePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_TextFieldNomeActionPerformed
 
     private void CancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelButtonActionPerformed
+        if(sending){
+            return;
+        }
         container.dispose();
     }//GEN-LAST:event_CancelButtonActionPerformed
 
@@ -573,6 +576,8 @@ public class CreatePanel extends javax.swing.JPanel {
                     sender.sendSOD();
 
                     sender.LockCard();
+                    
+                    sending = false;
                 } catch (Exception ex) {
                     worked = false;
                     JOptionPane.showMessageDialog(null, "A problem happened check debug status!");

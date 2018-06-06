@@ -178,13 +178,14 @@ public class SecurityProtocols {
         return new EACResult(null, null);
     }
 
-    public AAResult doAA(DG15File dg15) throws CardServiceException, NoSuchAlgorithmException, NoSuchProviderException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+    public Security.AAResult doAA(DG15File dg15) throws CardServiceException, NoSuchAlgorithmException, NoSuchProviderException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
 
         PublicKey publicKey = dg15.getPublicKey();
-        byte[] challenge = new byte[]{0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08};
-        //new Random().nextBytes(challenge);
+        byte[] challenge = new byte[8];
+        new Random().nextBytes(challenge);
+        // new byte[]{0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08};
 
-        AAResult res = service.doAA(publicKey, digestAlgorithm, sigAlg, challenge);
+        AAResult res = service.doAA(publicKey, "SHA1", "SHA1withRSA", challenge);
 
         StringBuilder sb = new StringBuilder();
 
@@ -215,9 +216,10 @@ public class SecurityProtocols {
         }
         System.out.println(sb);
         System.out.println(sb1);
-        System.out.println(sb.toString().equals(sb1.toString()));
+        boolean result = sb.toString().equals(sb1.toString());
+        System.out.println(result);
 
-        return res;
+        return new Security.AAResult(res.getPublicKey(),res.getDigestAlgorithm(),res.getSignatureAlgorithm(),res.getChallenge(),res.getResponse(),result);
     }
 
     /**
