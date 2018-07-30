@@ -6,6 +6,18 @@ Zhiqun CHEN.
   programmer’s guide}.
 \newblock Addison-Wesley, England, UK, 2000.
 
+\bibitem{HOWPASSPORT}
+HomeOffice.
+\newblock How your passport is made -- exclusive behind-the-scenes footage.
+\newblock \url{https://www.youtube.com/watch?v=Ha5VPXZ3ILs}.
+\newblock Accessed: 26-06-2018.
+
+\bibitem{INNOVALOR}
+InnoValor.
+\newblock Readid.
+\newblock \url{https://www.readid.com/}.
+\newblock Accessed: 26-06-2018.
+
 \bibitem{ISO}
 ISO/IEC.
 \newblock Iso/iec 19794-5 biometrics.
@@ -23,6 +35,12 @@ S.~Milborrow and F.Nicolls.
 \newblock Active shape models with sift descriptors and mars.
 \newblock {\em VISAPP}, 2014.
 \newblock Accessed: 13-04-2018.
+
+\bibitem{USPASSPORT}
+U.S.~Department of~State.
+\newblock Policy podcast: Making a passport.
+\newblock \url{https://www.youtube.com/watch?v=1XIjbJ4GvEQ}.
+\newblock Accessed: 26-06-2018.
 
 \bibitem{BOUNCYCASTLE}
 The~Legion of~the Bouncy~Castle.

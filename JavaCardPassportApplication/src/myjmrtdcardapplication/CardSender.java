@@ -283,9 +283,8 @@ public class CardSender {
     public void SendDG14(PublicKey RSApublicKey) throws CardServiceException {
         ArrayList<SecurityInfo> infos = new ArrayList();
 
-        SecurityInfo caInfo = new ChipAuthenticationInfo(SecurityInfo.ID_CA_ECDH_AES_CBC_CMAC_256, 2);  //Encontrar o ID Certo
+        SecurityInfo caInfo = new ChipAuthenticationInfo(SecurityInfo.ID_CA_ECDH_3DES_CBC_CBC, 2);  //Encontrar o ID Certo
         SecurityInfo caKInfo = new ChipAuthenticationPublicKeyInfo(RSApublicKey);
-        //SecurityInfo taInfo = new TerminalAuthenticationInfo();
 
         infos.add(caInfo);
         infos.add(caKInfo);

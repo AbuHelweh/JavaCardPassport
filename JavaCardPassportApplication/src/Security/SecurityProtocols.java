@@ -173,7 +173,7 @@ public class SecurityProtocols {
         }
 
         CAResult cares = service.doCA(chipauthinfo.getKeyId(), chipinfo.getObjectIdentifier(), SecurityInfo.ID_PK_ECDH, chipauthinfo.getSubjectPublicKey());
-        //TAResult tares = service.doTA(caReference, terminalCertificates, terminalKey, taAlg, cares, DOCUMENTNUMBER);
+        //TAResult tares = service.doTA(caReference, terminalCertificates, cares.getPCDPrivateKey(), SecurityInfo.ID_TA_ECDSA_SHA_256, cares, DOCUMENTNUMBER);
 
         return new EACResult(null, null);
     }

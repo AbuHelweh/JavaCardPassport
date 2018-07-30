@@ -150,12 +150,14 @@ public class FingerPrintVerification extends javax.swing.JFrame {
             
             boolean match;
             
+            ControlledDialog.showMessageDialog("Escaneie seu dedo agora", "Digital");
+            
             new Thread(new Runnable(){
                 @Override
                 public void run(){
                     FPrintController fp = new FPrintController();
                     showMatch(fp.verifyImage(imgchar, 500, 160));
-                    fp.sayHello();
+                    ControlledDialog.closeMessageDialog();
                 }
             }).start();
             
