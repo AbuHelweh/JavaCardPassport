@@ -13,7 +13,7 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>/home/luca/workspace/JavaCardPassport/StasmBridgeLib/StasmBridgeLib.cpp</itemPath>
+      <itemPath>StasmBridgeLib.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -28,8 +28,8 @@
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
-    <Elem>/home/luca/workspace/JavaCardPassport/StasmBridgeLib</Elem>
-    <Elem>/home/luca/workspace/JavaCardPassport/Libs/Downloads/stasm4.1.0/stasm</Elem>
+    <Elem>.</Elem>
+    <Elem>../Libs/Downloads/stasm4.1.0/stasm</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -42,21 +42,21 @@
       <compileType>
         <cTool>
           <incDir>
-            <pElem>/home/luca/Documents/TCC/jdk1.8.0_131/include</pElem>
-            <pElem>/home/luca/Documents/TCC/jdk1.8.0_131/include/linux</pElem>
-            <pElem>/home/luca/workspace/JavaCardPassport/Libs/Downloads/stasm4.1.0/stasm</pElem>
-            <pElem>/home/luca/workspace/JavaCardPassport/Libs/Downloads/stasm4.1.0/stasm/MOD_1</pElem>
-            <pElem>/home/luca/workspace/JavaCardPassport/Libs/Downloads/stasm4.1.0/Build1</pElem>
+            <pElem>../Libs/Downloads/jdk1.8.0_131/include</pElem>
+            <pElem>../Libs/Downloads/jdk1.8.0_131/include/linux</pElem>
+            <pElem>../Libs/Downloads/stasm4.1.0/stasm</pElem>
+            <pElem>../Libs/Downloads/stasm4.1.0/stasm/MOD_1</pElem>
+            <pElem>../Libs/Downloads/stasm4.1.0/Build1</pElem>
           </incDir>
           <commandLine>-shared</commandLine>
         </cTool>
         <ccTool>
           <incDir>
-            <pElem>/home/luca/Documents/TCC/jdk1.8.0_131/include</pElem>
-            <pElem>/home/luca/Documents/TCC/jdk1.8.0_131/include/linux</pElem>
-            <pElem>/home/luca/workspace/JavaCardPassport/Libs/Downloads/stasm4.1.0/stasm</pElem>
-            <pElem>/home/luca/workspace/JavaCardPassport/Libs/Downloads/stasm4.1.0/stasm/MOD_1</pElem>
-            <pElem>/home/luca/workspace/JavaCardPassport/Libs/Downloads/stasm4.1.0/Build1</pElem>
+            <pElem>../Libs/Downloads/jdk1.8.0_131/include</pElem>
+            <pElem>../Libs/Downloads/jdk1.8.0_131/include/linux</pElem>
+            <pElem>../Libs/Downloads/stasm4.1.0/stasm</pElem>
+            <pElem>../Libs/Downloads/stasm4.1.0/stasm/MOD_1</pElem>
+            <pElem>../Libs/Downloads/stasm4.1.0/Build1</pElem>
           </incDir>
           <commandLine>-shared --verbose</commandLine>
         </ccTool>
@@ -77,15 +77,12 @@
           <commandLine>--verbose</commandLine>
         </linkerTool>
       </compileType>
-      <item path="/home/luca/workspace/JavaCardPassport/StasmBridgeLib/StasmBridgeLib.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
       <item path="/home/luca/workspace/JavaCardPassport/StasmBridgeLib/StasmBridgeLib.h"
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="StasmBridgeLib.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="2">
@@ -108,15 +105,12 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
-      <item path="/home/luca/workspace/JavaCardPassport/StasmBridgeLib/StasmBridgeLib.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
       <item path="/home/luca/workspace/JavaCardPassport/StasmBridgeLib/StasmBridgeLib.h"
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="StasmBridgeLib.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
   </confs>

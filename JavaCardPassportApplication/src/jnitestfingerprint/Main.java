@@ -18,13 +18,11 @@ public class Main {
         System.out.println(System.getProperty("user.name"));
         if (System.getProperty("os.name").contains("Windows")) {
             System.load("C:/Users/" + System.getProperty("user.name") + "/Downloads/FingerPrintLib/FingerPrintBridgeLib.so");
-            //System.load("C:/Users/" + System.getProperty("user.name") + "/Downloads/FingerPrintLib/libfprint.so");
         }
 
         if (System.getProperty("os.name").contains("Linux")) {
-            System.load("/home/" + System.getProperty("user.name") + "/workspace/JavaCardPassport/FingerPrintBridgeLib/dist/FingerPrintBridgeLib.so");
+            System.load("/home/" + System.getProperty("user.name") + "/TCC/JavaCardPassport/FingerPrintBridgeLib/dist/FingerPrintBridgeLib.so");
             System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-            //System.load("/usr/lib/libfprint.so");
         }
     }
 

@@ -35,7 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/_ext/e699828c/StasmBridgeLib.o
+	${OBJECTDIR}/StasmBridgeLib.o
 
 
 # C Compiler Flags
@@ -62,10 +62,10 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libStasmBridgeLib.${CND_DLIB_EXT}: ${
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libStasmBridgeLib.${CND_DLIB_EXT} ${OBJECTFILES} ${LDLIBSOPTIONS} -shared -fPIC
 
-${OBJECTDIR}/_ext/e699828c/StasmBridgeLib.o: /home/luca/workspace/JavaCardPassport/StasmBridgeLib/StasmBridgeLib.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/e699828c
+${OBJECTDIR}/StasmBridgeLib.o: StasmBridgeLib.cpp 
+	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e699828c/StasmBridgeLib.o /home/luca/workspace/JavaCardPassport/StasmBridgeLib/StasmBridgeLib.cpp
+	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/StasmBridgeLib.o StasmBridgeLib.cpp
 
 # Subprojects
 .build-subprojects:
