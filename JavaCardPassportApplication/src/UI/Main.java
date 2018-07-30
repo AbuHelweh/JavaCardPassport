@@ -19,8 +19,8 @@ public class Main{
     public static void main(String[] args){
         try {
             System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-            System.load("/home/" + System.getProperty("user.name") + "/TCC/JavaCardPassport/FingerPrintBridgeLib/dist/FingerPrintBridgeLib.so");
-            System.load("/home/" + System.getProperty("user.name") + "/TCC/JavaCardPassport/StasmBridgeLib/dist/StasmBridgeLib.so");
+            System.load("/home/" + System.getProperty("user.name") + "/workspace/JavaCardPassport/FingerPrintBridgeLib/dist/FingerPrintBridgeLib.so");
+            System.load("/home/" + System.getProperty("user.name") + "/workspace/JavaCardPassport/StasmBridgeLib/dist/StasmBridgeLib.so");
             new MainFrame();
         } catch (Exception e){
             e.printStackTrace();

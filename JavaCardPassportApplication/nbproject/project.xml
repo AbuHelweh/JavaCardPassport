@@ -5,9 +5,9 @@
         <data xmlns="http://www.netbeans.org/ns/j2se-project/3">
             <name>JNITestFingerPrint</name>
             <source-roots>
+                <root id="src.java3.dir" name="Source Packages"/>
+                <root id="src.dir" name="/home/luca/workspace/JavaCardPassport/Libs/Downloads/commons-io-2.6-src/src/main/java"/>
                 <root id="src.java4.dir"/>
-                <root id="src.java3.dir"/>
-                <root id="src.dir"/>
                 <root id="src.java.dir"/>
             </source-roots>
             <test-roots>
