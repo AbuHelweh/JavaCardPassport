@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.9.5)  12 JUL 2018 18:49
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.8.1)  7 AUG 2018 17:27
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -585,17 +585,7 @@ ABD: EverySelectfont initializing macros
 LaTeX Info: Redefining \selectfont on input line 20.
  [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2]
-Underfull \hbox (badness 10000) in paragraph at lines 67--72
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 81--85
-
- []
-
-[3] (./TCC.toc)
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2] [3] (./TCC.toc)
 \tf@toc=\write3
 \openout3 = `TCC.toc'.
 
@@ -608,90 +598,90 @@ Underfull \hbox (badness 10000) in paragraph at lines 81--85
 File: AssinaturaDigital.png Graphic file (type png)
 
 <use AssinaturaDigital.png>
-Package pdftex.def Info: AssinaturaDigital.png used on input line 162.
+Package pdftex.def Info: AssinaturaDigital.png used on input line 155.
 (pdftex.def)             Requested size: 250.93842pt x 215.41963pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 172--173
+Underfull \hbox (badness 10000) in paragraph at lines 165--166
+
+ []
+
+[2 <./AssinaturaDigital.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 174--187
+
+ []
+
+[3]
+Underfull \hbox (badness 10000) in paragraph at lines 203--204
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 181--194
-
- []
-
-[2 <./AssinaturaDigital.png>] [3]
-Underfull \hbox (badness 10000) in paragraph at lines 226--227
+Underfull \hbox (badness 10000) in paragraph at lines 205--221
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 228--244
+Underfull \hbox (badness 10000) in paragraph at lines 222--225
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 245--248
+Underfull \hbox (badness 10000) in paragraph at lines 235--236
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 237--239
 
  []
 
 [4]
-Underfull \hbox (badness 10000) in paragraph at lines 258--259
+Underfull \hbox (badness 10000) in paragraph at lines 240--242
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 260--262
+Underfull \hbox (badness 10000) in paragraph at lines 243--245
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 263--265
+Underfull \hbox (badness 10000) in paragraph at lines 246--248
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 266--268
+Underfull \hbox (badness 10000) in paragraph at lines 249--251
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 269--271
+Underfull \hbox (badness 10000) in paragraph at lines 252--254
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 272--274
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 275--277
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 278--280
+Underfull \hbox (badness 10000) in paragraph at lines 255--257
 
  []
 
 [5]
-Underfull \hbox (badness 10000) in paragraph at lines 298--299
+Underfull \hbox (badness 10000) in paragraph at lines 275--276
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 300--302
+Underfull \hbox (badness 10000) in paragraph at lines 277--279
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 303--306
+Underfull \hbox (badness 10000) in paragraph at lines 280--283
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 307--309
+Underfull \hbox (badness 10000) in paragraph at lines 284--286
 
  []
 
@@ -709,10 +699,10 @@ cs . google . com / document / d /
 
 ) [7] (./TCC.aux) ) 
 Here is how much of TeX's memory you used:
- 3048 strings out of 494953
- 40195 string characters out of 6180978
- 114348 words of memory out of 5000000
- 6284 multiletter control sequences out of 15000+600000
+ 3049 strings out of 494953
+ 40209 string characters out of 6180978
+ 112352 words of memory out of 5000000
+ 6285 multiletter control sequences out of 15000+600000
  6774 words of font info for 25 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  38i,5n,23p,1372b,291s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -723,7 +713,7 @@ m/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx
 hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/t
 exlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti7.pfb></usr/share/texlive/
 texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on TCC.pdf (11 pages, 180028 bytes).
+Output written on TCC.pdf (11 pages, 178452 bytes).
 PDF statistics:
  71 PDF objects out of 1000 (max. 8388607)
  48 compressed objects within 1 object stream

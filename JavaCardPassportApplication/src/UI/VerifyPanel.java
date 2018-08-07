@@ -118,7 +118,10 @@ public class VerifyPanel extends javax.swing.JPanel implements Runnable {
             }
             if (com.getTagList()[3] != 0) {
                 for(FingerInfo f : reader.readDG3()){
-                    fingers[f.getFingerImageInfos().get(0).getPosition() -1] = f;
+                    System.out.println(f.getFingerImageInfos().get(0).getPosition());
+                    if(f.getFingerImageInfos().get(0).getPosition() != 0){
+                        fingers[f.getFingerImageInfos().get(0).getPosition() -1] = f;
+                    }
                 }
             }
 
@@ -372,7 +375,7 @@ public class VerifyPanel extends javax.swing.JPanel implements Runnable {
         String year = yymmdd.substring(0, 2);
         String month = yymmdd.substring(2, 4);
         String day = yymmdd.substring(4);
-        if (Integer.parseInt(year) > cal.get(Calendar.YEAR) - 2000) {
+        if (Integer.parseInt(year) > cal.get(Calendar.YEAR) - 1950) {
             year = "19" + year;
         } else {
             year = "20" + year;

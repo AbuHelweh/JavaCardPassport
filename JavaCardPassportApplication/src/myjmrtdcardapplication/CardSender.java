@@ -26,6 +26,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import net.sf.scuba.data.Gender;
 import net.sf.scuba.smartcards.CardServiceException;
+import org.apache.commons.io.FileUtils;
 import org.jmrtd.BACKeySpec;
 import org.jmrtd.PassportService;
 import org.jmrtd.cert.CardVerifiableCertificate;
@@ -245,15 +246,44 @@ public class CardSender {
      * @throws CardServiceException
      */
     public void SendDG3(FingerInfo[] fingers) throws IOException, CardServiceException {
+        
+        byte[] dummyImg = FileUtils.readFileToByteArray(new File("dummy.jpg"));
 
-
+        ArrayList<FingerImageInfo> dummyArray = new ArrayList();
+        dummyArray.add(new FingerImageInfo(0,
+                    1, 1, 100, //view count, view number, quality%
+                    FingerImageInfo.IMPRESSION_TYPE_SWIPE, //impression type
+                    0, 0, //Dimensions w,h
+                    new ByteArrayInputStream(dummyImg), //image bytes
+                    0, //image size in bytes
+                    FingerInfo.COMPRESSION_JPEG) //compression type          //Cria uma entrada de digital para um dedo
+        );
+        
+        FingerInfo dummy = new FingerInfo(0, //capture device ID 0= unspecified
+                    0, //aquisition level 30 = 500dpi
+                    FingerInfo.SCALE_UNITS_PPI, //scale units
+                    0, 0, //dimension picture w,h
+                    0, 0, //dimension reader w,h
+                    8, //pixel depth
+                    FingerInfo.COMPRESSION_JPEG,
+                    dummyArray);      //cria uma entrada de série de digitais
+        
         ArrayList<FingerInfo> fingerInfos = new ArrayList<>();
 
-
+        boolean willSend = false;
+        
         for (FingerInfo fingerInfo : fingers) {
             if(fingerInfo != null){
                 fingerInfos.add(fingerInfo);
+                willSend = true;
             }
+            else{
+                fingerInfos.add(dummy);
+            }
+        }
+        
+        if(!willSend){
+            return;
         }
 
 
@@ -322,7 +352,7 @@ public class CardSender {
         perso.writeFile(service.EF_DG15, new ByteArrayInputStream(dg15.getEncoded()));
 
         dataGroupHashes.put(15, digest.digest(dg15.getEncoded()));
-        dataGroupComTagList[15] = LDSFile.EF_DG15_TAG;//LDSFile.EF_DG15_TAG;
+        dataGroupComTagList[15] = LDSFile.EF_DG15_TAG;
     }
 
     public void sendSOD() throws Exception {

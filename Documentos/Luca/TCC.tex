@@ -31,7 +31,7 @@ bottom=20mm,
 		Luca Fachini Campelli
 		\vspace {4cm}
 
-		\textbf{DESENVOLVIMENTO DE UM APLICAÇÃO PARA COLETA DE DADOS \\
+		\textbf{DESENVOLVIMENTO DE UMA APLICAÇÃO PARA COLETA DE DADOS \\
 				E EMISSÃO DE PASSAPORTES ELETRÔNICOS NA PLATAFORMA JAVACARD}
 		\vspace {10cm}
 		
@@ -45,7 +45,7 @@ bottom=20mm,
 		Luca Fachini Campelli
 		\vspace{2cm}
 		
-		\textbf{\large DESENVOLVIMENTO DE UM APLICAÇÃO PARA COLETA DE DADOS \\
+		\textbf{\large DESENVOLVIMENTO DE UMA APLICAÇÃO PARA COLETA DE DADOS \\
 				E EMISSÃO DE PASSAPORTES ELETRÔNICOS NA PLATAFORMA JAVACARD}
 		\vspace{2cm}
 
@@ -62,29 +62,22 @@ bottom=20mm,
 
 	\newpage
 
-	\paragraph{\large Resumo}
+	\paragraph{\large Resumo (Melhorar)}
 		\begin{justify}
-			\hspace{2cm} Com a preocupação com a segurança em todas as áreas, a identificação correta e segura das credenciais de uma pessoa se torna de extrema importância. A necessidade de vários documentos diferentes para as mais variadas funções faz surgir vários problemas, desde falsificação e roubo, até simples desorganização e perda.
-O maior exemplo da necessidade dos mais variados documentos é em viagens internacionais. Nelas são necessárias diversas etapas até que se confirme a identidade do viajante afim de evitar falsificações, e outros tipos de ameaça, sendo o mais importante dos documentos o passaporte.\\
-			\hspace*{2cm} O intuito deste trabalho é criar uma infra-estrutura para emissão de passaportes eletrônicos na plataforma Javacard, baseado no padrão ICAO 9303, tendo em mente a segurança das informações. O sistema de emissão deverá prover um aplicativo que colete as informações do usuário, e crie um passaporte eletrônico dentro de uma das 5 possibilidades existentes.
-Este cartão deve possuir todas as informações de identificação da pessoa, juntamente com informações biométricas. 
-O projeto será efetuado juntamente com o LabSec (Laboratório de Segurança Computacional da UFSC) e o professor responsável, com a utilização da biblioteca JMRTD, que será adaptada para os fins deste projeto, e projetos anteriores do LabSec que servirão de base para desenvolvimento do produto final. \\
+			\hspace{2cm} Foi desenvolvido um software para computador capaz de coletar as informações do usuário, e emitir um passaporte eletrônico em um Javacard que segue o padrão ICAO 9303. Este cartão é munido de todas as informações necessárias para a verificação da identidade do usuário, incluindo informações biométricas como identificação facial, e digitais, juntamente com todos os mecanismos de segurança descritos pelo documento ICAO 9303.
 	
 	\vspace*{10px}
-Palavras-chave: Javacard, Passaporte,JMRTD, Segurança, Passaporte-Eletrônico, e-Passport
+Palavras-chave: Javacard, Passaporte,JMRTD, Segurança, Passaporte-Eletrônico, e-Passport, SmartCard, JCOP
 		\end{justify}
 
 
 	\paragraph{\large Abstract}
 		\begin{justify}
 
-			\hspace{2cm} With the increasing importance over security, the correct identification of a person's credentials becomes increasingly as important. The need for various documents for diferent uses brings many problems to the surface, ranging from falsification to disorganization and loss.
-The greatest example being international travels, where various stages are required util the identity of an individual is confirmed, to prevent any kind of threat. The most important of these documents being the passport.\\
-			\hspace*{2cm} 
-			This paper aims to create an infra-structure for the issuance of electronic passports on the JavaCard platform, based on the ICAO 9303 standard, with information security in mind. The issuance system should provide an application that collects user information, and creates an electronic passport in one of 5 existing possibilities. This passport should posess all required user information, along with biometrics. This project will be done together with LabSec (UFSC's Computational Security Lab) and it's responsable professor, utilizing the JMRTD library, that shall be adapted for this project's purposes, along with prior projects from the lab, that will serve as a basis for the developing of the final product.\\
+			\hspace{2cm} A computer software was developed capable of collecting user information, and emiting an electronic passport on a Javacard that follows the ICAO 9303 standard. This card posesses all required information to verify the user's identity, including biometrics such as face recognition and fingerprints, together with all security mecanisms described in the ICAO 9303 document.
 
 	\vspace*{10px}
-Key-Words: Javacard, Passaport,JMRTD, Security, Electronic-Passport, e-Passport
+Key-Words: Javacard, Passaport,JMRTD, Security, Electronic-Passport, e-Passport, SmartCard, JCOP
 
 		\end{justify}
 	
@@ -96,27 +89,27 @@ Key-Words: Javacard, Passaport,JMRTD, Security, Electronic-Passport, e-Passport
 
 	\pagenumbering{arabic}
 
-	\section{Introdução}
+	\section{Introdução (Modificar, muito)}
 		\begin{justify}
 			
-			\hspace{2cm} O método de criação de um passaporte é extremamente burocrático\cite{HOWPASSPORT}. O modelo de passaporte que normalmente possuímos é o tipo TD3 descrito no documento ICAO\cite{ICAO}, e exigem o preenchimento de formulários e a manufatura da caderneta com chip como parte de sua emissão. Os chips vem programados da fábrica e todos obedecem o padrão descrito no documento ICAO\cite{USPASSPORT}.
+			\hspace{2cm} Quando começaram a ser utilizados, os passaportes funcionavam apenas por meio físico, na forma de uma caderneta ou documento escrito, com todas as informações sendo verificadas manualmente, comparando as informações com o outros papéis, ou com um sistema eletrônico. Isto acarreta em uma passagem mais lenta pelo controle e abre muitas brechas para erros e falsificações passarem pelos vigías. Várias formas de prevenir falsificações como marcas d’água, padrões de impressão e manufatura do papel foram utilizadas, porém a inovação mais impactante e discutida foi a inserção de um chip dentro do passaporte. Embora várias informações possam ainda ser verificadas visualmente, mais ainda podem ser verificadas por meio eletrônico com o chip interno do passaporte, e mais rapidamente, diminuindo o risco de fraude. Este chip pode guardar as informações biométricas do dono, junto com as informações visuais, e ainda mais importante, possuindo diversos protocolos de segurança para garantir a autenticidade dos dados conferidos \cite{PASSPORTWIKI}\cite{HOWPASSPORT}.
 			\hspace*{2cm} Diversos softwares existem para a leitura de passportes e em sua maioria se utilizam da biblioteca JMRTD\cite{JMRTD} como base para seu funcionamento, poucos utilizam outras bibliotecas de código fechado, como o software de leitura de chips NFC da empresa InnoValor\cite{INNOVALOR}, mas não foi possível encontrar o software utilizado por aeroportos para a verificação de passaportes. Apenas um software foi encontrado que efetivamente recolha dados e emita um passaporte sendo este uma versão antiga da biblioteca JMRTD que possuía um aplicativo standalone para emissão e leitura de passaportes eletrônicos, este que foi descontinuado da versão 0.4.9 para a versão 0.5, mantendo o pacote apenas como uma biblioteca de leitura. 
 			\hspace*{2cm} Desta forma para cumprir os requisitos de recolher as informações do usuário e emitir um passaporte válido de acordo com o padrão ICAO9303, será utilizado esta parte da versão 0.4.9 do aplicativo para a personalização do cartão.
 
 			
 		\end{justify}
 
-	\section{Objetivos}
+	\subsection{Objetivos}
 		\begin{justify}
-			
-				\hspace{2cm}O objetivo principal deste projeto é a criação do sistema de coleta de dados, e emissão do cartão, onde os dados sejam armazenados dentro do cartão para que depois possam ser extraídos e validados em qualquer tipo de máquina que possua este sistema.\\
+				
+				\hspace{2cm}O objetivo principal é a criação do sistema de coleta de dados e emissão de um passaporte eletrônico em um cartão Javacard, onde os dados sejam armazenados depois possam ser extraídos e validados em qualquer tipo de máquina que possua este sistema.\\
 				\hspace*{2cm}Os objetivos específicos se dão por:\\
 					\hspace*{3cm}1.Coleta dos dados básicos do usuário\cite{SASSO}\\
 					\hspace*{3cm}2.Coleta da foto do usuário e extração dos dados faciais da foto\cite{ISO}\cite{ICAO}.\\
 					\hspace*{3cm}3.Coleta dos dados biométricos como digital e íris.\\
 					\hspace*{3cm}4.Ter o cartão preenchido e que cumpra as especificações do padrão ICAO9303.\cite{ICAO}\\
 					\hspace*{3cm}5.Ter o programa que colete os dados do usuário de forma rápida e fácil.\\
-				 \hspace*{2cm}Ao final do projeto espera-se ter concluído a criação de um sistema que colete os dados do usuário, armazenando-os no banco de dados, e que emita o cartão conforme as especificações ditadas no padrão ICAO9303
+				 \hspace*{2cm}Ao final do projeto espera-se ter concluído a criação de um sistema que colete os dados do usuário, armazenando-os no banco de dados e no cartão, e que emita o cartão conforme as especificações ditadas no padrão ICAO9303
 
 			
 		\end{justify}
@@ -175,7 +168,7 @@ Key-Words: Javacard, Passaport,JMRTD, Security, Electronic-Passport, e-Passport
 			\end{justify}
 
     
-	\section{O Documento ICAO 9303\cite{ICAO}}
+	\section{O Documento ICAO 9303\cite{ICAO} - Remover Talvez?}
 		\begin{justify}
 			
 				\hspace*{2cm} O documento ICAO 9303 é o documento emitido que regulamenta passaportes eletrônicos, e é o padrão utilizado para toda formatação de passaportes eletrônicos. ICAO é uma sigla para “International Civil Aviation Organization”, que é uma agência especializada das Nações Unidas. Foi estabelecida em 1944 para gerenciar a admnistração e governância da Convenção de Aviação Civil Internacional (Convenção de Chicago). \\
@@ -194,13 +187,6 @@ Key-Words: Javacard, Passaport,JMRTD, Security, Electronic-Passport, e-Passport
 
 		\end{justify}
 
-	\section{História do Passaporte Eletrônico}
-		\begin{justify}
-			
-			\hspace{2cm}Quando começaram a ser utilizados, os passaportes funcionavam apenas por meio físico, na forma de uma caderneta, com todas as informações sendo verificadas manualmente, comparando as informações com o sistema. Isto acarreta em uma passagem mais lenta pelo controle e abre muitas brechas para erros e falsificações passarem pelos vigías. Várias formas de prevenir falsificações como marcas d’água, padrões de impressão e manufatura do papel foram utilizadas, porém a inovação mais impactante e discutida foi a inserção de um chip dentro do passaporte. Embora várias informações possam ainda ser verificadas visualmente, mais ainda podem ser verificadas por meio eletrônico com o chip interno do passaporte, e mais rapidamente, diminuindo o risco de fraude. Este chip pode guardar as informações biométricas do dono, junto com as informações visuais, e ainda mais importante, possuindo diversos protocolos de segurança para garantir a autenticidade dos dados conferidos.
-			
-		\end{justify}
-
 	\section{Javacard\cite{JAVACHEN}}
 		\begin{justify}
 			
@@ -211,7 +197,7 @@ Key-Words: Javacard, Passaport,JMRTD, Security, Electronic-Passport, e-Passport
 		\end{justify}
 
 
-	\section{O aplicativo e sua estrutura lógica de dados}
+	\section{O aplicativo e sua estrutura lógica de dados - Remover talvez?}
 		\begin{justify}
 
 			\hspace{2cm} A biblioteca JMRTD possui consigo um aplicativo a ser instalado e executado no cartão para o funcionamento da biblioteca\cite{SASSO}. Este aplicativo foi feito juntamente com a biblioteca no padrão ICAO9303, portanto ele pode ser lido inclusive por outras bibliotecas que implementem o padrão. Este aplictivo tem como função armazenar todas as informações referentes a um passaporte, e portanto possui uma estrutura de dados lógica interna descrita pelo padrão ICAO9303:\\
@@ -273,33 +259,39 @@ Key-Words: Javacard, Passaport,JMRTD, Security, Electronic-Passport, e-Passport
 		\end{justify}
 
 
-	\section{Metodologia - Reescrever?}
+	\section{Desenvolvimento - Reescrever?}
 		\begin{justify}
 			
-		\hspace{2cm}O projeto será executado tendo como base o aplicativo JMRTD\cite{JMRTD}, que engloba uma API Java e um Applet, onde juntos já permitem o armazenamento de informações no cartão, e o projeto: IDEdu: Proposta de um Cartão de Identificação Acadêmico\cite{SASSO} baseado no padrão ICAO 9303\cite{ICAO}, para que seja criado um aplicativo que emita os passaportes, e que possa ser expandido caso haja a necessidade, para englobar mais documentos e não só o passaporte.\\
-		\hspace*{2cm}Será feita uma extensa pesquisa sobre os documentos ICAO 9303\cite{ICAO}, e a documentação da biblioteca JMRTD para se iniciar o projeto.\\
-		\hspace*{2cm}O programa será desenvolvido com a linguagem de programação Java, utilizando o sistema JNI para a integração de bibliotecas que existem somente em C e C++, e as bibliotecas JMRTD, como a biblioteca principal para a construção do cartão, BouncyCastle\cite{BOUNCYCASTLE} e EJBCA\cite{EJBCA} como provedores de segurança e certificação, libfprint\cite{PRINT} para a coleta das digitais biométricas, Stasm\cite{STASM} para o reconhecimento facial, e OpenCV\cite{OPENCV} para processamento de imagem.\\
-		\hspace*{2cm}Utilizando uma parte do código da versão 0.4.9 da biblioteca JMRTD, é possível enviar informações para o cartão, desta forma pode-se fácilmente coletar e enviar as informações à respeito do MRZ. A biblioteca OpenCV será usada para o processamento da foto da pessoa, e possui funções para tirar a foto com a camera da máquina. Com a biblioteca Stasm, se pode retirar os pontos faciais da pessoa, e depois tratá-los para se adequarem ao padrão ICAO. Foi necessário utilizar a API nativa do java para integrar as bibliotecas Stasm e libfprint ao projeto, pois elas existem apenas em C. Com a biblioteca libfprint foi possível a extração da digital para sua inserção.
+		\hspace{2cm}O projeto foi desenvolvido tendo como base o aplicativo JMRTD\cite{JMRTD}, que engloba uma Biblioteca Java e um Applet, para que seja criado um aplicativo que emita os passaportes, e que possa ser expandido caso haja a necessidade, para englobar mais documentos e não só o passaporte.\\
+		\hspace*{2cm}Foi feita uma extensa pesquisa sobre os documentos ICAO 9303\cite{ICAO}, e a documentação da biblioteca JMRTD para se iniciar o projeto.\\
+		\hspace*{2cm}O programa foi desenvolvido com a linguagem de programação Java, utilizando o sistema JNI para a integração de bibliotecas que existem somente em C e C++, e as bibliotecas JMRTD, como a biblioteca principal para a construção do cartão, BouncyCastle\cite{BOUNCYCASTLE} e EJBCA\cite{EJBCA} como provedores de segurança e certificação, libfprint\cite{PRINT} para a coleta das digitais biométricas, Stasm\cite{STASM} para o reconhecimento facial, e OpenCV\cite{OPENCV} para processamento de imagem.\\
+		\hspace*{2cm}Utilizando uma parte do código da versão 0.4.9 da biblioteca JMRTD, é possível enviar informações para o cartão, desta forma pode-se fácilmente coletar e enviar as informações à respeito do MRZ. A biblioteca OpenCV foi usada para o processamento da foto da pessoa, e possui funções para tirar a foto com a camera da máquina. Com a biblioteca Stasm, se pode retirar os pontos faciais da pessoa, e depois tratá-los para se adequarem ao padrão ICAO. Foi necessário utilizar a API nativa do java para integrar as bibliotecas Stasm e libfprint ao projeto, pois elas existem apenas em C. Com a biblioteca libfprint foi possível a extração da digital para sua inserção.
 
 		\end{justify}
 
 
 	\subsection{Os protocolos de segurança}
 		\begin{justify}
-			\hspace{2cm}Para o acesso as informações do cartão diversos protocolos de segurança devem ser efetuados para garantir a troca segura de mensagens entre o terminal e o cartão, e ter a certeza de que o terminal e o cartão não foram adulterados de alguma maneira. Todos os protocolos estão completamente descritos no documento ICAO 9303 parte 11\\
+			\hspace{2cm}Para o acesso as informações do cartão diversos protocolos de segurança devem ser efetuados para garantir a troca segura de mensagens entre o terminal e o cartão, e ter a certeza de que o terminal e o cartão não foram adulterados de alguma maneira. Estes protocolos devem ser corretamente configurados durante a criação do cartão para que garantam a segurança das informações que nele estão guardadas. Todos os protocolos estão completamente descritos no documento ICAO 9303 parte 11\\
 
 			\hspace*{2cm} BAC - Basic Access Control - Controle de Acesso Básico\\
 			\hspace*{2cm} Antes de fazer qualquer tipo de operação no cartão, deve-se efetuar este protocolo. Ele utiliza as informações do número do documento, data de nascimento e de validade do cartão para criar chaves simétricas seguras para a troca de mensagens entre o terminal e o cartão criando assim um canal seguro de comunicação. Esta informação estará impressa na frente do cartão, e portanto a execução com sucesso deste protocolo não só garante um canal de comunicação seguro, mas também confirma que as informações impressas batem com as armazenadas no cartão.\\
 			
 			\hspace*{2cm} PA - Passive Authentication - Autenticação Passiva\\
-			\hspace*{2cm} Este protocolo faz uso dos arquivos COM e SOD para seu funcionamento. O arquivo SOD armazena a hash de cada Grupo de Dados presente no cartão, e o arquivo COM indica sua presença. Desta forma o protocolo se inicia verificando se para cada arquivo cuja presença esteja indicada em COM, incluindo o arquivo COM, se sua hash coincide com a hash armazenada em SOD. Se todas coincidirem então nenhum arquivo foi alterado desde a fabricação do cartão.\\
+			\hspace*{2cm} Este protocolo faz uso dos arquivos COM e SOD para seu funcionamento. O arquivo SOD armazena a hash de cada Grupo de Dados presente no cartão, e o arquivo COM indica sua presença. Desta forma o protocolo se inicia verificando se para cada arquivo cuja presença esteja indicada em COM, incluindo o próprio arquivo COM, se sua hash coincide com a hash armazenada em SOD. Se todas coincidirem então nenhum arquivo foi alterado desde a fabricação do cartão.\\
 			\hspace*{2cm} O segundo passo consiste em utilizar o certificado de assinatura encontrado no SOD, construindo uma corrente de certificação até um certificado assinado por uma CA reconhecida, e garantindo que cada certificado da corrente seja válido. Passados por estes dois passos então se pode confirmar que os dados do cartão são válidos e não foram alterados.\\
 			
 			\hspace*{2cm} AA - Active Authentication - Autenticação Ativa\\
-			\hspace*{2cm} Este protocolo deve ser feito após o PA, pois ele confirma que o SOD foi lido de um cartão com um chip válido. Ele consiste em uma troca de mensagens de desafio-resposta onde a aplicação envia uma mensagem ao cartão e este responde com esta mensagem cifrada pela chave privada do cartão. A aplicação então decifra utilizando a chave pública armazenada no arquivo DG15 e, caso a resposta coincida com a mensagem enviada, então o chip não foi adulterado, já que a chave privada interna do cartão é o par da chave pública gravada no arquivo DG15.\\
+			\hspace*{2cm} Este protocolo deve ser feito após o PA, pois ele confirma que o SOD foi lido de um cartão com um chip válido. Ele consiste em uma troca de mensagens de desafio-resposta onde a aplicação envia uma mensagem ao cartão e este responde com esta mensagem cifrada pela chave privada do cartão. A aplicação então decifra utilizando a chave pública armazenada no arquivo DG15 e, caso a resposta coincida com a mensagem enviada, então o chip não foi adulterado, já que a chave privada interna do cartão, inacessível externamente, é o par da chave pública gravada no arquivo DG15.\\
 			
 			\hspace*{2cm} EAC - Extended Access Control - Controle de Acesso Extendido\\
-			\hspace*{2cm} Este protocolo deve ser feito após o BAC e é necessário para se obter acesso as biometrias adicionais do cartão. Ele consiste em autenticar o terminal para o cartão, e o cartão para o terminal em duas etapas, Utilizando-se de um par de chaves assimétrico com curvas elípticas. Ao término do protocolo um canal de comunicação de maior segurança entre o cartão e o terminal é gerado, e o acesso às biometrias adicionais é liberado.
+			\hspace*{2cm} Este protocolo deve ser feito após o BAC e é necessário para se obter acesso as biometrias adicionais do cartão. Ele consiste em autenticar o terminal para o cartão, e o cartão para o terminal em duas etapas, utilizando-se de um par de chaves assimétricas. Ao término do protocolo um canal de comunicação de maior segurança entre o cartão e o terminal é gerado, e o acesso às biometrias adicionais é liberado.
+			
+		\end{justify}
+
+	\subsection{Funcionamento}
+		\begin{justify}
+			\hspace{2cm} O aplicativo desenvolvido possui duas funções, coletar as informações do usuário e com ela gerar um novo passaporte válido, e verificar se as informações coletadas estão devidamente inseridas no cartão. A parte da verificação de identidade do proprietário não faz jús ao escopo deste trabalho. O aplicativo possui as funções de retirar uma foto da pessoa, e de coletar todas as suas digitais. O aplicativo também necessita de certificados digitais e pares de chaves para que os protocolos de segurança possam ser executados.
 			
 		\end{justify}
 
