@@ -92,8 +92,8 @@ Key-Words: Javacard, Passaport,JMRTD, Security, Electronic-Passport, e-Passport,
 	\section{Introdução (Modificar, muito)}
 		\begin{justify}
 			
-			\hspace{2cm} Quando começaram a ser utilizados, os passaportes funcionavam apenas por meio físico, na forma de uma caderneta ou documento escrito, com todas as informações sendo verificadas manualmente, comparando as informações com o outros papéis, ou com um sistema eletrônico. Isto acarreta em uma passagem mais lenta pelo controle e abre muitas brechas para erros e falsificações passarem pelos vigías. Várias formas de prevenir falsificações como marcas d’água, padrões de impressão e manufatura do papel foram utilizadas, porém a inovação mais impactante e discutida foi a inserção de um chip dentro do passaporte. Embora várias informações possam ainda ser verificadas visualmente, mais ainda podem ser verificadas por meio eletrônico com o chip interno do passaporte, e mais rapidamente, diminuindo o risco de fraude. Este chip pode guardar as informações biométricas do dono, junto com as informações visuais, e ainda mais importante, possuindo diversos protocolos de segurança para garantir a autenticidade dos dados conferidos \cite{PASSPORTWIKI}\cite{HOWPASSPORT}.
-			\hspace*{2cm} Diversos softwares existem para a leitura de passportes e em sua maioria se utilizam da biblioteca JMRTD\cite{JMRTD} como base para seu funcionamento, poucos utilizam outras bibliotecas de código fechado, como o software de leitura de chips NFC da empresa InnoValor\cite{INNOVALOR}, mas não foi possível encontrar o software utilizado por aeroportos para a verificação de passaportes. Apenas um software foi encontrado que efetivamente recolha dados e emita um passaporte sendo este uma versão antiga da biblioteca JMRTD que possuía um aplicativo standalone para emissão e leitura de passaportes eletrônicos, este que foi descontinuado da versão 0.4.9 para a versão 0.5, mantendo o pacote apenas como uma biblioteca de leitura. 
+			\hspace{2cm} Quando começaram a ser utilizados, os passaportes funcionavam apenas por meio físico, na forma de uma caderneta ou documento escrito, com todas as informações sendo verificadas manualmente, comparando as informações com o outros papéis, ou com um sistema eletrônico. Isto acarreta em uma passagem mais lenta pelo controle e abre muitas brechas para erros e falsificações passarem pelos vigías. Várias formas de prevenir falsificações como marcas d’água, padrões de impressão e manufatura do papel foram utilizadas, porém a inovação mais impactante e discutida foi a inserção de um chip dentro do passaporte. Embora várias informações possam ainda ser verificadas visualmente, mais ainda podem ser verificadas por meio eletrônico com o chip interno do passaporte, e mais rapidamente, diminuindo o risco de fraude. Este chip pode guardar as informações biométricas do dono, junto com as informações visuais, e ainda mais importante, possuindo diversos protocolos de segurança para garantir a autenticidade dos dados conferidos \cite{HOWPASSPORT}\cite{PASSPORTWIKI}.\\
+			\hspace*{2cm} Diversos softwares existem para a leitura de passportes e em sua maioria se utilizam da biblioteca JMRTD\cite{JMRTD} como base para seu funcionamento, poucos utilizam outras bibliotecas de código fechado, como o software de leitura de chips NFC da empresa InnoValor\cite{INNOVALOR}, mas não foi possível encontrar o software utilizado por aeroportos para a verificação de passaportes. Apenas dois softwares foram encontrados que efetivamente recolham dados e emitam um passaporte, pypassport\cite{PYPASSPORT}, e uma versão antiga da biblioteca JMRTD que possuía um aplicativo standalone para emissão e leitura de passaportes eletrônicos, este que foi descontinuado da versão 0.4.9 para a versão 0.5, mantendo o pacote apenas como uma biblioteca de leitura. \\
 			\hspace*{2cm} Desta forma para cumprir os requisitos de recolher as informações do usuário e emitir um passaporte válido de acordo com o padrão ICAO9303, será utilizado esta parte da versão 0.4.9 do aplicativo para a personalização do cartão.
 
 			
@@ -104,14 +104,27 @@ Key-Words: Javacard, Passaport,JMRTD, Security, Electronic-Passport, e-Passport,
 				
 				\hspace{2cm}O objetivo principal é a criação do sistema de coleta de dados e emissão de um passaporte eletrônico em um cartão Javacard, onde os dados sejam armazenados depois possam ser extraídos e validados em qualquer tipo de máquina que possua este sistema.\\
 				\hspace*{2cm}Os objetivos específicos se dão por:\\
-					\hspace*{3cm}1.Coleta dos dados básicos do usuário\cite{SASSO}\\
-					\hspace*{3cm}2.Coleta da foto do usuário e extração dos dados faciais da foto\cite{ISO}\cite{ICAO}.\\
+					\hspace*{3cm}1.Coleta dos dados básicos do usuário\\
+					\hspace*{3cm}2.Coleta da foto do usuário e extração dos dados faciais da foto.\\
 					\hspace*{3cm}3.Coleta dos dados biométricos como digital e íris.\\
-					\hspace*{3cm}4.Ter o cartão preenchido e que cumpra as especificações do padrão ICAO9303.\cite{ICAO}\\
+					\hspace*{3cm}4.Ter o cartão preenchido e que cumpra as especificações do padrão ICAO9303.\\
 					\hspace*{3cm}5.Ter o programa que colete os dados do usuário de forma rápida e fácil.\\
 				 \hspace*{2cm}Ao final do projeto espera-se ter concluído a criação de um sistema que colete os dados do usuário, armazenando-os no banco de dados e no cartão, e que emita o cartão conforme as especificações ditadas no padrão ICAO9303
 
 			
+		\end{justify}
+
+	\subsection{Trabalhos Cprrelatos e Revisão Bibliográfica}
+		\begin{justify}
+			\hspace{2cm} Várias bibliotecas e aplicativos funcionais existem, que fazem possível a leitura de passaportes eletrônicos, ou por via de chips de contato ou RFID, escritos em várias linguagens de programação. Muitos poucos permitem a emissão e personalização destes passaportes. Para a linguagem Java, vários se utilizam também da biblioteca JMRTD.
+			\hspace*{2cm}pypassport - PYTHON - emite e lê passaportes\cite{PYPASSPORT}
+			\hspace*{2cm}innoValor - \cite{PYPASSPORT}
+			\hspace*{2cm}pypassport - \cite{PYPASSPORT}
+			\hspace*{2cm}pypassport - \cite{PYPASSPORT}
+			\hspace*{2cm}pypassport - \cite{PYPASSPORT}
+			\hspace*{2cm}pypassport - \cite{PYPASSPORT}
+
+
 		\end{justify}
 
 	\section {Conceitos Básicos}
@@ -135,7 +148,7 @@ Key-Words: Javacard, Passaport,JMRTD, Security, Electronic-Passport, e-Passport,
 			\begin{justify}
 			
 
-				\hspace{2cm} Esta função é amplamente utilizada para garantia de consistência tanto em criptografia quanto em várias outras áreas. Esta função funciona embaralhando os bits de uma mensagem à um ponto que seja impossível inverter o processo. Ela aceita uma mensagem de qualquer tamanho, porém sempre retornará uma cadeia de bytes de tamanho fixo, não importando qual seja a entrada. Porém a maior característica desta função está no fato de que para duas entradas distintas x e y quaisquer, o resultado da função sempre será diferente para os dois. Desta forma, é possível se checar a integridade de uma mensagem, aplicando a função hash sobre ela antes de ser enviada, e depois de recebida, e comparando as saídas, pois se a mensagem foi alterada, por menor que seja a alteração, os dois resultados da função serão completamente diferentes. O algoritmo mais utilizado para esta função é o SHA 2 - Secure Hash Algorithm 2(Algoritmo de Hash Seguro 2), projetado pela NSA, e possui seis versões diferentes, onde a mudança principal está no número de bits que eles retornam: SHA-224, SHA-256, SHA-384, SHA-512, SHA-512/224, SHA-512/256. 
+				\hspace{2cm} Esta função é amplamente utilizada para garantia de consistência tanto em criptografia quanto em várias outras áreas. Ela funciona embaralhando os bits de uma mensagem à um ponto que seja impossível inverter o processo. Ela aceita uma mensagem de qualquer tamanho, porém sempre retornará uma cadeia de bytes de tamanho fixo, não importando qual seja a entrada. Porém a maior característica desta função está no fato de que para duas entradas distintas x e y quaisquer, o resultado da função sempre será diferente para as duas. Desta forma, é possível se confirmar a integridade de uma mensagem, aplicando a função hash sobre ela antes de ser enviada, e depois de recebida, comparando a hash da mensagem com a hash recebida, pois se a mensagem foi alterada, por menor que seja a alteração, os dois resultados da função serão completamente diferentes. O algoritmo mais utilizado para esta função é o SHA 2 - Secure Hash Algorithm 2(Algoritmo de Hash Seguro 2), projetado pela NSA, e possui seis versões diferentes, onde a mudança principal está no número de bits que eles retornam: SHA-224, SHA-256, SHA-384, SHA-512, SHA-512/224, SHA-512/256. 
 			
 			\end{justify}
 

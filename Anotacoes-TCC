@@ -23,7 +23,6 @@ JMRTD:
 
 2.0:
 Active authentication não serve para impedir acesso aos DG's 3 e 4, ele serve para aumentar a segurança.
-PACE serve para aumentar a segurança
 Passive authentication -> Importante
 Basic Access Control aumenta segurança
 Extended Access Control é o que impede de acessar os arquivos.
