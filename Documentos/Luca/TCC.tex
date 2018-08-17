@@ -92,9 +92,8 @@ Key-Words: Javacard, Passaport,JMRTD, Security, Electronic-Passport, e-Passport,
 	\section{Introdução (Modificar, muito)}
 		\begin{justify}
 			
-			\hspace{2cm} Quando começaram a ser utilizados, os passaportes funcionavam apenas por meio físico, na forma de uma caderneta ou documento escrito, com todas as informações sendo verificadas manualmente, comparando as informações com o outros papéis, ou com um sistema eletrônico. Isto acarreta em uma passagem mais lenta pelo controle e abre muitas brechas para erros e falsificações passarem pelos vigías. Várias formas de prevenir falsificações como marcas d’água, padrões de impressão e manufatura do papel foram utilizadas, porém a inovação mais impactante e discutida foi a inserção de um chip dentro do passaporte. Embora várias informações possam ainda ser verificadas visualmente, mais ainda podem ser verificadas por meio eletrônico com o chip interno do passaporte, e mais rapidamente, diminuindo o risco de fraude. Este chip pode guardar as informações biométricas do dono, junto com as informações visuais, e ainda mais importante, possuindo diversos protocolos de segurança para garantir a autenticidade dos dados conferidos \cite{HOWPASSPORT}\cite{PASSPORTWIKI}.\\
-			\hspace*{2cm} Diversos softwares existem para a leitura de passportes e em sua maioria se utilizam da biblioteca JMRTD\cite{JMRTD} como base para seu funcionamento, poucos utilizam outras bibliotecas de código fechado, como o software de leitura de chips NFC da empresa InnoValor\cite{INNOVALOR}, mas não foi possível encontrar o software utilizado por aeroportos para a verificação de passaportes. Apenas dois softwares foram encontrados que efetivamente recolham dados e emitam um passaporte, pypassport\cite{PYPASSPORT}, e uma versão antiga da biblioteca JMRTD que possuía um aplicativo standalone para emissão e leitura de passaportes eletrônicos, este que foi descontinuado da versão 0.4.9 para a versão 0.5, mantendo o pacote apenas como uma biblioteca de leitura. \\
-			\hspace*{2cm} Desta forma para cumprir os requisitos de recolher as informações do usuário e emitir um passaporte válido de acordo com o padrão ICAO9303, será utilizado esta parte da versão 0.4.9 do aplicativo para a personalização do cartão.
+			\hspace{2cm} Quando começaram a ser utilizados, os passaportes funcionavam apenas por meio físico, na forma de uma caderneta ou documento escrito, com todas as informações sendo verificadas manualmente, comparando as informações com o outros papéis, ou com um sistema eletrônico.\cite{PASSPORTWIKI} Isto acarreta em uma passagem mais lenta pelo controle e abre muitas brechas para erros e falsificações passarem pelos vigías. Várias formas de prevenir falsificações como marcas d’água, padrões de impressão e manufatura do papel foram utilizadas, porém a inovação mais impactante e discutida foi a inserção de um chip dentro do passaporte. Embora várias informações possam ainda ser verificadas visualmente, mais ainda podem ser verificadas por meio eletrônico com o chip interno do passaporte, e mais rapidamente, diminuindo o risco de fraude. Este chip pode guardar as informações biométricas do dono, junto com as informações visuais, e ainda mais importante, possuindo diversos protocolos de segurança para garantir a autenticidade dos dados conferidos \cite{HOWPASSPORT}.\\
+			\hspace*{2cm} Diversos softwares existem para a leitura de passportes e, daqueles escritos em Java, em sua maioria se utilizam da biblioteca JMRTD\cite{JMRTD} como base para seu funcionamento, mas não foi possível encontrar o software utilizado por aeroportos para a verificação de passaportes. 
 
 			
 		\end{justify}
@@ -103,31 +102,33 @@ Key-Words: Javacard, Passaport,JMRTD, Security, Electronic-Passport, e-Passport,
 		\begin{justify}
 				
 				\hspace{2cm}O objetivo principal é a criação do sistema de coleta de dados e emissão de um passaporte eletrônico em um cartão Javacard, onde os dados sejam armazenados depois possam ser extraídos e validados em qualquer tipo de máquina que possua este sistema.\\
-				\hspace*{2cm}Os objetivos específicos se dão por:\\
+				\hspace*{2cm}Desta forma, alguns requisitos são propostos para que o objetivo se dê por alcançado:\\
 					\hspace*{3cm}1.Coleta dos dados básicos do usuário\\
 					\hspace*{3cm}2.Coleta da foto do usuário e extração dos dados faciais da foto.\\
 					\hspace*{3cm}3.Coleta dos dados biométricos como digital e íris.\\
 					\hspace*{3cm}4.Ter o cartão preenchido e que cumpra as especificações do padrão ICAO9303.\\
-					\hspace*{3cm}5.Ter o programa que colete os dados do usuário de forma rápida e fácil.\\
-				 \hspace*{2cm}Ao final do projeto espera-se ter concluído a criação de um sistema que colete os dados do usuário, armazenando-os no banco de dados e no cartão, e que emita o cartão conforme as especificações ditadas no padrão ICAO9303
+					\hspace*{3cm}5.Preenchimento correto das informações de segurança do cartão.\\
+				 \hspace*{2cm}Ao final do projeto espera-se ter concluído a criação de um sistema que colete os dados do usuário, armazenando-os no cartão, conforme as especificações ditadas no padrão ICAO9303
 
 			
 		\end{justify}
 
-	\subsection{Trabalhos Cprrelatos e Revisão Bibliográfica}
+	\subsection{Trabalhos Correlatos e Revisão Bibliográfica}
 		\begin{justify}
-			\hspace{2cm} Várias bibliotecas e aplicativos funcionais existem, que fazem possível a leitura de passaportes eletrônicos, ou por via de chips de contato ou RFID, escritos em várias linguagens de programação. Muitos poucos permitem a emissão e personalização destes passaportes. Para a linguagem Java, vários se utilizam também da biblioteca JMRTD.
-			\hspace*{2cm}pypassport - PYTHON - emite e lê passaportes\cite{PYPASSPORT}
-			\hspace*{2cm}innoValor - \cite{PYPASSPORT}
-			\hspace*{2cm}pypassport - \cite{PYPASSPORT}
-			\hspace*{2cm}pypassport - \cite{PYPASSPORT}
-			\hspace*{2cm}pypassport - \cite{PYPASSPORT}
-			\hspace*{2cm}pypassport - \cite{PYPASSPORT}
+		Parametrizar o método de busca para deixar mais forte esta seção. Com qual query de busca que se chegou o resultado, qual foi a extensão da busca.
+			\hspace{2cm} Várias bibliotecas e aplicativos funcionais existem, que fazem possível a leitura de passaportes eletrônicos, ou por via de chips de contato ou RFID, escritos em várias linguagens de programação. Muitos poucos permitem a emissão e personalização destes passaportes. Para a linguagem Java, vários se utilizam também da biblioteca JMRTD. \\
+			\hspace*{2cm}A pesquisa foi efetuada utilizando-se a plataforma de busca Google, com as seguintes pesquisas: "e-passport reader python", "e-passport reader java", "e-passport reader c++", sendo analisada toda a primeira e segunda páginas da busca, e os que mais se destacaram foram:\\
+			\hspace*{2cm}1. pypassport\cite{PYPASSPORT} - PYTHON - provê a emissão e leitura de passaportes RFID \\
+			\hspace*{2cm}2. innoValor\cite{INNOVALOR} - JAVA - provê apenas a leitura de passaportes RFID\\
+			\hspace*{2cm}3. e-passport NFC reader\cite{TANANAEV} - JAVA - provê apenas a leitura de passaportes RFID, utiliza a biblioteca JMRTD\\
+			\hspace*{2cm}4. epassport reader\cite{GLAMDRING} - JAVA - provê apenas a leitura de passaportes, utiliza a biblioteca JMRTD \\
+			\hspace*{2cm}5. RFIDIOt\cite{RFIDIOT} - PYTHON - Ferramentas para trabalhar com cartões RFID, podendo ler e escrever nos cartões\\
+			\hspace*{2cm}6. wzmrtd\cite{WZMRTD} - C++ - provê apenas a leitura de passaportes RFID.
 
 
 		\end{justify}
 
-	\section {Conceitos Básicos}
+	\section {Fundamentações teóricas e práticas}
 		\subsection{O que é segurança computacional? [\cite{STALLINS} - cap 1]}
 			\begin{justify}
 			
@@ -181,7 +182,7 @@ Key-Words: Javacard, Passaport,JMRTD, Security, Electronic-Passport, e-Passport,
 			\end{justify}
 
     
-	\section{O Documento ICAO 9303\cite{ICAO} - Remover Talvez?}
+	\subsection{O Documento ICAO 9303\cite{ICAO}}
 		\begin{justify}
 			
 				\hspace*{2cm} O documento ICAO 9303 é o documento emitido que regulamenta passaportes eletrônicos, e é o padrão utilizado para toda formatação de passaportes eletrônicos. ICAO é uma sigla para “International Civil Aviation Organization”, que é uma agência especializada das Nações Unidas. Foi estabelecida em 1944 para gerenciar a admnistração e governância da Convenção de Aviação Civil Internacional (Convenção de Chicago). \\
@@ -200,7 +201,7 @@ Key-Words: Javacard, Passaport,JMRTD, Security, Electronic-Passport, e-Passport,
 
 		\end{justify}
 
-	\section{Javacard\cite{JAVACHEN}}
+	\subsection{Javacard\cite{JAVACHEN}}
 		\begin{justify}
 			
 
@@ -210,7 +211,7 @@ Key-Words: Javacard, Passaport,JMRTD, Security, Electronic-Passport, e-Passport,
 		\end{justify}
 
 
-	\section{O aplicativo e sua estrutura lógica de dados - Remover talvez?}
+	\subsection{O aplicativo e sua estrutura lógica de dados}
 		\begin{justify}
 
 			\hspace{2cm} A biblioteca JMRTD possui consigo um aplicativo a ser instalado e executado no cartão para o funcionamento da biblioteca\cite{SASSO}. Este aplicativo foi feito juntamente com a biblioteca no padrão ICAO9303, portanto ele pode ser lido inclusive por outras bibliotecas que implementem o padrão. Este aplictivo tem como função armazenar todas as informações referentes a um passaporte, e portanto possui uma estrutura de dados lógica interna descrita pelo padrão ICAO9303:\\
@@ -232,17 +233,17 @@ Key-Words: Javacard, Passaport,JMRTD, Security, Electronic-Passport, e-Passport,
 			\hspace*{2cm} DG 15 — Informações da chave pública para Autenticação Ativa***\\
 			\hspace*{2cm} DG 16 — Pessoas para contato*\\
 
-			\hspace*{2cm} * - Opcional\\
+			\hspace*{1.5cm} * - Opcional\\
 			\hspace*{2cm} ** - Ainda não definido, estrutura geral que acomoda qualquer tipo de dados\\
 			\hspace*{2cm} *** - Condicional, apenas se suportado\\
 			
 			\hspace*{2cm}Além destes existem mais dois arquivos que não armazenam dados do usuário mas sim dados do cartão, estes são: COM e SOD.\\
 			\hspace*{2cm} O arquivo COM, ou Arquivo de Cabeçalho e de Presença de Grupos de Dados, possui a função de armazenar a presença dos arquivos de dados, ou seja, quais arquivos estão presentes no cartão, e informações de versionamento do sistema de arquivos do cartão. \\
-			\hspace*{2cm} O arquivo SOD, ou Document Security Object - Objeto de Segurança do Documento, possui a função de armazenar o resultado da função hash de cada arquivo, ou seja, no processo de emissão do cartão, cada arquivo é passado também pela função hash, e seu resultado é armazenado dentro do arquivo SOD. Ele também armazena todas as informações de segurança do cartão como os algoritmos utilizados para a função hash e criptografia.
-			\hspace*{2cm} O cartão possui também uma zona que é ilegível por meios externos, informações sensíveis a criptografia como chaves privadas são armazenadas ali na sua criação, e depois só podem ser lidas pelo próprio cartão.
+			\hspace*{2cm} O arquivo SOD, ou Document Security Object - Objeto de Segurança do Documento, possui a função de armazenar o resultado da função hash de cada arquivo, ou seja, no processo de emissão do cartão, cada arquivo é passado também pela função hash, e seu resultado é armazenado dentro do arquivo SOD. Ele também armazena todas as informações de segurança do cartão como os algoritmos utilizados para a função hash e criptografia.\\
+			\hspace*{2cm} O cartão possui também uma zona que é ilegível por meios externos, informações sensíveis a criptografia como chaves privadas são armazenadas ali na sua criação, e depois só podem ser lidas e utilizadas pelo próprio cartão.
 		\end{justify}
 
-	\section{As bibliotecas utilizadas}
+	\subsection{As bibliotecas utilizadas}
 		\begin{justify}
 			 
 		\hspace{2cm}O sistema principal será desenvolvido na linguagem de programação Java, porém algumas das bibliotecas escolhidas foram escritas na linguagem de programação C ou C++ exigindo a utilização da Interface Nativa Java (JNI) para sua utilização.\\
@@ -272,13 +273,15 @@ Key-Words: Javacard, Passaport,JMRTD, Security, Electronic-Passport, e-Passport,
 		\end{justify}
 
 
-	\section{Desenvolvimento - Reescrever?}
+	\section{Desenvolvimento - Reescrever? }
 		\begin{justify}
 			
 		\hspace{2cm}O projeto foi desenvolvido tendo como base o aplicativo JMRTD\cite{JMRTD}, que engloba uma Biblioteca Java e um Applet, para que seja criado um aplicativo que emita os passaportes, e que possa ser expandido caso haja a necessidade, para englobar mais documentos e não só o passaporte.\\
 		\hspace*{2cm}Foi feita uma extensa pesquisa sobre os documentos ICAO 9303\cite{ICAO}, e a documentação da biblioteca JMRTD para se iniciar o projeto.\\
 		\hspace*{2cm}O programa foi desenvolvido com a linguagem de programação Java, utilizando o sistema JNI para a integração de bibliotecas que existem somente em C e C++, e as bibliotecas JMRTD, como a biblioteca principal para a construção do cartão, BouncyCastle\cite{BOUNCYCASTLE} e EJBCA\cite{EJBCA} como provedores de segurança e certificação, libfprint\cite{PRINT} para a coleta das digitais biométricas, Stasm\cite{STASM} para o reconhecimento facial, e OpenCV\cite{OPENCV} para processamento de imagem.\\
 		\hspace*{2cm}Utilizando uma parte do código da versão 0.4.9 da biblioteca JMRTD, é possível enviar informações para o cartão, desta forma pode-se fácilmente coletar e enviar as informações à respeito do MRZ. A biblioteca OpenCV foi usada para o processamento da foto da pessoa, e possui funções para tirar a foto com a camera da máquina. Com a biblioteca Stasm, se pode retirar os pontos faciais da pessoa, e depois tratá-los para se adequarem ao padrão ICAO. Foi necessário utilizar a API nativa do java para integrar as bibliotecas Stasm e libfprint ao projeto, pois elas existem apenas em C. Com a biblioteca libfprint foi possível a extração da digital para sua inserção.
+		\hspace*{2cm}*Falar dos protocolos de segurança, e ressaltar AA e EAC*
+
 
 		\end{justify}
 
@@ -305,6 +308,7 @@ Key-Words: Javacard, Passaport,JMRTD, Security, Electronic-Passport, e-Passport,
 	\subsection{Funcionamento}
 		\begin{justify}
 			\hspace{2cm} O aplicativo desenvolvido possui duas funções, coletar as informações do usuário e com ela gerar um novo passaporte válido, e verificar se as informações coletadas estão devidamente inseridas no cartão. A parte da verificação de identidade do proprietário não faz jús ao escopo deste trabalho. O aplicativo possui as funções de retirar uma foto da pessoa, e de coletar todas as suas digitais. O aplicativo também necessita de certificados digitais e pares de chaves para que os protocolos de segurança possam ser executados.
+			\hspace*{2cm} *Expandir*
 			
 		\end{justify}
 

@@ -72,6 +72,7 @@ import org.bouncycastle.jce.ECNamedCurveTable;
  *
  * @author Luca Fachini Campelli 16/06/17
  */
+@Deprecated
 public class CardCom {
 
     public static String DOCUMENTNUMBER = "123456789"; //RG - requerido 9digitos

@@ -76,6 +76,22 @@ public class MyCertificateFactory {
     private MyCertificateFactory() {
 
     }
+    
+    public KeyPair getEACECPair(){
+        return pair;
+    }
+    
+    public KeyPair getEACRSAPair(){
+        return RSApair;
+    }
+    
+    public CVCPrincipal getCAREF(){
+        return caRef;
+    }
+    
+    public CVCPrincipal getHOLDERREF(){
+        return holderRef;
+    }
 
     /**
      * Generates a CVCPrincipal object that wraps the ejbca implementation on
@@ -83,7 +99,7 @@ public class MyCertificateFactory {
      *
      * @return
      */
-    public CVCPrincipal generateCardVerifiableCertificatePrincipal(Country country, String sequenceNumber) {
+    public CVCPrincipal generateCardVerifiableCertificatePrincipal(Country country) {
 
         CVCPrincipal ref = new CVCPrincipal(country, country.getName().substring(0, 4), "00001");
         System.out.println(ref.toString());
@@ -128,19 +144,11 @@ public class MyCertificateFactory {
      * @throws Exception
      */
     public CardVerifiableCertificate generateCVCertificate(Country country, int validYears) throws IOException, NoSuchAlgorithmException, NoSuchProviderException, InvalidKeyException, SignatureException, ConstructionException, InvalidAlgorithmParameterException {
-        holderRef = generateCardVerifiableCertificatePrincipal(country, "00001");
-        caRef = generateCardVerifiableCertificatePrincipal(country, "00001");
+        holderRef = generateCardVerifiableCertificatePrincipal(country);
+        caRef = generateCardVerifiableCertificatePrincipal(country);
 
         pair = generateEllipticCurveKeyPair();
         RSApair = generateRSAKeyPair();
-
-        //Debug purposes only
-        DebugPersistence persistence = DebugPersistence.getInstance();
-
-        persistence.saveCaRef(caRef);
-        persistence.saveHolderRef(holderRef);
-        persistence.saveRSAPair(RSApair);
-        persistence.saveECPair(pair);
 
         String CertificateKeyAlgorithm = "SHA1withRSA";//"SHA256WITHECDSA";//
 
@@ -304,7 +312,7 @@ public class MyCertificateFactory {
         // set the certificate and the key in the keystore
         ks.setKeyEntry("DocSignCertificate", certGen.getPrivateKey(), pw.toCharArray(),
                 new X509Certificate[]{cert});
-        DebugPersistence.getInstance().saveRSAPair(new KeyPair(certGen.getPublicKey(), certGen.getPrivateKey()));
+        RSApair = new KeyPair(certGen.getPublicKey(), certGen.getPrivateKey());
 
         FileOutputStream fos = new FileOutputStream("/home/" + System.getProperty("user.name") + "/workspace/JavaCardPassport/Documentos/mykeystore.ks");
 

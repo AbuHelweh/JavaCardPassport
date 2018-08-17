@@ -27,11 +27,13 @@ import net.sf.scuba.smartcards.CardServiceException;
 import org.bouncycastle.util.Arrays;
 import org.jmrtd.BACKeySpec;
 import org.jmrtd.PassportService;
+import org.jmrtd.cert.CVCPrincipal;
 import org.jmrtd.lds.ChipAuthenticationInfo;
 import org.jmrtd.lds.ChipAuthenticationPublicKeyInfo;
 import org.jmrtd.lds.LDSFile;
 import org.jmrtd.lds.SODFile;
 import org.jmrtd.lds.SecurityInfo;
+import org.jmrtd.lds.TerminalAuthenticationInfo;
 import org.jmrtd.lds.icao.COMFile;
 import org.jmrtd.lds.icao.DG14File;
 import org.jmrtd.lds.icao.DG15File;
@@ -157,6 +159,7 @@ public class SecurityProtocols {
 
         ChipAuthenticationInfo chipinfo = null;
         ChipAuthenticationPublicKeyInfo chipauthinfo = null;
+        TerminalAuthenticationInfo tainfo = null;
 
         Collection<SecurityInfo> infos = dg14.getSecurityInfos();
         for (SecurityInfo i : infos) {
@@ -166,18 +169,33 @@ public class SecurityProtocols {
             if (i instanceof ChipAuthenticationPublicKeyInfo) {
                 chipauthinfo = (ChipAuthenticationPublicKeyInfo) i;
             }
+            if(i instanceof TerminalAuthenticationInfo){
+                tainfo = (TerminalAuthenticationInfo) i;
+            }
         }
 
         if (chipinfo == null || chipauthinfo == null) {
             throw new Exception("dg14 file empty");
-        }
-
+        }        
+        
         CAResult cares = service.doCA(chipauthinfo.getKeyId(), chipinfo.getObjectIdentifier(), SecurityInfo.ID_PK_ECDH, chipauthinfo.getSubjectPublicKey());
         //TAResult tares = service.doTA(caReference, terminalCertificates, cares.getPCDPrivateKey(), SecurityInfo.ID_TA_ECDSA_SHA_256, cares, DOCUMENTNUMBER);
 
         return new EACResult(null, null);
     }
 
+    /**
+     * Handler for active authentication protocol, sends challenge to card that encrypts it, receives, decrypt and validate
+     * @param dg15 - DG15 file wher public key is located
+     * @return - AA Result with protocol result
+     * @throws CardServiceException
+     * @throws NoSuchAlgorithmException
+     * @throws NoSuchProviderException
+     * @throws NoSuchPaddingException
+     * @throws InvalidKeyException
+     * @throws IllegalBlockSizeException
+     * @throws BadPaddingException 
+     */
     public Security.AAResult doAA(DG15File dg15) throws CardServiceException, NoSuchAlgorithmException, NoSuchProviderException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
 
         PublicKey publicKey = dg15.getPublicKey();

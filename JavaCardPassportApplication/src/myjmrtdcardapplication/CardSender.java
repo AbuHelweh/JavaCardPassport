@@ -5,7 +5,6 @@
  */
 package myjmrtdcardapplication;
 
-import util.DebugPersistence;
 import util.ImageWorks;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -35,6 +34,7 @@ import org.jmrtd.lds.ChipAuthenticationPublicKeyInfo;
 import org.jmrtd.lds.LDSFile;
 import org.jmrtd.lds.SODFile;
 import org.jmrtd.lds.SecurityInfo;
+import org.jmrtd.lds.TerminalAuthenticationInfo;
 import org.jmrtd.lds.icao.COMFile;
 import org.jmrtd.lds.icao.DG14File;
 import org.jmrtd.lds.icao.DG15File;
@@ -93,14 +93,15 @@ public class CardSender {
         if (!perso.isOpen()) {
             perso.open();
         }
+        
 
         if (certificate != null) {
 
             System.out.println("Enviando Chave Privada EAC/ ECDH");
-            perso.putPrivateEACKey(DebugPersistence.getInstance().getECPair().getPrivate());
+            perso.putPrivateEACKey(MyCertificateFactory.getInstance().getEACECPair().getPrivate()); //<<CVCA Private Key??
 
             System.out.println("Sending Certificate");
-            perso.putCVCertificate(certificate);
+            perso.putCVCertificate(certificate); //<-- CVCA Public Key?
         }
 
         System.out.println("Sending BAC");
@@ -307,18 +308,19 @@ public class CardSender {
      * Envia o arquivo DG14 que contem as informacoes necessarias para o
      * protocolo CA, parte do EAC
      *
-     * @param RSApublicKey
+     * @param DHpublicKey
      * @throws CardServiceException
      */
-    public void SendDG14(PublicKey RSApublicKey) throws CardServiceException {
+    public void SendDG14(PublicKey DHpublicKey) throws CardServiceException {
         ArrayList<SecurityInfo> infos = new ArrayList();
 
         SecurityInfo caInfo = new ChipAuthenticationInfo(SecurityInfo.ID_CA_ECDH_3DES_CBC_CBC, 2);  //Encontrar o ID Certo
-        SecurityInfo caKInfo = new ChipAuthenticationPublicKeyInfo(RSApublicKey);
+        SecurityInfo caKInfo = new ChipAuthenticationPublicKeyInfo(DHpublicKey);
+        SecurityInfo taInfo = new TerminalAuthenticationInfo();
 
         infos.add(caInfo);
         infos.add(caKInfo);
-        //infos.add(taInfo);
+        infos.add(taInfo);
 
         DG14File dg14 = new DG14File(infos);
 

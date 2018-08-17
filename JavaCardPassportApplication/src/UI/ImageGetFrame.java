@@ -57,6 +57,7 @@ public class ImageGetFrame extends javax.swing.JFrame {
             @Override
             public void windowClosed(WindowEvent ev) {
                 cv.release();
+                taken = true;
             }
         });
         this.setVisible(true);

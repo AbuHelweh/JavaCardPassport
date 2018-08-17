@@ -7,7 +7,6 @@ package UI;
 
 import util.FingerPrintCollection;
 import util.MyCertificateFactory;
-import util.DebugPersistence;
 import util.GlobalFlags;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -148,7 +147,7 @@ public class CreatePanel extends javax.swing.JPanel {
             ImageWorks.extractPointsFromImageAndResolve(file);
 
         } else {
-            ControlledDialog.showMessageDialog("Loading Camera", "Please Wait");
+            ControlledDialog.showMessageDialog("Loading Camera... Please Wait");
             new ImageGetFrame(this);
         }
     }
@@ -566,7 +565,7 @@ public class CreatePanel extends javax.swing.JPanel {
 
                     //Certificado do cartão, provavelmente uma versao CV do certificado SOD
                     if (certificate != null) {
-                        sender.SendDG14(DebugPersistence.getInstance().getDHKey().getPublic());
+                        sender.SendDG14(MyCertificateFactory.getInstance().getEACECPair().getPublic());
                     }
                     
                     sender.SendDG15();

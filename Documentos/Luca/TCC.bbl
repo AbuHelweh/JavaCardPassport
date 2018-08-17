@@ -24,6 +24,19 @@ ISO/IEC.
 \newblock https://www.iso.org/standard/50867.html.
 \newblock Accessed: 23-05-2018.
 
+\bibitem{PYPASSPORT}
+Olivier~Roger Jean-Francois~Houzard.
+\newblock Python library to read the biometric epassport.
+\newblock \url{https://code.google.com/archive/p/pypassport/}.
+\newblock Accessed: 10-08-2018.
+
+\bibitem{RFIDIOT}
+Adam Laurie.
+\newblock Rfidiot.py - rfid io tools for python.
+\newblock \url{https://github.com/AdamLaurie/RFIDIOt},
+  \url{http://www.rfidiot.org/}.
+\newblock Accessed: 10-08-2018.
+
 \bibitem{PRINT}
 LibFPrint.
 \newblock Libfprint.
@@ -36,12 +49,6 @@ S.~Milborrow and F.Nicolls.
 \newblock {\em VISAPP}, 2014.
 \newblock Accessed: 13-04-2018.
 
-\bibitem{USPASSPORT}
-U.S.~Department of~State.
-\newblock Policy podcast: Making a passport.
-\newblock \url{https://www.youtube.com/watch?v=1XIjbJ4GvEQ}.
-\newblock Accessed: 26-06-2018.
-
 \bibitem{BOUNCYCASTLE}
 The~Legion of~the Bouncy~Castle.
 \newblock Bouncy castle.
@@ -52,7 +59,7 @@ The~Legion of~the Bouncy~Castle.
 Martin OOSTDIJK.
 \newblock Jmrtd.
 \newblock \url{https://www.jmrtd.org}.
-\newblock Accessed: 13-04-2018.
+\newblock Accessed: 15-08-2018.
 
 \bibitem{ICAO}
 International Civil~Aviation Organization.
@@ -69,8 +76,8 @@ PrimeKey.
 
 \bibitem{SASSO}
 Felipe SASSO.
-\newblock Idedu: Proposta de um cartão de identificação acadêmico baseado
-  no padrão icao 9303.
+\newblock Cartão de identificação humana para autenticação e autorização
+  segura.
 \newblock
   \url{https://docs.google.com/document/d/15Jd3IzxCOFT7Vi-mvTHSbRyRPQeikQoldCGfVxTFUMU/edit}.
 \newblock Accessed: 31-07-2017.
@@ -91,6 +98,25 @@ SCUBA Team.
 \newblock Smart card utilities for better access, project scuba.
 \newblock \url{http://scuba.sourceforge.net}.
 \newblock Accessed: 13-04-2018.
+
+\bibitem{GLAMDRING}
+Github user Glamdring.
+\newblock epassport reader.
+\newblock \url{https://github.com/Glamdring/epassport-reader}.
+\newblock Accessed: 15-08-2018.
+
+\bibitem{TANANAEV}
+Github user Tananaev.
+\newblock e-passport nfc reader.
+\newblock \url{https://github.com/tananaev/passport-reader}.
+\newblock Accessed: 15-08-2018.
+
+\bibitem{WZMRTD}
+ariadnext waazaa.org.
+\newblock wzmrtd.
+\newblock \url{https://github.com/ariadnext/wzmrtd}.
+\newblock "Accessed: 10-08-2018" , "Site original http://waazaa.org/wzmrtd não
+  existe mais na data em que este documento foi escrito".
 
 \bibitem{PASSPORTWIKI}
 Wikipedia.

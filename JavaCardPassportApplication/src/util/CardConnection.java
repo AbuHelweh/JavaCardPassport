@@ -52,7 +52,7 @@ public class CardConnection {
         }
 
         for (int i = 0; i < 10 && !reader.isCardPresent(); i++) {
-            ControlledDialog.showMessageDialog("Por favor insira um cartão " + i, "Início");
+            ControlledDialog.showMessageDialog("Por favor insira um cartão " + i);
             reader.waitForCardPresent(1000);
             System.err.println("Cartão " + (reader.isCardPresent() ? "" : "não ") + "conectado " + i);
         }
@@ -88,7 +88,7 @@ public class CardConnection {
                 if (GlobalFlags.DEBUG) {
                     System.err.println("Por favor retire o cartão");
                 }
-                ControlledDialog.showMessageDialog("Por favor retire o cartão", "Fim");
+                ControlledDialog.showMessageDialog("Por favor retire o cartão");
             }
 
             while (reader.isCardPresent()) {

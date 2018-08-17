@@ -24,18 +24,12 @@ public class ControlledDialog extends JFrame {
         }
     }
 
-    public static void showMessageDialog(String message, String name) {
+    public static void showMessageDialog(String message) {
         if (actual == null) {
-            actual = new ControlledDialog(message, name);
+            actual = new ControlledDialog();
         }
-        actual.setTitle(name);
+        actual.setTitle(message);
         actual.setLocationRelativeTo(null);
-        actual.jLabel1.setText(message);
-        new Thread(new Runnable() {
-            public void run() {
-                actual.repaint();
-            }
-        }).start();
         actual.setVisible(true);
 
     }
@@ -44,13 +38,9 @@ public class ControlledDialog extends JFrame {
      * Creates new form MessageDialog There can be only one so one disposes the
      * other if called
      */
-    private ControlledDialog(String message, String name) {
+    private ControlledDialog() {
         initComponents();
-        this.jLabel1.setText(message);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        this.setLocationRelativeTo(null);
-        this.setTitle(name);
-
         this.setVisible(true);
 
     }
@@ -64,27 +54,17 @@ public class ControlledDialog extends JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jLabel1.setText("Problems");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE)
-                .addContainerGap())
+            .addGap(0, 300, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
-                .addContainerGap())
+            .addGap(0, 0, Short.MAX_VALUE)
         );
 
         pack();
@@ -92,6 +72,5 @@ public class ControlledDialog extends JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }
