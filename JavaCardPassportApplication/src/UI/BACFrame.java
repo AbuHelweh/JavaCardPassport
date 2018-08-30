@@ -240,10 +240,10 @@ public class BACFrame extends javax.swing.JFrame {
         
         DocNum = DOCNUMFIELD.getText().trim();
         if(DocNum.length() != 9){
-            errMsg += "Wrong Document Number Length!" + System.lineSeparator();
+            //errMsg += "Wrong Document Number Length!" + System.lineSeparator();
         }
         if(!DocNum.matches("[0-9]+")){
-            errMsg += "Document Number Can't Have Letters";
+            //errMsg += "Document Number Can't Have Letters";
         }
         
         birth = BIRTHYEARBOX.getItemAt(BIRTHYEARBOX.getSelectedIndex()).substring(2);

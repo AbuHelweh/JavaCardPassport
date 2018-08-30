@@ -17,7 +17,9 @@ import javax.swing.JButton;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.core.MatOfInt;
+import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
 import static org.opencv.videoio.Videoio.CV_CAP_PROP_FRAME_HEIGHT;
 import static org.opencv.videoio.Videoio.CV_CAP_PROP_FRAME_WIDTH;
@@ -157,16 +159,27 @@ public class ImageGetFrame extends javax.swing.JFrame {
                 System.out.print("Failed to capture Image");
                 return;
             }
-
+            
             Imgcodecs.imencode(".jpg", frame, mob, params);
-
             byte[] ba = mob.toArray();
             try {
                 photo = ImageIO.read(new ByteArrayInputStream(ba));
-                File picture = new File("PictureTaken.jpg");
+                File picture = new File("PictureTakenFull.jpg");
+                ImageIO.write(photo, "jpg", picture);
+                
+                ImageWorks.extractPointsFromImageAndResolve(picture);
+                
+                Imgproc.resize(frame, frame, new Size(320,240));
+                
+                params = new MatOfInt(Imgcodecs.CV_IMWRITE_JPEG_QUALITY, 50);
+            
+                Imgcodecs.imencode(".jpg", frame, mob, params);
+                
+                ba = mob.toArray();
+                photo = ImageIO.read(new ByteArrayInputStream(ba));
+                picture = new File("PictureTakenHalf.jpg");
                 ImageIO.write(photo, "jpg", picture);
                 back.placeImage(picture);
-                ImageWorks.extractPointsFromImageAndResolve(picture);
 
             } catch (Exception ex) {
                 ex.printStackTrace();

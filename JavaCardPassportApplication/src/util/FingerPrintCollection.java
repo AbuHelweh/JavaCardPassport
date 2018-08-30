@@ -13,14 +13,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Scanner;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -32,8 +29,9 @@ import org.jmrtd.lds.iso19794.FingerInfo;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.core.MatOfInt;
+import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
-import util.ControlledDialog;
+import org.opencv.imgproc.Imgproc;
 
 /**
  *
@@ -210,7 +208,10 @@ public class FingerPrintCollection extends javax.swing.JFrame {
             System.out.println(img.length);
 
             //---------------Converter Para JPeg--------------------------------
-            MatOfInt params = new MatOfInt(Imgcodecs.CV_IMWRITE_JPEG_QUALITY, 50);  //com este parametro
+            
+            Imgproc.resize(temp, temp, new Size(), 0.5, 0.5, Imgproc.INTER_LINEAR);
+            
+            MatOfInt params = new MatOfInt(Imgcodecs.CV_IMWRITE_JPEG_QUALITY, 30);  //com este parametro
             Imgcodecs.imwrite(finger + ".jpg", temp, params);    //Salva a imagem em formato JPEG
 
             byte[] imgJPG = FileUtils.readFileToByteArray(new File(finger + ".jpg")); //<< Lê a imagem JPG direto como byteArray

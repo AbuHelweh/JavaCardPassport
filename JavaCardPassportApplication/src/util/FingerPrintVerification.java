@@ -11,13 +11,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -26,13 +22,13 @@ import javax.swing.JPanel;
 import jnitestfingerprint.FPrintController;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.jmrtd.lds.iso19794.FingerImageInfo;
 import org.jmrtd.lds.iso19794.FingerInfo;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.core.MatOfInt;
+import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
-import util.ControlledDialog;
+import org.opencv.imgproc.Imgproc;
 
 /**
  *
@@ -126,6 +122,7 @@ public class FingerPrintVerification extends javax.swing.JFrame {
             
             System.out.println(imgJPG.length);
             
+            Imgproc.resize(tempJPG, tempJPG, new Size(),2,2,Imgproc.INTER_LINEAR);
             
             //---------------Converter para PGM---------------------------------
             

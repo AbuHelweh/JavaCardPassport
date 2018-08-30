@@ -15,6 +15,9 @@ top=30mm,
 bottom=20mm,
 }
 
+\usepackage[backend=bibtex,style=authoryear]{biblatex}
+\renewcommand*{\nameyeardelim}{\addcolon\space}
+
 \renewcommand{\contentsname}{Sumário}
 \renewcommand{\listfigurename}{Figuras}
 \begin{document}
@@ -89,11 +92,11 @@ Key-Words: Javacard, Passaport,JMRTD, Security, Electronic-Passport, e-Passport,
 
 	\pagenumbering{arabic}
 
-	\section{Introdução (Modificar, muito)}
+	\section{Introdução}
 		\begin{justify}
 			
-			\hspace{2cm} Quando começaram a ser utilizados, os passaportes funcionavam apenas por meio físico, na forma de uma caderneta ou documento escrito, com todas as informações sendo verificadas manualmente, comparando as informações com o outros papéis, ou com um sistema eletrônico.\cite{PASSPORTWIKI} Isto acarreta em uma passagem mais lenta pelo controle e abre muitas brechas para erros e falsificações passarem pelos vigías. Várias formas de prevenir falsificações como marcas d’água, padrões de impressão e manufatura do papel foram utilizadas, porém a inovação mais impactante e discutida foi a inserção de um chip dentro do passaporte. Embora várias informações possam ainda ser verificadas visualmente, mais ainda podem ser verificadas por meio eletrônico com o chip interno do passaporte, e mais rapidamente, diminuindo o risco de fraude. Este chip pode guardar as informações biométricas do dono, junto com as informações visuais, e ainda mais importante, possuindo diversos protocolos de segurança para garantir a autenticidade dos dados conferidos \cite{HOWPASSPORT}.\\
-			\hspace*{2cm} Diversos softwares existem para a leitura de passportes e, daqueles escritos em Java, em sua maioria se utilizam da biblioteca JMRTD\cite{JMRTD} como base para seu funcionamento, mas não foi possível encontrar o software utilizado por aeroportos para a verificação de passaportes. 
+			\hspace{2cm} Quando começaram a ser utilizados, os passaportes funcionavam apenas por meio físico, na forma de uma caderneta ou documento escrito, com todas as informações sendo verificadas manualmente, comparando as informações com o outros papéis, o que abria brechas para a falsificação. Conforme o documento foi evoluindo, até se tornar a caderneta que conhecemos hoje, várias formas de prevenir falsificações como marcas d’água, padrões de impressão e manufatura do papel foram utilizadas, porém a inovação mais impactante e discutida foi a inserção de um chip eletrônico dentro do passaporte \parencite{WIKIPEDIA}. Embora várias informações possam ainda ser verificadas visualmente mais ainda podem ser verificadas por meio deste chip interno do passaporte, e mais rapidamente, permitindo até que a aferição do passaporte seja automatizada. Este chip pode guardar as informações biométricas do dono, junto com as informações visuais, e ainda mais importante, possuindo diversos protocolos de segurança para garantir a autenticidade dos dados conferidos \parencite{HOWPASSPORT}.\\
+			\hspace*{2cm} Diversos softwares existem para a leitura de passportes e, daqueles escritos em Java, em sua maioria se utilizam da biblioteca JMRTD\parencite{JMRTD} como base para seu funcionamento, mas não foi possível encontrar o software utilizado por aeroportos para a verificação de passaportes. Sendo assim, seria possível emitir um passaporte na plataforma javacard, utilizando bibliotecas open-source, que seja equivalente ao passaporte utilizado hoje em dia?
 
 			
 		\end{justify}
@@ -103,11 +106,11 @@ Key-Words: Javacard, Passaport,JMRTD, Security, Electronic-Passport, e-Passport,
 				
 				\hspace{2cm}O objetivo principal é a criação do sistema de coleta de dados e emissão de um passaporte eletrônico em um cartão Javacard, onde os dados sejam armazenados depois possam ser extraídos e validados em qualquer tipo de máquina que possua este sistema.\\
 				\hspace*{2cm}Desta forma, alguns requisitos são propostos para que o objetivo se dê por alcançado:\\
-					\hspace*{3cm}1.Coleta dos dados básicos do usuário\\
-					\hspace*{3cm}2.Coleta da foto do usuário e extração dos dados faciais da foto.\\
-					\hspace*{3cm}3.Coleta dos dados biométricos como digital e íris.\\
+					\hspace*{3cm}1.O sistema deve coletr os dados básicos do usuário\\
+					\hspace*{3cm}2.O sistema deve tirar a foto do usuário e extrair dela os dados para o reconhecimento facial.\\
+					\hspace*{3cm}3.O sistema deve coletar os dados biométricos como digital e íris.\\
 					\hspace*{3cm}4.Ter o cartão preenchido e que cumpra as especificações do padrão ICAO9303.\\
-					\hspace*{3cm}5.Preenchimento correto das informações de segurança do cartão.\\
+					\hspace*{3cm}5.O cartão deve ser equivalente a um passaporte oficial, na questão de sua estrutura interna e dados armazenados\\
 				 \hspace*{2cm}Ao final do projeto espera-se ter concluído a criação de um sistema que colete os dados do usuário, armazenando-os no cartão, conforme as especificações ditadas no padrão ICAO9303
 
 			
@@ -115,28 +118,21 @@ Key-Words: Javacard, Passaport,JMRTD, Security, Electronic-Passport, e-Passport,
 
 	\subsection{Trabalhos Correlatos e Revisão Bibliográfica}
 		\begin{justify}
-		Parametrizar o método de busca para deixar mais forte esta seção. Com qual query de busca que se chegou o resultado, qual foi a extensão da busca.
+			Parametrizar o método de busca para deixar mais forte esta seção. Com qual query de busca que se chegou o resultado, qual foi a extensão da busca.\\
 			\hspace{2cm} Várias bibliotecas e aplicativos funcionais existem, que fazem possível a leitura de passaportes eletrônicos, ou por via de chips de contato ou RFID, escritos em várias linguagens de programação. Muitos poucos permitem a emissão e personalização destes passaportes. Para a linguagem Java, vários se utilizam também da biblioteca JMRTD. \\
-			\hspace*{2cm}A pesquisa foi efetuada utilizando-se a plataforma de busca Google, com as seguintes pesquisas: "e-passport reader python", "e-passport reader java", "e-passport reader c++", sendo analisada toda a primeira e segunda páginas da busca, e os que mais se destacaram foram:\\
-			\hspace*{2cm}1. pypassport\cite{PYPASSPORT} - PYTHON - provê a emissão e leitura de passaportes RFID \\
-			\hspace*{2cm}2. innoValor\cite{INNOVALOR} - JAVA - provê apenas a leitura de passaportes RFID\\
-			\hspace*{2cm}3. e-passport NFC reader\cite{TANANAEV} - JAVA - provê apenas a leitura de passaportes RFID, utiliza a biblioteca JMRTD\\
-			\hspace*{2cm}4. epassport reader\cite{GLAMDRING} - JAVA - provê apenas a leitura de passaportes, utiliza a biblioteca JMRTD \\
-			\hspace*{2cm}5. RFIDIOt\cite{RFIDIOT} - PYTHON - Ferramentas para trabalhar com cartões RFID, podendo ler e escrever nos cartões\\
-			\hspace*{2cm}6. wzmrtd\cite{WZMRTD} - C++ - provê apenas a leitura de passaportes RFID.
+			\hspace*{2cm}A pesquisa foi efetuada utilizando-se a plataforma de busca Google, com as seguintes pesquisas: "e-passport reader python", "e-passport reader java", "e-passport reader c++", "e-passport creation", "passport creation python", "passport creation java", sendo analisada toda a primeira e segunda páginas da busca, e os que mais se destacaram foram:\\
+			\hspace*{2cm}1. pypassport\parencite{PYPASSPORT} - PYTHON - provê a emissão e leitura de passaportes RFID \\
+			\hspace*{2cm}2. innoValor\parencite{INNOVALOR} - JAVA - provê apenas a leitura de passaportes RFID\\
+			\hspace*{2cm}3. e-passport NFC reader\parencite{TANANAEV} - JAVA - provê apenas a leitura de passaportes RFID, utiliza a biblioteca JMRTD\\
+			\hspace*{2cm}4. epassport reader\parencite{GLAMDRING} - JAVA - provê apenas a leitura de passaportes, utiliza a biblioteca JMRTD \\
+			\hspace*{2cm}5. RFIDIOt\parencite{RFIDIOT} - PYTHON - Ferramentas para trabalhar com cartões RFID, podendo ler e escrever nos cartões\\
+			\hspace*{2cm}6. wzmrtd\parencite{WZMRTD} - C++ - provê apenas a leitura de passaportes RFID.
 
 
 		\end{justify}
 
 	\section {Fundamentações teóricas e práticas}
-		\subsection{O que é segurança computacional? [\cite{STALLINS} - cap 1]}
-			\begin{justify}
-			
-				\hspace{2cm} Segurança computacional engloba todas as áres de pesquisa relacionadas a manter algum tipo de informação segura, seja ela uma senha, listas de cadastros, um banco de dados, documentos ou uma receita de bolo. As pesquisas relacionadas a segurança computacional, trabalham para proteger estas informaçôes de pessoas que as poderiam utilizar para maus fins, seja impedindo que elas sejam obtidas ou entendidas por outras pessoas, ou garantindo que uma informação não foi alterada antes de ser entregue ao destinatário. As próximas seções deste documento explicam certos campos desta área que serão tratados.
-			
-			\end{justify}
-
-		\subsection{Criptografia Simétrica e Assimétrica [\cite{STALLINS} -parte 1 - parte 2]}
+		\subsection{Criptografia Simétrica e Assimétrica}
 			\begin{justify}
 			
 
@@ -145,7 +141,7 @@ Key-Words: Javacard, Passaport,JMRTD, Security, Electronic-Passport, e-Passport,
 					
 			\end{justify}
 
-		\subsection{Função Hash - SHA [\cite{STALLINS} - cap 11 - pg313]}
+		\subsection{Função Hash - SHA}
 			\begin{justify}
 			
 
@@ -153,26 +149,17 @@ Key-Words: Javacard, Passaport,JMRTD, Security, Electronic-Passport, e-Passport,
 			
 			\end{justify}
 
-		\subsection{Assinaturas Digitais[\cite{STALLINS} - cap 13.1 - pg 395]}
+		\subsection{Assinaturas Digitais}
 			\begin{justify}
 			
 
-				\hspace{2cm}A confiança entre duas partes de uma troca de mensagens pode não ser suficiente para que informação sensível seja transferida. Uma parte “A” pode forjar uma mensagem alegando ter sido enviada pela parte “B”, ou “B” pode simplesmente negar ter enviado qualquer mensagem, mesmo que o tenha. Desta forma, um meio de proteger âmbas as partes contra fraude mútua são as assinaturas digitais.
-		Uma assinatura digital consiste normalmente da própria mensagem "M", passada pela função hash e cifrada com a chave privada do remetente, concatenada ao fim da mensagem. Ao ser recebida esta assinatura pode ser verificada, removendo-a da mensagem, decifrando-a com a chave pública do remetente e comparando-a com a hash da mensagem recebida. Sendo assim duas afirmações podem ser concluídas: apenas o remetente pode ter enviado a mensagem, pois apenas a sua chave privada pode ser decifrada com sua chave pública, e a mensagem não foi alterada durante seu trajeto, pois as hash's coicidem.
+				\hspace{2cm}A confiança entre duas partes de uma troca de mensagens pode não ser suficiente para que informação sensível seja transferida. Uma parte “A” pode forjar uma mensagem alegando ter sido enviada pela parte “B”, ou “B” pode simplesmente negar ter enviado qualquer mensagem, mesmo que o tenha. Desta forma, um meio de proteger âmbas as partes contra fraude mútua são as assinaturas digitais.\\
+				\hspace*{2cm}Uma assinatura digital consiste normalmente da própria mensagem "M", passada pela função hash e cifrada com a chave privada do remetente, concatenada ao fim da mensagem. Ao ser recebida esta assinatura pode ser verificada, removendo-a da mensagem, decifrando-a com a chave pública do remetente e comparando-a com a hash da mensagem recebida. Sendo assim duas afirmações podem ser concluídas: apenas o remetente pode ter enviado a mensagem, pois apenas a sua chave privada pode ser decifrada com sua chave pública, e a mensagem não foi alterada durante seu trajeto, pois as hash's coicidem.
 			
 			
 			\end{justify}
 
-
-		\begin{figure}[hb!]
-			\centering
-			\includegraphics[width=250px]{AssinaturaDigital.png}
-			\caption{Descrição simplificada do funcionamento de uma assinatura digital.}
-			\label{fig:digiSign}
-
-		\end{figure}
-
-		\subsection{Certificados Digitais[\cite{STALLINS} - cap 14.4 - pg 435]}
+		\subsection{Certificados Digitais}
 			\begin{justify}
 			
 				
@@ -182,7 +169,7 @@ Key-Words: Javacard, Passaport,JMRTD, Security, Electronic-Passport, e-Passport,
 			\end{justify}
 
     
-	\subsection{O Documento ICAO 9303\cite{ICAO}}
+	\subsection{O Documento ICAO 9303}
 		\begin{justify}
 			
 				\hspace*{2cm} O documento ICAO 9303 é o documento emitido que regulamenta passaportes eletrônicos, e é o padrão utilizado para toda formatação de passaportes eletrônicos. ICAO é uma sigla para “International Civil Aviation Organization”, que é uma agência especializada das Nações Unidas. Foi estabelecida em 1944 para gerenciar a admnistração e governância da Convenção de Aviação Civil Internacional (Convenção de Chicago). \\
@@ -201,20 +188,20 @@ Key-Words: Javacard, Passaport,JMRTD, Security, Electronic-Passport, e-Passport,
 
 		\end{justify}
 
-	\subsection{Javacard\cite{JAVACHEN}}
+	\subsection{Javacard}
 		\begin{justify}
 			
 
-				\hspace{2cm} O Javacard é um cartão eletrônico que possui dois componentes principais, Um chip de contato e um processador interno. Este chip de contato se faz presente do lado externo do cartão, da mesma forma que cartões de crédito ou débito modernos, e cuida da comunicação do cartão com a leitora. O processador interno funciona como um computador, ele roda um sistema operacional Java, o que torna este cartão um Javacard. Ele também possui uma memória interna capaz de armazenar dados. O que diferencia este cartão de cartões de crédito por exemplo, é o fato de o cartão possuir um máquina virtual Java (JVM) instalada. A JVM faz possível o cartão possuir aplicativos em sua memória, e dependendo do programa que os acessar, pode escolher qual deles executar. Estes aplicativos conversam com o terminal por meio de mensagens, chamadas APDU's, que são em sua maioria padronizadas em alguns formatos específicos. O Chip de contato fornece energia e faz a comunicação entre a leitora ou terminal e o processador. Estes cartões possuem diversos mecanismos de segurança embutidos na própria JVM, os aplicativos rodam isolados uns dos outros, portanto os dados de um aplicativo nunca poderão serem lidos por outro. Os cartões também suportam funções de criptografia, que dependem dos aplicativos para serem utilizadas.
+				\hspace{2cm} O Javacard é um cartão eletrônico que possui dois componentes principais, Um chip de contato e um processador interno. Este chip de contato se faz presente do lado externo do cartão, da mesma forma que cartões de crédito ou débito modernos, e cuida da comunicação do cartão com a leitora. O processador interno funciona como um computador, ele roda um sistema operacional Java, o que torna este cartão um Javacard. Ele também possui uma memória interna capaz de armazenar dados. O que diferencia este cartão de cartões de crédito por exemplo, é o fato de o cartão possuir um máquina virtual Java (JVM) instalada. A JVM faz possível o cartão possuir aplicativos em sua memória, conhecidos como applets, e dependendo do programa que os acessar, pode escolher qual deles executar. Estes applets são diferentes dos aplicativos Java desenvolvidos para computador, pois devem levar em conta as limitações de processamento e memória dos cartões. Para tal, existe uma biblioteca de desenvolvimento independente conhecida como Java Card Development Kit oferecida pela empresa Oracle, que também disponibiliza o kit de desenvolvimento java convencional. Dentro do cartão, os applets conversam com o terminal por meio de mensagens, chamadas APDU's, que são em sua maioria padronizadas em formatos específicos. O Chip de contato fornece energia e faz a comunicação entre a leitora ou terminal e o processador. Estes cartões possuem diversos mecanismos de segurança embutidos na própria JVM, por exemplo, os aplicativos rodam isolados uns dos outros, portanto os dados de um aplicativo nunca poderão serem lidos por outro. Os cartões também suportam funções de criptografia, que dependem dos aplicativos para serem utilizadas.
 
 			
 		\end{justify}
 
 
-	\subsection{O aplicativo e sua estrutura lógica de dados}
+	\subsection{O applet e sua estrutura lógica de dados}
 		\begin{justify}
 
-			\hspace{2cm} A biblioteca JMRTD possui consigo um aplicativo a ser instalado e executado no cartão para o funcionamento da biblioteca\cite{SASSO}. Este aplicativo foi feito juntamente com a biblioteca no padrão ICAO9303, portanto ele pode ser lido inclusive por outras bibliotecas que implementem o padrão. Este aplictivo tem como função armazenar todas as informações referentes a um passaporte, e portanto possui uma estrutura de dados lógica interna descrita pelo padrão ICAO9303:\\
+			\hspace{2cm} A biblioteca JMRTD possui consigo um applet a ser instalado e executado no cartão para o funcionamento da biblioteca. Este applet foi feito juntamente com a biblioteca no padrão ICAO9303, portanto ele pode ser lido inclusive por outras bibliotecas que implementem o padrão. Este applet tem como função armazenar todas as informações referentes a um passaporte, e portanto possui uma estrutura de dados lógica interna descrita pelo padrão ICAO9303:\\
 			
 			\hspace*{1.5cm} DG 1 — Informação da Zona Legível por Máquina\\
 			\hspace*{2cm} DG 2 — Características Faciais (Foto)\\
@@ -248,25 +235,25 @@ Key-Words: Javacard, Passaport,JMRTD, Security, Electronic-Passport, e-Passport,
 			 
 		\hspace{2cm}O sistema principal será desenvolvido na linguagem de programação Java, porém algumas das bibliotecas escolhidas foram escritas na linguagem de programação C ou C++ exigindo a utilização da Interface Nativa Java (JNI) para sua utilização.\\
 		
-        \hspace*{2cm}JMRTD\cite{JMRTD}\\
+        \hspace*{2cm}JMRTD\\
     \hspace*{2cm}Java Machine Readable Travel Documents: é uma biblioteca para a criação, edição, e aferição de passaportes eletônicos escrita na linguagem de programação Java. Ela foi desenvolvida juntamente com a biblioteca Scuba, que a complementa. Ela possui a capacidade de criar, e editar novos passaportes, além que resgatar as informações de um passaporte pronto. \\
         
-		\hspace*{2cm}SCUBA\cite{SCUBA}\\
+		\hspace*{2cm}SCUBA\\
     \hspace*{2cm}Smart Card Utilities for Better Access: é uma biblioteca para a comunicação com cartões eletrônicos da plataforma javacard, escrita na linguagem de programação Java. Ela faz a ponte entre o JMRTD e o javacard possuindo a capacidade de transmitir mensagens e prover a comunicação com os cartões.\\
 		
-        \hspace*{2cm}STASM\cite{STASM}\\
-    \hspace*{2cm}Active Shape Models with STASM: é uma biblioteca de reconhecimento facial escrita na linguagem de progrmação C++. Ela se utiliza de modelos de formas para reconhecer um rosto em uma foto e retirar os pontos de referência do rosto para que depois seja feito o reconhecimento da pessoa, fazendo uso da biblioteca Open-CV. Possui a maioria dos pontos de reconhecimento parecida com o padrão ISO\cite{ISO}, e foi escolhida por ser de fácil utilização e possuir uma extensa documentação com exemplos mínimos disponíveis, facilitando a sua compreensão, além de ser complementar à biblioteca Open-CV.\\
+        \hspace*{2cm}STASM\\
+    \hspace*{2cm}Active Shape Models with STASM: é uma biblioteca de reconhecimento facial escrita na linguagem de progrmação C++. Ela se utiliza de modelos de formas para reconhecer um rosto em uma foto e retirar os pontos de referência do rosto para que depois seja feito o reconhecimento da pessoa, fazendo uso da biblioteca Open-CV. Possui a maioria dos pontos de reconhecimento parecida com o padrão ISO\parencite{ISO}, e foi escolhida por ser de fácil utilização e possuir uma extensa documentação com exemplos mínimos disponíveis, facilitando a sua compreensão, além de ser complementar à biblioteca Open-CV.\\
 		
-        \hspace*{2cm}LIBFPRINT\cite{PRINT}\\
+        \hspace*{2cm}LIBFPRINT\\
     \hspace*{2cm}É uma biblioteca de coleção e verificação de digitais biométricas escrita na linguagem de programação C. Ela provê funções para se coletar uma digital e guardá-la como uma imagem, e depois extrair as minutas desta imagem para que se compare com uma digital recém tirada. Foi escolhida por ter uma documentação extensa, exemplos mínimos e ter sido recomendada pelo orientador deste projeto.\\
 		
-        \hspace*{2cm}OPEN-CV\cite{OPENCV}\\
+        \hspace*{2cm}OPEN-CV\\
     \hspace*{2cm}Open Source Computer Vision Library: é uma biblioteca para manipulação de imagens e visão computacional escrita na linguagem de programação C++ e Java. Ela possui funcionalidades para conversão de imagens, e acessar a câmera do dispositivo para tirar fotos ou videos. Ela também provê visão computacional, permitindo identificar formas e rostos na imagem. A biblioteca Stasm amplia a funcionalidade para rostos, detectando mais pontos de interesse no rosto da pessoa, e foi escolhida por ser a mais bem recomendada biblioteca de manipulação de imagens e visão computacional, com relação a sua utilização.\\
 		
-        \hspace*{2cm}EJBCA\cite{EJBCA}\\
+        \hspace*{2cm}EJBCA\\
     \hspace*{2cm}Open Source PKI Certificate Authority: é uma biblioteca para criação e manejo de certificados digitais auto-assinados escrita na linguagem de programação Java. É necessária para o funcionamento da biblioteca JMRTD, para criação dos certificados verificáveis por cartão (CVC), necessários para a execução dos protocolos de segurança do cartão.\\
 		
-        \hspace*{2cm}BOUNCYCASTLE\cite{BOUNCYCASTLE}\\
+        \hspace*{2cm}BOUNCYCASTLE\\
     \hspace*{2cm}Bouncy Castle Security Provider: é um provedor de segurança, uma biblioteca que possui funções criptograficas e de geração e acordo de chaves para criptografia escrita na linguagem de programação Java. Toda a segurança da biblioteca do JMRTD é feita com ele, portanto por motivos de compatibilidade foi-se utilizado o bouncycastle como provedor para o sistema final.\\
 
 			
@@ -276,11 +263,14 @@ Key-Words: Javacard, Passaport,JMRTD, Security, Electronic-Passport, e-Passport,
 	\section{Desenvolvimento - Reescrever? }
 		\begin{justify}
 			
-		\hspace{2cm}O projeto foi desenvolvido tendo como base o aplicativo JMRTD\cite{JMRTD}, que engloba uma Biblioteca Java e um Applet, para que seja criado um aplicativo que emita os passaportes, e que possa ser expandido caso haja a necessidade, para englobar mais documentos e não só o passaporte.\\
-		\hspace*{2cm}Foi feita uma extensa pesquisa sobre os documentos ICAO 9303\cite{ICAO}, e a documentação da biblioteca JMRTD para se iniciar o projeto.\\
-		\hspace*{2cm}O programa foi desenvolvido com a linguagem de programação Java, utilizando o sistema JNI para a integração de bibliotecas que existem somente em C e C++, e as bibliotecas JMRTD, como a biblioteca principal para a construção do cartão, BouncyCastle\cite{BOUNCYCASTLE} e EJBCA\cite{EJBCA} como provedores de segurança e certificação, libfprint\cite{PRINT} para a coleta das digitais biométricas, Stasm\cite{STASM} para o reconhecimento facial, e OpenCV\cite{OPENCV} para processamento de imagem.\\
-		\hspace*{2cm}Utilizando uma parte do código da versão 0.4.9 da biblioteca JMRTD, é possível enviar informações para o cartão, desta forma pode-se fácilmente coletar e enviar as informações à respeito do MRZ. A biblioteca OpenCV foi usada para o processamento da foto da pessoa, e possui funções para tirar a foto com a camera da máquina. Com a biblioteca Stasm, se pode retirar os pontos faciais da pessoa, e depois tratá-los para se adequarem ao padrão ICAO. Foi necessário utilizar a API nativa do java para integrar as bibliotecas Stasm e libfprint ao projeto, pois elas existem apenas em C. Com a biblioteca libfprint foi possível a extração da digital para sua inserção.
-		\hspace*{2cm}*Falar dos protocolos de segurança, e ressaltar AA e EAC*
+		\hspace{2cm}O projeto foi desenvolvido tendo como base o aplicativo JMRTD\parencite{JMRTD}, que engloba uma Biblioteca Java e um Applet, para que seja criado um aplicativo que emita os passaportes, e que possa ser expandido caso haja a necessidade, para englobar mais documentos e não só o passaporte.\\
+		\hspace*{2cm}Foi feita uma extensa pesquisa sobre os documentos ICAO 9303\parencite{ICAO}, e a documentação da biblioteca JMRTD para se iniciar o projeto.\\
+		\hspace*{2cm}O programa foi desenvolvido com a linguagem de programação Java, utilizando o sistema JNI para a integração de bibliotecas que existem somente em C e C++, e as bibliotecas JMRTD, como a biblioteca principal para a construção do cartão, BouncyCastle\parencite{BOUNCYCASTLE} e EJBCA\parencite{EJBCA} como provedores de segurança e certificação, libfprint\parencite{PRINT} para a coleta das digitais biométricas, Stasm\parencite{STASM} para o reconhecimento facial, e OpenCV\parencite{OPENCV} para processamento de imagem.\\
+		\hspace*{2cm}Utilizando uma parte do código da versão 0.4.9 da biblioteca JMRTD, é possível enviar informações para o cartão, desta forma pode-se fácilmente coletar e enviar as informações à respeito do MRZ. A biblioteca OpenCV foi usada para o processamento da foto da pessoa, e possui funções para tirar a foto com a camera da máquina. Com a biblioteca Stasm, se pode retirar os pontos faciais da pessoa, e depois tratá-los para se adequarem ao padrão ICAO. Foi necessário utilizar a API nativa do java para integrar as bibliotecas Stasm e libfprint ao projeto, pois elas existem apenas em C. Com a biblioteca libfprint foi possível a extração da digital para sua inserção.\\
+		\hspace*{2cm}Durante o desenvolvimento, alguns pontos chave tiveram uma quantidade de esforço maior para serem desenvolvidos. Para a captura de digitais, e leitura facial, as bibliotecas libfprint e Stasm, que são escritas em C e C++ respectivamente, tiveram de ser integradas ao aplicativo. Para isso, foi utilizada a API nativa da linguagem Java, chamada de JNI. Ela exige que seja construída uma biblioteca dinamica com as funções a serem utilizadas das bibliotecas em C/C++, para serem acessadas por uma classe dedicada a fazer a ligação do aplicativo em Java com o JNI.\\
+		\hspace*{2cm}Como não é possível a troca de mensagens entre a interface nativa (JNI) e a aplicação, quando é necessária a execução de uma função nativa não é possível, por exemplo, enviar um sinal a uma Thread Java avisando do início da captura da digital. Aparentemente, também, alguns tipos de Threads, como as de repintura de janelas, parecem parar de funcionar durante a execução da biblioteca em C.\\
+		\hspace*{2cm}Existem classes dedicadas à captura da foto e das digitais. Para a foto, utliza-se a biblioteca OpenCV para acessar a camera, em uma thread, que mostra o vídeo na tela. Quando se é tirada a foto, ela é primeiro decodificada em jpeg com 100\% de qualidade, e 
+		\hspace*{2cm}Para a implementação do protocolo de segurança de Autenticação Ativa, a classe de personalização de cartões da versão 4.9 do JMRTD já possui um método que envia as informações necessárias para o cartão, porém se estava encontrando dificuldades para enviar a chave privada do cartão, utilizada neste protocolo. Depois de analisar tanto o método da biblioteca quanto as funções efetuadas pelo cartão ao receber tal instrução, percebeu-se uma discrepância entre os dados enviados e os dados lidos. A bliblioteca enviava um buffer contendo dois identificadores, seguidos pelo tamanho da entrada e depois a informação, mas o cartão apenas lia a primeira identificação e tomava a segunda como tamanho da entrada, resultando em erro. Retirar a segunda identificação, considerada espúria, resultou no funcionamento correto do envio da chave, e na correta configuração do protocolo.
 
 
 		\end{justify}
@@ -322,8 +312,7 @@ Key-Words: Javacard, Passaport,JMRTD, Security, Electronic-Passport, e-Passport,
 	\section{Referências}
 		\renewcommand{\section}[2]{}
 		
-		\bibliography{TCC}
-		\bibliographystyle{plain}
+		\printbibliography		
 		
 \endgroup
 \end{document}

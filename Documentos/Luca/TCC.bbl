@@ -1,127 +1,469 @@
-\begin{thebibliography}{10}
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.0 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated as
+% required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
 
-\bibitem{JAVACHEN}
-Zhiqun CHEN.
-\newblock {\em Java Card™ Technology for Smart Cards : architecture and
-  programmer’s guide}.
-\newblock Addison-Wesley, England, UK, 2000.
+\datalist[entry]{nyt/global//global/global}
+  \entry{BOUNCYCASTLE}{online}{}
+    \name{author}{1}{}{%
+      {{hash=otBCTL}{%
+         prefix={of\bibnamedelima the},
+         prefixi={o\bibinitperiod\bibinitdelim t\bibinitperiod},
+         family={Bouncy\bibnamedelima Castle},
+         familyi={B\bibinitperiod\bibinitdelim C\bibinitperiod},
+         given={The\bibnamedelima Legion},
+         giveni={T\bibinitperiod\bibinitdelim L\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{BCTLot1}
+    \strng{fullhash}{BCTLot1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{B}
+    \field{sortinithash}{B}
+    \field{title}{Bouncy Castle}
+    \verb{url}
+    \verb http://www.bouncycastle.org/java.html
+    \endverb
+    \warn{\item Invalid format of field 'urldate'}
+  \endentry
 
-\bibitem{HOWPASSPORT}
-HomeOffice.
-\newblock How your passport is made -- exclusive behind-the-scenes footage.
-\newblock \url{https://www.youtube.com/watch?v=Ha5VPXZ3ILs}.
-\newblock Accessed: 26-06-2018.
+  \entry{GLAMDRING}{online}{}
+    \name{author}{1}{}{%
+      {{hash=BB}{%
+         family={Bozhanov},
+         familyi={B\bibinitperiod},
+         given={Bozhidar},
+         giveni={B\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{BB1}
+    \strng{fullhash}{BB1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelyear}{2016}
+    \field{labeldatesource}{year}
+    \field{sortinit}{B}
+    \field{sortinithash}{B}
+    \field{title}{epassport Reader}
+    \verb{url}
+    \verb https://github.com/Glamdring/epassport-reader
+    \endverb
+    \field{year}{2016}
+    \warn{\item Invalid format of field 'urldate'}
+  \endentry
 
-\bibitem{INNOVALOR}
-InnoValor.
-\newblock Readid.
-\newblock \url{https://www.readid.com/}.
-\newblock Accessed: 26-06-2018.
+  \entry{HOWPASSPORT}{online}{}
+    \name{author}{1}{}{%
+      {{hash=H}{%
+         family={HomeOffice},
+         familyi={H\bibinitperiod},
+      }}%
+    }
+    \list{organization}{1}{%
+      {Youtube}%
+    }
+    \strng{namehash}{H1}
+    \strng{fullhash}{H1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelyear}{2013}
+    \field{labeldatesource}{year}
+    \field{sortinit}{H}
+    \field{sortinithash}{H}
+    \field{title}{How your passport is made -- exclusive behind-the-scenes
+  footage}
+    \verb{url}
+    \verb https://www.youtube.com/watch?v=Ha5VPXZ3ILs
+    \endverb
+    \field{year}{2013}
+    \warn{\item Invalid format of field 'urldate'}
+  \endentry
 
-\bibitem{ISO}
-ISO/IEC.
-\newblock Iso/iec 19794-5 biometrics.
-\newblock https://www.iso.org/standard/50867.html.
-\newblock Accessed: 23-05-2018.
+  \entry{PYPASSPORT}{online}{}
+    \name{author}{2}{}{%
+      {{hash=HJF}{%
+         family={Houzard},
+         familyi={H\bibinitperiod},
+         given={Jean-Francois},
+         giveni={J\bibinitperiod-F\bibinitperiod},
+      }}%
+      {{hash=RO}{%
+         family={Roger},
+         familyi={R\bibinitperiod},
+         given={Olivier},
+         giveni={O\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{HJFRO1}
+    \strng{fullhash}{HJFRO1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelyear}{2009}
+    \field{labeldatesource}{year}
+    \field{sortinit}{H}
+    \field{sortinithash}{H}
+    \field{title}{PyPassport, Python library to read the biometric ePassport}
+    \verb{url}
+    \verb https://code.google.com/archive/p/pypassport/
+    \endverb
+    \field{year}{2009}
+    \warn{\item Invalid format of field 'urldate'}
+  \endentry
 
-\bibitem{PYPASSPORT}
-Olivier~Roger Jean-Francois~Houzard.
-\newblock Python library to read the biometric epassport.
-\newblock \url{https://code.google.com/archive/p/pypassport/}.
-\newblock Accessed: 10-08-2018.
+  \entry{INNOVALOR}{online}{}
+    \name{author}{1}{}{%
+      {{hash=I}{%
+         family={InnoValor},
+         familyi={I\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{I1}
+    \strng{fullhash}{I1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelyear}{2013}
+    \field{labeldatesource}{year}
+    \field{sortinit}{I}
+    \field{sortinithash}{I}
+    \field{title}{ReadID}
+    \verb{url}
+    \verb https://www.readid.com/
+    \endverb
+    \field{year}{2013}
+    \warn{\item Invalid format of field 'urldate'}
+  \endentry
 
-\bibitem{RFIDIOT}
-Adam Laurie.
-\newblock Rfidiot.py - rfid io tools for python.
-\newblock \url{https://github.com/AdamLaurie/RFIDIOt},
-  \url{http://www.rfidiot.org/}.
-\newblock Accessed: 10-08-2018.
+  \entry{ISO}{online}{}
+    \name{author}{1}{}{%
+      {{hash=I}{%
+         family={ISO/IEC},
+         familyi={I\bibinitperiod},
+      }}%
+    }
+    \list{organization}{1}{%
+      {Internation Organization of Standardization}%
+    }
+    \strng{namehash}{I2}
+    \strng{fullhash}{I2}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelyear}{2011}
+    \field{labeldatesource}{year}
+    \field{sortinit}{I}
+    \field{sortinithash}{I}
+    \field{title}{ISO/IEC 19794-5 Biometrics}
+    \verb{url}
+    \verb https://www.iso.org/standard/50867.html
+    \endverb
+    \field{year}{2011}
+    \warn{\item Invalid format of field 'urldate'}
+  \endentry
 
-\bibitem{PRINT}
-LibFPrint.
-\newblock Libfprint.
-\newblock \url{https://www.freedesktop.org/wiki/Software/fprint/libfprint/ }.
-\newblock Accessed: 13-04-2018.
+  \entry{RFIDIOT}{online}{}
+    \name{author}{1}{}{%
+      {{hash=LA}{%
+         family={Laurie},
+         familyi={L\bibinitperiod},
+         given={Adam},
+         giveni={A\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{LA1}
+    \strng{fullhash}{LA1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelyear}{2011}
+    \field{labeldatesource}{year}
+    \field{sortinit}{L}
+    \field{sortinithash}{L}
+    \field{title}{RFIDIOt.py - RFID IO tools for python}
+    \verb{url}
+    \verb https://github.com/AdamLaurie/RFIDIOt/,http://www.rfidiot.org/
+    \endverb
+    \field{year}{2011}
+    \warn{\item Invalid format of field 'urldate'}
+  \endentry
 
-\bibitem{STASM}
-S.~Milborrow and F.Nicolls.
-\newblock Active shape models with sift descriptors and mars.
-\newblock {\em VISAPP}, 2014.
-\newblock Accessed: 13-04-2018.
+  \entry{STASM}{article}{}
+    \name{author}{2}{}{%
+      {{hash=MS}{%
+         family={Milborrow},
+         familyi={M\bibinitperiod},
+         given={S.},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=F}{%
+         family={F.Nicolls},
+         familyi={F\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{MSF1}
+    \strng{fullhash}{MSF1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelyear}{2014}
+    \field{labeldatesource}{year}
+    \field{sortinit}{M}
+    \field{sortinithash}{M}
+    \field{title}{Active Shape Models with SIFT Descriptors and MARS}
+    \verb{url}
+    \verb http://www.milbo.users.sonic.net/stasm/
+    \endverb
+    \field{journaltitle}{VISAPP}
+    \field{year}{2014}
+    \warn{\item Invalid format of field 'urldate'}
+  \endentry
 
-\bibitem{BOUNCYCASTLE}
-The~Legion of~the Bouncy~Castle.
-\newblock Bouncy castle.
-\newblock \url{http://www.bouncycastle.org/java.html}.
-\newblock Accessed: 13-04-2018.
+  \entry{JMRTD}{online}{}
+    \name{author}{1}{}{%
+      {{hash=OM}{%
+         family={Oostdijk},
+         familyi={O\bibinitperiod},
+         given={Martin},
+         giveni={M\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{OM1}
+    \strng{fullhash}{OM1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelyear}{2010}
+    \field{labeldatesource}{year}
+    \field{sortinit}{O}
+    \field{sortinithash}{O}
+    \field{title}{JMRTD}
+    \verb{url}
+    \verb https://www.jmrtd.org
+    \endverb
+    \field{year}{2010}
+    \warn{\item Invalid format of field 'urldate'}
+  \endentry
 
-\bibitem{JMRTD}
-Martin OOSTDIJK.
-\newblock Jmrtd.
-\newblock \url{https://www.jmrtd.org}.
-\newblock Accessed: 15-08-2018.
+  \entry{ICAO}{online}{}
+    \name{author}{1}{}{%
+      {{hash=OICA}{%
+         family={Organization},
+         familyi={O\bibinitperiod},
+         given={International Civil\bibnamedelima Aviation},
+         giveni={I\bibinitperiod\bibinitdelim C\bibinitperiod\bibinitdelim
+  A\bibinitperiod},
+      }}%
+    }
+    \list{organization}{1}{%
+      {ICAO}%
+    }
+    \strng{namehash}{OICA1}
+    \strng{fullhash}{OICA1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelyear}{2015}
+    \field{labeldatesource}{year}
+    \field{sortinit}{O}
+    \field{sortinithash}{O}
+    \field{title}{ICAO 9303: Machine Readable Travel Documents}
+    \verb{url}
+    \verb https://www.icao.int/publications/pages/publication.aspx?docnum=9303
+    \endverb
+    \field{year}{2015}
+    \warn{\item Invalid format of field 'urldate'}
+  \endentry
 
-\bibitem{ICAO}
-International Civil~Aviation Organization.
-\newblock Icao 9303: Machine readable travel documents.
-\newblock
-  \url{https://www.icao.int/publications/pages/publication.aspx?docnum=9303}.
-\newblock Accessed: 13-04-2018.
+  \entry{EJBCA}{online}{}
+    \name{author}{1}{}{%
+      {{hash=P}{%
+         family={PrimeKey},
+         familyi={P\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{P1}
+    \strng{fullhash}{P1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{P}
+    \field{sortinithash}{P}
+    \field{title}{EJBCA Open Source PKI Certificate Authority}
+    \verb{url}
+    \verb https://www.ejbca.org
+    \endverb
+    \warn{\item Invalid format of field 'urldate'}
+  \endentry
 
-\bibitem{EJBCA}
-PrimeKey.
-\newblock Ejbca open source pki certificate authority.
-\newblock \url{https://www.ejbca.org}.
-\newblock Accessed: 13-04-2018.
+  \entry{SASSO}{online}{}
+    \name{author}{1}{}{%
+      {{hash=SF}{%
+         family={SASSO},
+         familyi={S\bibinitperiod},
+         given={Felipe},
+         giveni={F\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{SF1}
+    \strng{fullhash}{SF1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{S}
+    \field{sortinithash}{S}
+    \field{title}{Cartão de Identificação humana para autenticação e
+  autorização segura}
+    \verb{url}
+    \verb https://docs.google.com/document/d/15Jd3IzxCOFT7Vi-mvTHSbRyRPQeikQold
+    \verb CGfVxTFUMU/edit
+    \endverb
+    \warn{\item Invalid format of field 'urldate'}
+  \endentry
 
-\bibitem{SASSO}
-Felipe SASSO.
-\newblock Cartão de identificação humana para autenticação e autorização
-  segura.
-\newblock
-  \url{https://docs.google.com/document/d/15Jd3IzxCOFT7Vi-mvTHSbRyRPQeikQoldCGfVxTFUMU/edit}.
-\newblock Accessed: 31-07-2017.
+  \entry{TANANAEV}{online}{}
+    \name{author}{1}{}{%
+      {{hash=TA}{%
+         family={Tananaev},
+         familyi={T\bibinitperiod},
+         given={Anton},
+         giveni={A\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{TA1}
+    \strng{fullhash}{TA1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelyear}{2016}
+    \field{labeldatesource}{year}
+    \field{sortinit}{T}
+    \field{sortinithash}{T}
+    \field{title}{e-Passport NFC Reader}
+    \verb{url}
+    \verb https://github.com/tananaev/passport-reader
+    \endverb
+    \field{year}{2016}
+    \warn{\item Invalid format of field 'urldate'}
+  \endentry
 
-\bibitem{STALLINS}
-William STALLINS.
-\newblock {\em Criptography and Network Security Principles and Practice}.
-\newblock Prentice Hall, ?, 2014.
+  \entry{PRINT}{online}{}
+    \name{author}{1}{}{%
+      {{hash=TL}{%
+         family={Team},
+         familyi={T\bibinitperiod},
+         given={LibFPrint},
+         giveni={L\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{TL1}
+    \strng{fullhash}{TL1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{T}
+    \field{sortinithash}{T}
+    \field{title}{LibFPrint}
+    \verb{url}
+    \verb https://www.freedesktop.org/wiki/Software/fprint/libfprint/
+    \endverb
+    \warn{\item Invalid format of field 'urldate'}
+  \endentry
 
-\bibitem{OPENCV}
-OpenCV Team.
-\newblock Opencv library.
-\newblock \url{https://opencv.org/}.
-\newblock Accessed: 13-04-2018.
+  \entry{OPENCV}{online}{}
+    \name{author}{1}{}{%
+      {{hash=TO}{%
+         family={Team},
+         familyi={T\bibinitperiod},
+         given={OpenCV},
+         giveni={O\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{TO1}
+    \strng{fullhash}{TO1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{T}
+    \field{sortinithash}{T}
+    \field{title}{OpenCV Library}
+    \verb{url}
+    \verb https://opencv.org/
+    \endverb
+    \warn{\item Invalid format of field 'urldate'}
+  \endentry
 
-\bibitem{SCUBA}
-SCUBA Team.
-\newblock Smart card utilities for better access, project scuba.
-\newblock \url{http://scuba.sourceforge.net}.
-\newblock Accessed: 13-04-2018.
+  \entry{SCUBA}{online}{}
+    \name{author}{1}{}{%
+      {{hash=TS}{%
+         family={Team},
+         familyi={T\bibinitperiod},
+         given={SCUBA},
+         giveni={S\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{TS1}
+    \strng{fullhash}{TS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{T}
+    \field{sortinithash}{T}
+    \field{title}{Smart Card Utilities for Better Access, Project SCUBA}
+    \verb{url}
+    \verb http://scuba.sourceforge.net
+    \endverb
+    \warn{\item Invalid format of field 'urldate'}
+  \endentry
 
-\bibitem{GLAMDRING}
-Github user Glamdring.
-\newblock epassport reader.
-\newblock \url{https://github.com/Glamdring/epassport-reader}.
-\newblock Accessed: 15-08-2018.
+  \entry{WZMRTD}{online}{}
+    \name{author}{2}{}{%
+      {{hash=w}{%
+         family={waazaa.org},
+         familyi={w\bibinitperiod},
+      }}%
+      {{hash=a}{%
+         family={ariadNEXT},
+         familyi={a\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{wa1}
+    \strng{fullhash}{wa1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelyear}{2011}
+    \field{labeldatesource}{year}
+    \field{sortinit}{W}
+    \field{sortinithash}{W}
+    \field{note}{"Site original http://waazaa.org/wzmrtd não existe mais na
+  data em que este documento foi escrito"}
+    \field{title}{wzMRTD}
+    \verb{url}
+    \verb https://github.com/ariadnext/wzmrtd
+    \endverb
+    \field{year}{2011}
+    \warn{\item Invalid format of field 'urldate'}
+  \endentry
 
-\bibitem{TANANAEV}
-Github user Tananaev.
-\newblock e-passport nfc reader.
-\newblock \url{https://github.com/tananaev/passport-reader}.
-\newblock Accessed: 15-08-2018.
-
-\bibitem{WZMRTD}
-ariadnext waazaa.org.
-\newblock wzmrtd.
-\newblock \url{https://github.com/ariadnext/wzmrtd}.
-\newblock "Accessed: 10-08-2018" , "Site original http://waazaa.org/wzmrtd não
-  existe mais na data em que este documento foi escrito".
-
-\bibitem{PASSPORTWIKI}
-Wikipedia.
-\newblock Passport.
-\newblock \url{https://en.wikipedia.org/wiki/Passport}.
-\newblock Accessed: 01-08-2018.
-
-\end{thebibliography}
+  \entry{PASSPORTWIKI}{online}{}
+    \name{author}{1}{}{%
+      {{hash=W}{%
+         family={Wikipedia},
+         familyi={W\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{W1}
+    \strng{fullhash}{W1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{W}
+    \field{sortinithash}{W}
+    \field{title}{Passport}
+    \verb{url}
+    \verb https://en.wikipedia.org/wiki/Passport
+    \endverb
+    \warn{\item Invalid format of field 'urldate'}
+  \endentry
+\enddatalist
+\endinput

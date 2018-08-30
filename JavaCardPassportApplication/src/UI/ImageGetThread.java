@@ -11,7 +11,9 @@ import javax.imageio.ImageIO;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.core.MatOfInt;
+import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
 
 /**
@@ -35,7 +37,7 @@ public class ImageGetThread implements Runnable{
             
             while (!video.taken()) {
                 MatOfByte mob = new MatOfByte();
-                MatOfInt params = new MatOfInt(Imgcodecs.CV_IMWRITE_JPEG_QUALITY, 100);
+                MatOfInt params = new MatOfInt(Imgcodecs.CV_IMWRITE_JPEG_QUALITY, 50);
 
                 System.out.println("VideoWorking");
 
@@ -45,7 +47,7 @@ public class ImageGetThread implements Runnable{
                         System.out.print("Failed to capture Image");
                         return;
                     }
-
+                    
                     Imgcodecs.imencode(".jpg", frame, mob, params);
 
                     byte[] ba = mob.toArray();

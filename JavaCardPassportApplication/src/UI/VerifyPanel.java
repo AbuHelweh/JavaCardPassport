@@ -94,6 +94,8 @@ public class VerifyPanel extends javax.swing.JPanel implements Runnable {
             reader.doBAC(key);
 
             COMFile com = reader.readCOM();
+            
+            //System.out.println(com.getTagList());
 
             SODFile sod = reader.readSOD();
 

@@ -41,6 +41,10 @@ public class CardConnection {
             System.out.println("No Readers Found");
             System.exit(-1);
         }
+        
+        for (CardTerminal reader : readers){
+            System.out.println(reader);
+        }
 
         //escolhe-se o primeiro
         reader = readers.get(0);
@@ -93,7 +97,7 @@ public class CardConnection {
 
             while (reader.isCardPresent()) {
                 System.out.println("Remova o cartão atual");
-                reader.waitForCardAbsent(100000);
+                reader.waitForCardAbsent(1000);
             }
 
             ControlledDialog.closeMessageDialog();
