@@ -302,30 +302,6 @@
     \warn{\item Invalid format of field 'urldate'}
   \endentry
 
-  \entry{SASSO}{online}{}
-    \name{author}{1}{}{%
-      {{hash=SF}{%
-         family={SASSO},
-         familyi={S\bibinitperiod},
-         given={Felipe},
-         giveni={F\bibinitperiod},
-      }}%
-    }
-    \strng{namehash}{SF1}
-    \strng{fullhash}{SF1}
-    \field{labelnamesource}{author}
-    \field{labeltitlesource}{title}
-    \field{sortinit}{S}
-    \field{sortinithash}{S}
-    \field{title}{Cartão de Identificação humana para autenticação e
-  autorização segura}
-    \verb{url}
-    \verb https://docs.google.com/document/d/15Jd3IzxCOFT7Vi-mvTHSbRyRPQeikQold
-    \verb CGfVxTFUMU/edit
-    \endverb
-    \warn{\item Invalid format of field 'urldate'}
-  \endentry
-
   \entry{TANANAEV}{online}{}
     \name{author}{1}{}{%
       {{hash=TA}{%
@@ -395,28 +371,6 @@
     \warn{\item Invalid format of field 'urldate'}
   \endentry
 
-  \entry{SCUBA}{online}{}
-    \name{author}{1}{}{%
-      {{hash=TS}{%
-         family={Team},
-         familyi={T\bibinitperiod},
-         given={SCUBA},
-         giveni={S\bibinitperiod},
-      }}%
-    }
-    \strng{namehash}{TS1}
-    \strng{fullhash}{TS1}
-    \field{labelnamesource}{author}
-    \field{labeltitlesource}{title}
-    \field{sortinit}{T}
-    \field{sortinithash}{T}
-    \field{title}{Smart Card Utilities for Better Access, Project SCUBA}
-    \verb{url}
-    \verb http://scuba.sourceforge.net
-    \endverb
-    \warn{\item Invalid format of field 'urldate'}
-  \endentry
-
   \entry{WZMRTD}{online}{}
     \name{author}{2}{}{%
       {{hash=w}{%
@@ -452,6 +406,9 @@
          family={Wikipedia},
          familyi={W\bibinitperiod},
       }}%
+    }
+    \list{organization}{1}{%
+      {Wikipedia}%
     }
     \strng{namehash}{W1}
     \strng{fullhash}{W1}

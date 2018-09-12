@@ -33,7 +33,6 @@ import org.jmrtd.lds.icao.MRZInfo;
 import org.jmrtd.lds.iso19794.FingerInfo;
 import util.ControlledDialog;
 import util.ImageWorks;
-
 /**
  *
  * @author luca
@@ -73,10 +72,14 @@ public class CreatePanel extends javax.swing.JPanel {
                 super.mouseClicked(e);
                 if (e.getClickCount() > 1) {
                     mouseHandler();
+                    
+                    if (chosenImage == null) {
+                        System.out.println("Image Error");
+                        return;
+                    }
                 }
-
+                
                 if (chosenImage == null) {
-                    System.out.println("Image Error");
                     return;
                 }
 
@@ -136,7 +139,7 @@ public class CreatePanel extends javax.swing.JPanel {
             if (choice == JFileChooser.APPROVE_OPTION) {
                 file = chooser.getSelectedFile();
             }
-
+            
             if (file == null) {
                 System.out.println("File Error");
                 return;
@@ -144,7 +147,7 @@ public class CreatePanel extends javax.swing.JPanel {
 
             chosenImage = file;
             
-            ImageWorks.extractPointsFromImageAndResolve(file);
+            ImageWorks.extractPointsFromImageAndResolve(file);            
 
         } else {
             ControlledDialog.showMessageDialog("Loading Camera... Please Wait");
@@ -564,9 +567,11 @@ public class CreatePanel extends javax.swing.JPanel {
                     sender.SendDG3(fingers);
 
                     //Certificado do cartão, provavelmente uma versao CV do certificado SOD
-                    if (certificate != null) {
-                        sender.SendDG14(MyCertificateFactory.getInstance().getEACECPair().getPublic());
-                    }
+                    //if (certificate != null) {
+                        //sender.SendDG14(MyCertificateFactory.getInstance().getEACECPair().getPublic());
+                    //}
+                    
+                    sender.SendDG14(MyCertificateFactory.getInstance().generateEllipticCurveKeyPair().getPublic());
                     
                     sender.SendDG15();
 
@@ -637,8 +642,8 @@ public class CreatePanel extends javax.swing.JPanel {
         Calendar cal = Calendar.getInstance();
 
         return new MRZInfo("P", this.EmitCombo.getItemAt(this.EmitCombo.getSelectedIndex()).trim().substring(0, 3),
-                this.TextFieldNome.getText().trim().toUpperCase(),
                 this.TextFieldSobreNome.getText().trim().toUpperCase(),
+                this.TextFieldNome.getText().trim().toUpperCase(),
                 this.PassportNumber.getText().trim().toUpperCase(),
                 this.NacCombo.getItemAt(this.NacCombo.getSelectedIndex()).trim().substring(0, 3),
                 this.YearBox.getItemAt(this.YearBox.getSelectedIndex()).trim().substring(2)

@@ -80,7 +80,7 @@ public class CardReader {
      */
     public void executeSecurityProtocols(COMFile com, SODFile sod) {
         SecurityProtocols sec = SecurityProtocols.getInstance(service, this);
-
+        /*
         sec.setAlgorithms(sod);
 
         try {
@@ -93,7 +93,7 @@ public class CardReader {
             System.out.println("EAC ERROR");
             e.printStackTrace();
         }
-        
+        */
         try{
             DG15File dg15 = this.readDG15();
             if(dg15 != null){
@@ -107,7 +107,7 @@ public class CardReader {
             System.out.println("AA ERROR");
             e.printStackTrace();
         }
-        
+        /*
         try {
             PAResult pares = sec.doPA(com, sod);
             System.out.println(pares.toString());
@@ -118,7 +118,7 @@ public class CardReader {
             System.out.println("PA ERROR");
             e.printStackTrace();
         }
-
+        */
     }
 
     /**
@@ -201,7 +201,7 @@ public class CardReader {
 
             FaceImageInfo image = ((DG2File) files[1]).getFaceInfos().get(0).getFaceImageInfos().get(0);  //Pega a primeira foto
 
-            FileOutputStream imgOut = new FileOutputStream(((DG1File) this.files[0]).getMRZInfo().getDocumentNumber() + ".jpg");
+            FileOutputStream imgOut = new FileOutputStream(((DG1File) this.files[0]).getMRZInfo().getDocumentNumber() + ".jp2");
 
             byte[] imgBytes = new byte[image.getImageLength()];
 
@@ -210,7 +210,7 @@ public class CardReader {
             imgOut.write(imgBytes);
             imgOut.close();
 
-            return ImageIO.read(new File(((DG1File) this.files[0]).getMRZInfo().getDocumentNumber() + ".jpg"));
+            return ImageIO.read(new File(((DG1File) this.files[0]).getMRZInfo().getDocumentNumber() + ".jp2"));
 
         } else {
             System.out.println("Não foi possível acessar o arquivo DG2");

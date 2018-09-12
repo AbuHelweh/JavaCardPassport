@@ -12,29 +12,27 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {2}Fundamenta\IeC {\c c}\IeC {\~o}es te\IeC {\'o}ricas e pr\IeC {\'a}ticas}{2}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.1}O que \IeC {\'e} seguran\IeC {\c c}a computacional?}{2}
+\contentsline {subsection}{\numberline {2.1}Criptografia Sim\IeC {\'e}trica e Assim\IeC {\'e}trica}{2}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.2}Criptografia Sim\IeC {\'e}trica e Assim\IeC {\'e}trica}{2}
+\contentsline {subsection}{\numberline {2.2}Fun\IeC {\c c}\IeC {\~a}o Hash - SHA}{2}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.3}Fun\IeC {\c c}\IeC {\~a}o Hash - SHA}{2}
+\contentsline {subsection}{\numberline {2.3}Assinaturas Digitais}{2}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.4}Assinaturas Digitais}{2}
+\contentsline {subsection}{\numberline {2.4}Certificados Digitais}{2}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.5}Certificados Digitais}{2}
+\contentsline {subsection}{\numberline {2.5}O Documento ICAO 9303}{2}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.6}O Documento ICAO 9303}{3}
+\contentsline {subsection}{\numberline {2.6}Javacard}{3}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.7}Javacard}{4}
+\contentsline {subsection}{\numberline {2.7}O applet e sua estrutura l\IeC {\'o}gica de dados}{3}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.8}O aplicativo e sua estrutura l\IeC {\'o}gica de dados}{4}
+\contentsline {subsection}{\numberline {2.8}As bibliotecas utilizadas}{4}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.9}As bibliotecas utilizadas}{5}
+\contentsline {subsection}{\numberline {2.9}Os protocolos de seguran\IeC {\c c}a}{5}
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {3}Desenvolvimento - Reescrever? }{6}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.1}Os protocolos de seguran\IeC {\c c}a}{6}
-\defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.2}Funcionamento}{7}
+\contentsline {subsection}{\numberline {3.1}Funcionamento}{7}
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {4}}{7}
 \defcounter {refsection}{0}\relax 

@@ -51,7 +51,7 @@ public class CardConnection {
 
         if (GlobalFlags.DEBUG) {
             System.err.println("Reader: " + reader);
-
+            System.err.println(reader.isCardPresent());
             System.err.println("Por favor insira um cartão");
         }
 

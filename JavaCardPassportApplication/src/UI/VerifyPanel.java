@@ -103,8 +103,8 @@ public class VerifyPanel extends javax.swing.JPanel implements Runnable {
                 MRZInfo info = reader.readDG1();
 
                 DocNumLabel.setText(info.getDocumentNumber());
-                NameLabel.setText(info.getPrimaryIdentifier());
-                SurLabel.setText(info.getSecondaryIdentifier().replace("<", " "));
+                NameLabel.setText(info.getSecondaryIdentifier().replace("<", " "));
+                SurLabel.setText(info.getPrimaryIdentifier().replace("<", " "));
                 SexLabel.setText(info.getGender().toString());
                 NascLabel.setText(info.getNationality());
                 EmitLabel.setText(info.getIssuingState());
@@ -118,6 +118,7 @@ public class VerifyPanel extends javax.swing.JPanel implements Runnable {
             if (com.getTagList()[2] != 0) {
                 picture = reader.readDG2();
             }
+            /*
             if (com.getTagList()[3] != 0) {
                 for(FingerInfo f : reader.readDG3()){
                     System.out.println(f.getFingerImageInfos().get(0).getPosition());
@@ -126,7 +127,7 @@ public class VerifyPanel extends javax.swing.JPanel implements Runnable {
                     }
                 }
             }
-
+            */
             reader.executeSecurityProtocols(com, sod);
 
             System.out.println(sod);
@@ -141,7 +142,8 @@ public class VerifyPanel extends javax.swing.JPanel implements Runnable {
             isReading = false;
             MainPanel.needsReset = true;
             JOptionPane.showMessageDialog(null, "Error de leitura:" + System.lineSeparator() + ex.getMessage());
-            container.dispose();
+            //container.dispose();
+            container.repaint();
         }
 
     }

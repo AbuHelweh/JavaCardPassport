@@ -39,6 +39,7 @@ public class FingerPrintVerification extends javax.swing.JFrame {
     FingerInfo[] fingers = new FingerInfo[10];
     boolean leftHand = false;
     JPanel[] panels = new JPanel[5];
+    boolean isPrint = false;
 
     /**
      * Creates new form FingerPrintVerification
@@ -106,6 +107,12 @@ public class FingerPrintVerification extends javax.swing.JFrame {
 
     public void mouseHandler(MouseEvent e, int finger) {
 
+        if(isPrint){
+            return;
+        } else {
+            isPrint = true;
+        }
+        
         try {
             int offset = 0;
 
@@ -161,6 +168,8 @@ public class FingerPrintVerification extends javax.swing.JFrame {
 
         } catch (Exception ex) {
             ex.printStackTrace();
+        } finally {
+            isPrint = false;
         }
     }
 

@@ -12,8 +12,9 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.util.Iterator;
 import javax.imageio.ImageIO;
-import javax.swing.JButton;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.core.MatOfInt;
@@ -21,8 +22,6 @@ import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
-import static org.opencv.videoio.Videoio.CV_CAP_PROP_FRAME_HEIGHT;
-import static org.opencv.videoio.Videoio.CV_CAP_PROP_FRAME_WIDTH;
 import util.ControlledDialog;
 
 /**
@@ -32,7 +31,6 @@ import util.ControlledDialog;
 public class ImageGetFrame extends javax.swing.JFrame {
 
     private CreatePanel back;
-    private BufferedImage photo;
     private Mat frame;
     private VideoCapture cv;
     private boolean taken = false;
@@ -44,7 +42,7 @@ public class ImageGetFrame extends javax.swing.JFrame {
         initComponents();
 
         this.setLocationRelativeTo(null);
-        
+
         cv = new VideoCapture(1);
         frame = new Mat();
         back = panel;
@@ -64,7 +62,6 @@ public class ImageGetFrame extends javax.swing.JFrame {
         });
         this.setVisible(true);
 
-        
         new Thread(new ImageGetThread(this, cv)).start();
         ControlledDialog.closeMessageDialog();
     }
@@ -159,26 +156,27 @@ public class ImageGetFrame extends javax.swing.JFrame {
                 System.out.print("Failed to capture Image");
                 return;
             }
-            
-            Imgcodecs.imencode(".jpg", frame, mob, params);
+
+            Imgcodecs.imencode(".jp2", frame, mob, params);
             byte[] ba = mob.toArray();
             try {
-                photo = ImageIO.read(new ByteArrayInputStream(ba));
-                File picture = new File("PictureTakenFull.jpg");
-                ImageIO.write(photo, "jpg", picture);
-                
+
+                File picture = new File("PictureTakenFull.jp2");
+                FileOutputStream fos = new FileOutputStream(picture);
+                fos.write(ba);
+              
                 ImageWorks.extractPointsFromImageAndResolve(picture);
-                
-                Imgproc.resize(frame, frame, new Size(320,240));
-                
+
+                Imgproc.resize(frame, frame, new Size(320, 240));
+
                 params = new MatOfInt(Imgcodecs.CV_IMWRITE_JPEG_QUALITY, 50);
-            
-                Imgcodecs.imencode(".jpg", frame, mob, params);
-                
+
+                Imgcodecs.imencode(".jp2", frame, mob, params);
+
                 ba = mob.toArray();
-                photo = ImageIO.read(new ByteArrayInputStream(ba));
-                picture = new File("PictureTakenHalf.jpg");
-                ImageIO.write(photo, "jpg", picture);
+                picture = new File("PictureTakenHalf.jp2");
+                fos = new FileOutputStream(picture);
+                fos.write(ba);
                 back.placeImage(picture);
 
             } catch (Exception ex) {

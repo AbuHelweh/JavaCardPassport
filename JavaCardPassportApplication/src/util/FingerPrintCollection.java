@@ -42,6 +42,7 @@ public class FingerPrintCollection extends javax.swing.JFrame {
     /**
      * Creates new form FingerPrintCollection
      */
+    boolean isPrint = false;
     CreatePanel parent;
     FingerInfo[] fingers;
     boolean leftHand = false;
@@ -110,6 +111,11 @@ public class FingerPrintCollection extends javax.swing.JFrame {
 
     public void mouseHandler(MouseEvent e, int finger) {
 
+        if(isPrint){
+            return;
+        } else {
+            isPrint = true;
+        }
         try {
             int offset = 0;
 
@@ -144,6 +150,8 @@ public class FingerPrintCollection extends javax.swing.JFrame {
 
         } catch (Exception ex) {
             ex.printStackTrace();
+        } finally {
+            isPrint = false;
         }
     }
 

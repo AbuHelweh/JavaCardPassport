@@ -113,9 +113,9 @@ public class MyCertificateFactory {
      * @throws Exception
      */
     public KeyPair generateEllipticCurveKeyPair() throws NoSuchAlgorithmException, InvalidAlgorithmParameterException {
-        KeyPairGenerator gen = KeyPairGenerator.getInstance("ECDSA", bcProvider);    //Curva Eliptica
+        KeyPairGenerator gen = KeyPairGenerator.getInstance("ECDH", bcProvider);    //Curva Eliptica
 
-        gen.initialize(ECNamedCurveTable.getParameterSpec("c2tnb239v3"));   //Campo binario f2m 239bits
+        gen.initialize(ECNamedCurveTable.getParameterSpec("prime192v1"));   //Campo binario f2m 239bits
         KeyPair pair = gen.genKeyPair();
 
         return pair;

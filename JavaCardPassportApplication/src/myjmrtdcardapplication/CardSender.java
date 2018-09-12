@@ -194,7 +194,7 @@ public class CardSender {
         //Imagem para o cartão
         BufferedImage portrait = ImageIO.read(file);        //Carrega a imagem jpg em java modificar com o metodo do fingerprint 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(portrait, "jpg", baos);
+        ImageIO.write(portrait, "jpeg 2000", baos);
         baos.flush();
         byte[] imageBytes = baos.toByteArray();     //Transforma em byteArray
         //-Imagem para o cartão
