@@ -22,8 +22,8 @@ public class MainFrame extends JFrame {
     private void initUI() throws IOException {
 
         this.add(new MainPanel(this));
-        this.setSize(400,300);
-        this.setTitle("JMRTD Card Builder and checker, does't verify, that's with Brandão");
+        this.setSize(500,250);
+        this.setTitle("TCC Luca Fachini Campelli");
         this.setLocationRelativeTo(null);
         this.setVisible(true);
         this.setFocusable(true);

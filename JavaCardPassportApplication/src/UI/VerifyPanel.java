@@ -18,7 +18,9 @@ import javax.smartcardio.CardException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import myjmrtdcardapplication.CardReader;
+import org.bouncycastle.util.Arrays;
 import org.jmrtd.BACKey;
+import org.jmrtd.lds.LDSFile;
 import org.jmrtd.lds.SODFile;
 import org.jmrtd.lds.icao.COMFile;
 import org.jmrtd.lds.icao.MRZInfo;
@@ -93,13 +95,15 @@ public class VerifyPanel extends javax.swing.JPanel implements Runnable {
 
             reader.doBAC(key);
 
-            COMFile com = reader.readCOM();
+            COMFile com = reader.readCOM();            
             
-            //System.out.println(com.getTagList());
+            for(int i : com.getTagList()){
+                System.out.println(i);
+            }
 
             SODFile sod = reader.readSOD();
 
-            if (com.getTagList()[1] != 0) {
+            if (Arrays.contains(com.getTagList(), LDSFile.EF_DG1_TAG)) {
                 MRZInfo info = reader.readDG1();
 
                 DocNumLabel.setText(info.getDocumentNumber());
@@ -115,11 +119,11 @@ public class VerifyPanel extends javax.swing.JPanel implements Runnable {
                 CPFLabel.setText(info.getPersonalNumber());
 
             }
-            if (com.getTagList()[2] != 0) {
+            if (Arrays.contains(com.getTagList(), LDSFile.EF_DG2_TAG)) {
                 picture = reader.readDG2();
             }
             /*
-            if (com.getTagList()[3] != 0) {
+            if (Arrays.contains(com.getTagList(), LDSFile.EF_DG3_TAG)) {
                 for(FingerInfo f : reader.readDG3()){
                     System.out.println(f.getFingerImageInfos().get(0).getPosition());
                     if(f.getFingerImageInfos().get(0).getPosition() != 0){

@@ -20,11 +20,11 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {2.4}Certificados Digitais}{2}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.5}O Documento ICAO 9303}{2}
+\contentsline {subsection}{\numberline {2.5}O Documento ICAO 9303}{3}
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {2.6}Javacard}{3}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.7}O applet e sua estrutura l\IeC {\'o}gica de dados}{3}
+\contentsline {subsection}{\numberline {2.7}O applet e sua estrutura l\IeC {\'o}gica de dados}{4}
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {2.8}As bibliotecas utilizadas}{4}
 \defcounter {refsection}{0}\relax 
@@ -32,8 +32,14 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {3}Desenvolvimento - Reescrever? }{6}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.1}Funcionamento}{7}
+\contentsline {section}{\numberline {4}Funcionamento *Expandir*}{8}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {4}}{7}
+\contentsline {subsection}{\numberline {4.1}Instala\IeC {\c c}\IeC {\~a}o}{8}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {5}Refer\IeC {\^e}ncias}{7}
+\contentsline {subsection}{\numberline {4.2}Desinstala\IeC {\c c}\IeC {\~a}o}{8}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.3}Descri\IeC {\c c}ao da aplica\IeC {\c c}\IeC {\~a}o}{8}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {5}Testes e Confirma\IeC {\c c}\IeC {\~o}es}{9}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {6}Refer\IeC {\^e}ncias}{9}

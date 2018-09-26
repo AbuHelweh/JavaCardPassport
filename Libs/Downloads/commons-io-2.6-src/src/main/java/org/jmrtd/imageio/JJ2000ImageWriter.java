@@ -124,7 +124,7 @@ public class JJ2000ImageWriter extends ImageWriter {
 			BufferedImage bufferedImage = (BufferedImage)renderedImage;
 			return bufferedImage;
 		}
-		BufferedImage result = new BufferedImage(renderedImage.getWidth(), renderedImage.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
+		BufferedImage result = new BufferedImage(renderedImage.getWidth(), renderedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
 		renderedImage.copyData(result.getRaster());
 		return result;
 	}

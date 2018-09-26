@@ -565,14 +565,11 @@ public class CreatePanel extends javax.swing.JPanel {
                     sender.SendDG1(mrz);
                     sender.SendDG2(chosenImage);
                     sender.SendDG3(fingers);
-
-                    //Certificado do cartão, provavelmente uma versao CV do certificado SOD
-                    //if (certificate != null) {
-                        //sender.SendDG14(MyCertificateFactory.getInstance().getEACECPair().getPublic());
-                    //}
                     
-                    sender.SendDG14(MyCertificateFactory.getInstance().generateEllipticCurveKeyPair().getPublic());
                     
+                    if(certificate != null){
+                        sender.SendDG14(MyCertificateFactory.getInstance().generateEllipticCurveKeyPair().getPublic());
+                    }
                     sender.SendDG15();
 
                     sender.SendCOM();

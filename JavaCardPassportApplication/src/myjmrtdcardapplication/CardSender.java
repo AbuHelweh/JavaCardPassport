@@ -20,6 +20,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
@@ -60,7 +61,7 @@ public class CardSender {
 
     MessageDigest digest;
     HashMap<Integer, byte[]> dataGroupHashes; //Doc 7 part 2.1 "A hash for each Data Group in use SHALL be stored in the Document Security Object (EF.SOD)"
-    int[] dataGroupComTagList = new int[17];
+    ArrayList<Integer> dataGroupComTagList = new ArrayList();
 
     public CardSender() {
 
@@ -77,7 +78,7 @@ public class CardSender {
         } catch (Exception e) {
             e.printStackTrace();
             if (e instanceof CardServiceException) {
-                JOptionPane.showMessageDialog(null, "ERRO DE LEITURA COM O CARTÃ‚O");
+                JOptionPane.showMessageDialog(null, "ERRO DE LEITURA COM O CARTÃO");
             }
         }
     }
@@ -117,20 +118,13 @@ public class CardSender {
      */
     public void SendCOM() throws CardServiceException {
 
-        dataGroupComTagList[0] = LDSFile.EF_COM_TAG;
-
-        dataGroupComTagList[4] = 0;//LDSFile.EF_DG4_TAG;
-        dataGroupComTagList[5] = 0;//LDSFile.EF_DG5_TAG;
-        dataGroupComTagList[6] = 0;//LDSFile.EF_DG6_TAG;
-        dataGroupComTagList[7] = 0;//LDSFile.EF_DG7_TAG;
-        dataGroupComTagList[8] = 0;//LDSFile.EF_DG8_TAG;
-        dataGroupComTagList[9] = 0;//LDSFile.EF_DG9_TAG;
-        dataGroupComTagList[10] = 0;//LDSFile.EF_DG10_TAG;
-        dataGroupComTagList[11] = 0;//LDSFile.EF_DG11_TAG;
-        dataGroupComTagList[12] = 0;//LDSFile.EF_DG12_TAG;
-        dataGroupComTagList[13] = 0;//LDSFile.EF_DG13_TAG;
-
-        COMFile com = new COMFile("01.08", "08.00.00", dataGroupComTagList); //LDS Version and UTF version
+        dataGroupComTagList.add(LDSFile.EF_COM_TAG);
+        
+        int[] a = new int[17];
+        
+        a = dataGroupComTagList.stream().mapToInt(Integer::intValue).toArray();
+        
+        COMFile com = new COMFile("01.08", "08.00.00", a); //LDS Version and UTF version
 
         dataGroupHashes.put(0, digest.digest(com.getEncoded()));
 
@@ -170,7 +164,7 @@ public class CardSender {
         perso.writeFile(service.EF_DG1, new ByteArrayInputStream(dg1.getEncoded()));
 
         dataGroupHashes.put(1, digest.digest(dg1.getEncoded()));
-        dataGroupComTagList[1] = LDSFile.EF_DG1_TAG;
+        dataGroupComTagList.add(LDSFile.EF_DG1_TAG);
     }
 
     /**
@@ -192,7 +186,7 @@ public class CardSender {
         FaceImageInfo.FeaturePoint[] fps = ImageWorks.extractPointsFromImageAndResolve(file);
 
         //Imagem para o cartÃ£o
-        BufferedImage portrait = ImageIO.read(file);        //Carrega a imagem jpg em java modificar com o metodo do fingerprint 
+        BufferedImage portrait = ImageIO.read(file);        //Carrega a imagem jp2 em java modificar com o metodo do fingerprint 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write(portrait, "jpeg 2000", baos);
         baos.flush();
@@ -236,7 +230,7 @@ public class CardSender {
         perso.writeFile(service.EF_DG2, new ByteArrayInputStream(dg2.getEncoded()));
 
         dataGroupHashes.put(2, digest.digest(dg2.getEncoded()));
-        dataGroupComTagList[2] = LDSFile.EF_DG2_TAG;
+        dataGroupComTagList.add(LDSFile.EF_DG2_TAG);
     }
 
     /**
@@ -301,7 +295,7 @@ public class CardSender {
         perso.writeFile(service.EF_DG3, new ByteArrayInputStream(dg3.getEncoded()));
 
         dataGroupHashes.put(3, digest.digest(dg3.getEncoded()));
-        dataGroupComTagList[3] = LDSFile.EF_DG3_TAG;
+        dataGroupComTagList.add(LDSFile.EF_DG3_TAG);
     }
 
     /**
@@ -314,7 +308,7 @@ public class CardSender {
     public void SendDG14(PublicKey DHpublicKey) throws CardServiceException {
         ArrayList<SecurityInfo> infos = new ArrayList();
 
-        SecurityInfo caInfo = new ChipAuthenticationInfo(SecurityInfo.ID_CA_ECDH_3DES_CBC_CBC, 2);  //Encontrar o ID Certo
+        SecurityInfo caInfo = new ChipAuthenticationInfo(SecurityInfo.ID_CA_DH_AES_CBC_CMAC_256, 2);  //Encontrar o ID Certo
         SecurityInfo caKInfo = new ChipAuthenticationPublicKeyInfo(DHpublicKey);
         SecurityInfo taInfo = new TerminalAuthenticationInfo();
 
@@ -335,7 +329,7 @@ public class CardSender {
         perso.writeFile(service.EF_DG14, new ByteArrayInputStream(dg14.getEncoded()));
 
         dataGroupHashes.put(14, digest.digest(dg14.getEncoded()));
-        dataGroupComTagList[14] = LDSFile.EF_DG14_TAG;
+        dataGroupComTagList.add(LDSFile.EF_DG14_TAG);
     }
 
     public void SendDG15() throws Exception {
@@ -344,7 +338,7 @@ public class CardSender {
         KeyPair aapair = keyGen.genKeyPair();
         DG15File dg15 = new DG15File(aapair.getPublic());
 
-        System.out.println("Enviando informaÃ§Ãµes para AA");
+        System.out.println("Enviando informações para AA");
         perso.putPrivateKey(aapair.getPrivate());
 
         perso.createFile(service.EF_DG15, (short) dg15.getEncoded().length);
@@ -354,14 +348,14 @@ public class CardSender {
         perso.writeFile(service.EF_DG15, new ByteArrayInputStream(dg15.getEncoded()));
 
         dataGroupHashes.put(15, digest.digest(dg15.getEncoded()));
-        dataGroupComTagList[15] = LDSFile.EF_DG15_TAG;
+        dataGroupComTagList.add(LDSFile.EF_DG15_TAG);
     }
 
     public void sendSOD() throws Exception {
         //PrivateKey to sign the data = Private key do Certificado?
         //Document Signer Certificate
 
-        X509Certificate docSignCert = MyCertificateFactory.getInstance().generateTestSignedX509Certificate();
+        X509Certificate docSignCert = (X509Certificate) MyCertificateFactory.getInstance().generateTestSignedX509Certificate();
 
         KeyStore ks = KeyStore.getInstance("JKS");
         String pw = "123456";

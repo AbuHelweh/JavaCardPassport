@@ -18,9 +18,11 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import net.sf.scuba.smartcards.CardServiceException;
+import org.bouncycastle.util.Arrays;
 import org.jmrtd.BACKeySpec;
 import org.jmrtd.PassportService;
 import org.jmrtd.lds.DataGroup;
+import org.jmrtd.lds.LDSFile;
 import org.jmrtd.lds.SODFile;
 import org.jmrtd.lds.icao.COMFile;
 import org.jmrtd.lds.icao.DG14File;
@@ -80,45 +82,48 @@ public class CardReader {
      */
     public void executeSecurityProtocols(COMFile com, SODFile sod) {
         SecurityProtocols sec = SecurityProtocols.getInstance(service, this);
-        /*
+        
         sec.setAlgorithms(sod);
 
-        try {
-            DG14File dg14 = this.readDG14();
-            if (dg14 != null) {
-                EACResult eacres = sec.doEAC(dg14);
-                System.out.println(eacres.toString());
-            }
-        } catch (Exception e) {
-            System.out.println("EAC ERROR");
-            e.printStackTrace();
-        }
-        */
-        try{
-            DG15File dg15 = this.readDG15();
-            if(dg15 != null){
-                Security.AAResult aares = sec.doAA(dg15);
-                System.out.println(aares);
-                if(!aares.getResult()){
-                    JOptionPane.showMessageDialog(null, "Falha na Autentica√ß√£o Ativa, Cart√£o Inv√°lido");
+        if(Arrays.contains(com.getTagList(), LDSFile.EF_DG14_TAG)){
+            try {
+                DG14File dg14 = this.readDG14();
+                if (dg14 != null) {
+                    EACResult eacres = sec.doEAC(dg14);
+                    System.out.println(eacres.toString());
                 }
+            } catch (Exception e) {
+                System.out.println("EAC ERROR");
+                e.printStackTrace();
             }
-        } catch (Exception e){
-            System.out.println("AA ERROR");
-            e.printStackTrace();
         }
-        /*
+ 
+        if(Arrays.contains(com.getTagList(), LDSFile.EF_DG15_TAG)){
+            try{
+                DG15File dg15 = this.readDG15();
+                if(dg15 != null){
+                    Security.AAResult aares = sec.doAA(dg15);
+                    System.out.println(aares);
+                    if(!aares.getResult()){
+                        JOptionPane.showMessageDialog(null, "Falha na AutenticaÁ„o Ativa, Cart„o Inv·lido");
+                    }
+                }
+            } catch (Exception e){
+                System.out.println("AA ERROR");
+                e.printStackTrace();
+            }
+        }
         try {
             PAResult pares = sec.doPA(com, sod);
             System.out.println(pares.toString());
             if(!pares.veredict()){
-                JOptionPane.showMessageDialog(null, "Falha na Autentica√ß√£o Passiva, Cart√£o Modificado");
+                JOptionPane.showMessageDialog(null, "Falha na AutenticaÁ„o Passiva, Cart„o Modificado");
             }
         } catch (Exception e) {
             System.out.println("PA ERROR");
             e.printStackTrace();
         }
-        */
+        
     }
 
     /**

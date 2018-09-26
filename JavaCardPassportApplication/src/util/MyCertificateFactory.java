@@ -8,6 +8,7 @@ package util;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
@@ -19,9 +20,11 @@ import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.PublicKey;
 import java.security.SignatureException;
+import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,23 +32,20 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import myjmrtdcardapplication.JMRTDSecurityProvider;
 import net.sf.scuba.data.Country;
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
+import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.asn1.x509.BasicConstraints;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
+import org.bouncycastle.cert.jcajce.JcaX509v3CertificateBuilder;
 import org.bouncycastle.jce.ECNamedCurveTable;
+import org.bouncycastle.operator.ContentSigner;
+import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.ejbca.cvc.exception.ConstructionException;
 import org.jmrtd.cert.CVCAuthorizationTemplate;
 import org.jmrtd.cert.CVCPrincipal;
 import org.jmrtd.cert.CVCertificateBuilder;
 import org.jmrtd.cert.CardVerifiableCertificate;
 import org.joda.time.*;
-import sun.security.tools.keytool.CertAndKeyGen;
-import sun.security.x509.AlgorithmId;
-import sun.security.x509.CertificateAlgorithmId;
-import sun.security.x509.CertificateSerialNumber;
-import sun.security.x509.CertificateValidity;
-import sun.security.x509.CertificateVersion;
-import sun.security.x509.CertificateX509Key;
-import sun.security.x509.X500Name;
-import sun.security.x509.X509CertImpl;
-import sun.security.x509.X509CertInfo;
 
 /**
  *
@@ -127,7 +127,7 @@ public class MyCertificateFactory {
      * @return
      * @throws Exception
      */
-    public KeyPair generateRSAKeyPair() throws NoSuchAlgorithmException {
+    private KeyPair generateRSAKeyPair() throws NoSuchAlgorithmException {
         KeyPairGenerator gen = KeyPairGenerator.getInstance("RSA", bcProvider);
 
         gen.initialize(2048);
@@ -161,62 +161,55 @@ public class MyCertificateFactory {
     }
 
     /**
-     * Modified from CertAndKeyGen, generates an X509Certificate and signs it
-     * with a custom private key Gambiarra? Maybe
-     *
-     * @param myname
+     * Gera um certificado x509 assinado pelo par de chaves
+     * @param dnName
      * @param validity
-     * @param publicKey Certificate Publice
-     * @param privateKey Signer Private
-     * @param sigAlg
+     * @param keyPair
+     * @param signatureAlgorithm
      * @return
      * @throws CertificateException
      * @throws InvalidKeyException
      * @throws SignatureException
      * @throws NoSuchAlgorithmException
-     * @throws NoSuchProviderException
+     * @throws NoSuchProviderException 
      */
-    public X509Certificate generateSignedX509Certificate(X500Name myname, long validity, PublicKey publicKey, PrivateKey privateKey, String sigAlg) throws CertificateException, InvalidKeyException, SignatureException, NoSuchAlgorithmException, NoSuchProviderException {
-        X509CertImpl cert;
+    public Certificate generateSignedX509Certificate(X500Name dnName, long validity, PublicKey pk, PrivateKey sk, String signatureAlgorithm, boolean isCA) throws CertificateException, InvalidKeyException, SignatureException, NoSuchAlgorithmException, NoSuchProviderException {
 
         Date lastDate;
         try {
 
-            if (publicKey == null) {
+            if (pk == null) {
                 throw new NullPointerException("Public Key NULL");
             }
-            if (privateKey == null) {
+            if (sk == null) {
                 throw new NullPointerException("Private Key NULL");
             }
 
-            lastDate = new Date();
-            lastDate.setTime(lastDate.getTime() + validity * 1000);
-            CertificateValidity interval = new CertificateValidity(new Date(), lastDate);
-            X509CertInfo info = new X509CertInfo();
+            long now = System.currentTimeMillis();
+            Date startDate = new Date(now);
+            
+            BigInteger certSerialNumber = new BigInteger(Long.toString(now)); // <-- Using the current timestamp as the certificate serial number
 
-            // Add all mandatory attributes
-            info.set(X509CertInfo.VERSION, new CertificateVersion(CertificateVersion.V3));
-            info.set(X509CertInfo.SERIAL_NUMBER, new CertificateSerialNumber(new java.util.Random().nextInt() & 0x7fffffff));
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(startDate);
+            calendar.add(Calendar.YEAR, 10); // <-- 10 Yr validity
 
-            AlgorithmId algID = AlgorithmId.get(sigAlg);
+            Date endDate = calendar.getTime();
 
-            if (algID == null) {
-                throw new NullPointerException("Private Key NULL");
-            }
+            ContentSigner contentSigner = new JcaContentSignerBuilder(signatureAlgorithm).build(sk);
 
-            info.set(X509CertInfo.ALGORITHM_ID, new CertificateAlgorithmId(algID));
-            info.set(X509CertInfo.SUBJECT, myname);
-            info.set(X509CertInfo.KEY, new CertificateX509Key(publicKey));
-            info.set(X509CertInfo.VALIDITY, interval);
-            info.set(X509CertInfo.ISSUER, myname);
+            JcaX509v3CertificateBuilder certBuilder = new JcaX509v3CertificateBuilder(dnName, certSerialNumber, startDate, endDate, dnName, pk);
 
-            cert = new X509CertImpl(info);
+            // Extensions --------------------------
+            // Basic Constraints
+            BasicConstraints basicConstraints = new BasicConstraints(isCA); // <-- true for CA, false for EndEntity
 
-            cert.sign(privateKey, sigAlg, "BC");
+            certBuilder.addExtension(new ASN1ObjectIdentifier("2.5.29.19"), true, basicConstraints); // Basic Constraints is usually marked as critical.
 
-            return (X509Certificate) cert;
+            // -------------------------------------
+            return new JcaX509CertificateConverter().setProvider(bcProvider).getCertificate(certBuilder.build(contentSigner));
 
-        } catch (IOException e) {
+        } catch (Exception e) {
 
             throw new CertificateEncodingException("getSelfCert: "
                     + e.getMessage());
@@ -227,7 +220,7 @@ public class MyCertificateFactory {
      * DebugPurposes gera um certificado assinado pela corrente de certificados
      * @return 
      */
-    public X509Certificate generateTestSignedX509Certificate() {
+    public Certificate generateTestSignedX509Certificate() {
         try {
 
             generateTestCertificateChain();
@@ -239,25 +232,25 @@ public class MyCertificateFactory {
 
             if (ks.getCertificate("DocSignCertificate") != null) {
                 System.out.println("Certificado existe");
-                return (X509Certificate) ks.getCertificate("DocSignCertificate");
+                //return (Certificate) ks.getCertificate("DocSignCertificate");
             }
 
-            KeyPair certGen = generateRSAKeyPair();
+            KeyPair certGen = getRSAKeyPair();
 
             // prepare the validity of the certificate
             long validSecs = (long) 365 * 24 * 60 * 60; // valid for one year
 
-            X509Certificate cert = generateSignedX509Certificate(
+            Certificate cert = generateSignedX509Certificate(
                     new X500Name("CN=card.labsec,O=LABSEC/UFSC,L=FLORIANOPOLIS,C=DE"),
                     validSecs,
                     certGen.getPublic(),
                     lastCertificateChainPrivateKey,
-                    "SHA256WithRSA");
+                    "SHA256WithRSA", false);
 
             lastCertificateChainPrivateKey = certGen.getPrivate();
 
             ks.setKeyEntry("DocSignCertificate", certGen.getPrivate(), pw.toCharArray(),
-                    new X509Certificate[]{cert});
+                    new Certificate[]{cert});
 
             FileOutputStream fos = new FileOutputStream("/home/" + System.getProperty("user.name") + "/workspace/JavaCardPassport/Documentos/mykeystore.ks");
 
@@ -277,7 +270,7 @@ public class MyCertificateFactory {
      * @return
      * @throws Exception 
      */
-    public X509Certificate generateSelfSignedX509Certificate() throws Exception {
+    public Certificate generateSelfSignedX509Certificate() throws Exception {
 
         KeyStore ks = KeyStore.getInstance("JKS");
         String pw = "123456";
@@ -286,46 +279,56 @@ public class MyCertificateFactory {
 
         if (ks.getCertificate("DocSignCertificate") != null) {
             System.out.println("Certificado existe");
-            return (X509Certificate) ks.getCertificate("DocSignCertificate");
+            //return (Certificate) ks.getCertificate("DocSignCertificate");
         }
+        
+        KeyPair keyPair = getRSAKeyPair();
 
-        // generate the certificate
-        // first parameter  = Algorithm
-        // second parameter = signrature algorithm
-        // third parameter  = the provider to use to generate the keys (may be null or
-        //                    use the constructor without provider)
-        CertAndKeyGen certGen = new CertAndKeyGen("RSA", "SHA256WithRSA", "BC");
+        long now = System.currentTimeMillis();
+        Date startDate = new Date(now);
 
-        // generate it with 2048 bits
-        certGen.generate(2048);
+        X500Name dnName = new X500Name("CN=MyJMRTD,O=LABSEC/UFSC,L=FLORIANOPOLIS,C=DE");
+        BigInteger certSerialNumber = new BigInteger(Long.toString(now)); // <-- Using the current timestamp as the certificate serial number
 
-        // prepare the validity of the certificate
-        long validSecs = (long) 365 * 24 * 60 * 60; // valid for one year
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(startDate);
+        calendar.add(Calendar.YEAR, 10); // <-- 10 Yr validity
 
-        // add the certificate information, currently only valid for one year.
-        X509Certificate cert = certGen.getSelfCertificate(
-                // enter your details according to your application
-                new X500Name("CN=MyJMRTD,O=LABSEC/UFSC,L=FLORIANOPOLIS,C=DE"), validSecs);
+        Date endDate = calendar.getTime();
+
+        String signatureAlgorithm = "SHA256WithRSA"; // <-- Use appropriate signature algorithm based on your keyPair algorithm.
+
+        ContentSigner contentSigner = new JcaContentSignerBuilder(signatureAlgorithm).build(keyPair.getPrivate());
+
+        JcaX509v3CertificateBuilder certBuilder = new JcaX509v3CertificateBuilder(dnName, certSerialNumber, startDate, endDate, dnName, keyPair.getPublic());
+
+        // Extensions --------------------------
+        // Basic Constraints
+        BasicConstraints basicConstraints = new BasicConstraints(true); // <-- true for CA, false for EndEntity
+
+        certBuilder.addExtension(new ASN1ObjectIdentifier("2.5.29.19"), true, basicConstraints); // Basic Constraints is usually marked as critical.
+
+        // -------------------------------------
+        Certificate cert =  new JcaX509CertificateConverter().setProvider(bcProvider).getCertificate(certBuilder.build(contentSigner));
 
         System.out.println(cert.toString());
 
         // set the certificate and the key in the keystore
-        ks.setKeyEntry("DocSignCertificate", certGen.getPrivateKey(), pw.toCharArray(),
-                new X509Certificate[]{cert});
-        RSApair = new KeyPair(certGen.getPublicKey(), certGen.getPrivateKey());
+        ks.setKeyEntry("DocSignCertificate", keyPair.getPrivate(), pw.toCharArray(),
+                new Certificate[]{cert});
 
         FileOutputStream fos = new FileOutputStream("/home/" + System.getProperty("user.name") + "/workspace/JavaCardPassport/Documentos/mykeystore.ks");
 
         ks.store(fos, pw.toCharArray());
-
         return cert;
     }
 
-    public KeyPair getGeneratedCertificateKeyPair() {
+    public KeyPair getRSAKeyPair() throws NoSuchAlgorithmException{
         if (RSApair != null) {
             return RSApair;
         }
-        return null;
+        RSApair = generateRSAKeyPair();
+        return RSApair;
     }
 
     /**
@@ -342,11 +345,7 @@ public class MyCertificateFactory {
 
         Set<X509Certificate> certChain = new HashSet<X509Certificate>();
         X509Certificate cert;
-        CertAndKeyGen certGen = new CertAndKeyGen("RSA", "SHA256WithRSA", "BC");
-        certGen.generate(2048);
-        long validSecs = (long) 365 * 24 * 60 * 60;
-        
-        PrivateKey rootkey = null;
+        PrivateKey rootkey;
 
         if (ks.getCertificate("LabsecRootAnchor") != null) {
 
@@ -356,68 +355,13 @@ public class MyCertificateFactory {
             certChain.add(cert);
 
         } else {
-            cert = certGen.getSelfCertificate(
-                    new X500Name("CN=root.labsec,O=LABSEC/UFSC,L=FLORIANOPOLIS,C=DE"), validSecs);
+            cert = (X509Certificate) generateSelfSignedX509Certificate();
 
-            rootkey = certGen.getPrivateKey();
-            lastCertificateChainPrivateKey = certGen.getPrivateKey();
+            rootkey = getRSAKeyPair().getPrivate();
+            lastCertificateChainPrivateKey = getRSAKeyPair().getPrivate();
 
-            ks.setKeyEntry("LabsecRootAnchor", certGen.getPrivateKey(), pw.toCharArray(),
-                    new X509Certificate[]{cert});
-
-            certChain.add(cert);
-        }
-
-        if (ks.getCertificate("LabsecIntermidiateAnchor") != null) {
-
-            cert = (X509Certificate) ks.getCertificate("LabsecIntermidiateAnchor");
-            certChain.add(cert);
-
-        } else {
-
-            certGen = new CertAndKeyGen("RSA", "SHA256WithRSA", "BC");
-            certGen.generate(2048);
-            
-            KeyPair kp = generateRSAKeyPair();
-
-            cert = generateSignedX509Certificate(
-                    new X500Name("CN=intermidiate.labsec,O=LABSEC/UFSC,L=FLORIANOPOLIS,C=DE"),
-                    validSecs,
-                    kp.getPublic(),
-                    rootkey,
-                    "SHA256WithRSA");
-
-            lastCertificateChainPrivateKey = kp.getPrivate();
-
-            ks.setKeyEntry("LabsecIntermidiateAnchor", kp.getPrivate(), pw.toCharArray(),
-                    new X509Certificate[]{cert});
-
-            certChain.add(cert);
-        }
-        
-        if (ks.getCertificate("LabsecIntermidiateAnchor1") != null) {
-
-            cert = (X509Certificate) ks.getCertificate("LabsecIntermidiateAnchor1");
-            certChain.add(cert);
-
-        } else {
-
-            certGen = new CertAndKeyGen("RSA", "SHA256WithRSA", "BC");
-            certGen.generate(2048);
-            
-            KeyPair kp = generateRSAKeyPair();
-
-            cert = generateSignedX509Certificate(
-                    new X500Name("CN=intermidiate1.labsec,O=LABSEC/UFSC,L=FLORIANOPOLIS,C=DE"),
-                    validSecs,
-                    kp.getPublic(),
-                    rootkey,
-                    "SHA256WithRSA");
-
-            lastCertificateChainPrivateKey = kp.getPrivate();
-
-            ks.setKeyEntry("LabsecIntermidiateAnchor1", kp.getPrivate(), pw.toCharArray(),
-                    new X509Certificate[]{cert});
+            ks.setKeyEntry("LabsecRootAnchor", rootkey, pw.toCharArray(),
+                    new Certificate[]{cert});
 
             certChain.add(cert);
         }

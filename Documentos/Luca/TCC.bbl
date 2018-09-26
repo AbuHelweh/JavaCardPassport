@@ -38,7 +38,9 @@
     \verb{url}
     \verb http://www.bouncycastle.org/java.html
     \endverb
-    \warn{\item Invalid format of field 'urldate'}
+    \field{urlday}{13}
+    \field{urlmonth}{04}
+    \field{urlyear}{2018}
   \endentry
 
   \entry{GLAMDRING}{online}{}
@@ -63,7 +65,9 @@
     \verb https://github.com/Glamdring/epassport-reader
     \endverb
     \field{year}{2016}
-    \warn{\item Invalid format of field 'urldate'}
+    \field{urlday}{15}
+    \field{urlmonth}{08}
+    \field{urlyear}{2018}
   \endentry
 
   \entry{HOWPASSPORT}{online}{}
@@ -90,7 +94,9 @@
     \verb https://www.youtube.com/watch?v=Ha5VPXZ3ILs
     \endverb
     \field{year}{2013}
-    \warn{\item Invalid format of field 'urldate'}
+    \field{urlday}{26}
+    \field{urlmonth}{06}
+    \field{urlyear}{2018}
   \endentry
 
   \entry{PYPASSPORT}{online}{}
@@ -121,7 +127,9 @@
     \verb https://code.google.com/archive/p/pypassport/
     \endverb
     \field{year}{2009}
-    \warn{\item Invalid format of field 'urldate'}
+    \field{urlday}{10}
+    \field{urlmonth}{08}
+    \field{urlyear}{2018}
   \endentry
 
   \entry{INNOVALOR}{online}{}
@@ -144,7 +152,9 @@
     \verb https://www.readid.com/
     \endverb
     \field{year}{2013}
-    \warn{\item Invalid format of field 'urldate'}
+    \field{urlday}{26}
+    \field{urlmonth}{06}
+    \field{urlyear}{2018}
   \endentry
 
   \entry{ISO}{online}{}
@@ -170,32 +180,9 @@
     \verb https://www.iso.org/standard/50867.html
     \endverb
     \field{year}{2011}
-    \warn{\item Invalid format of field 'urldate'}
-  \endentry
-
-  \entry{RFIDIOT}{online}{}
-    \name{author}{1}{}{%
-      {{hash=LA}{%
-         family={Laurie},
-         familyi={L\bibinitperiod},
-         given={Adam},
-         giveni={A\bibinitperiod},
-      }}%
-    }
-    \strng{namehash}{LA1}
-    \strng{fullhash}{LA1}
-    \field{labelnamesource}{author}
-    \field{labeltitlesource}{title}
-    \field{labelyear}{2011}
-    \field{labeldatesource}{year}
-    \field{sortinit}{L}
-    \field{sortinithash}{L}
-    \field{title}{RFIDIOt.py - RFID IO tools for python}
-    \verb{url}
-    \verb https://github.com/AdamLaurie/RFIDIOt/,http://www.rfidiot.org/
-    \endverb
-    \field{year}{2011}
-    \warn{\item Invalid format of field 'urldate'}
+    \field{urlday}{23}
+    \field{urlmonth}{05}
+    \field{urlyear}{2018}
   \endentry
 
   \entry{STASM}{article}{}
@@ -225,7 +212,9 @@
     \endverb
     \field{journaltitle}{VISAPP}
     \field{year}{2014}
-    \warn{\item Invalid format of field 'urldate'}
+    \field{urlday}{13}
+    \field{urlmonth}{04}
+    \field{urlyear}{2018}
   \endentry
 
   \entry{JMRTD}{online}{}
@@ -250,7 +239,9 @@
     \verb https://www.jmrtd.org
     \endverb
     \field{year}{2010}
-    \warn{\item Invalid format of field 'urldate'}
+    \field{urlday}{15}
+    \field{urlmonth}{08}
+    \field{urlyear}{2018}
   \endentry
 
   \entry{ICAO}{online}{}
@@ -279,7 +270,9 @@
     \verb https://www.icao.int/publications/pages/publication.aspx?docnum=9303
     \endverb
     \field{year}{2015}
-    \warn{\item Invalid format of field 'urldate'}
+    \field{urlday}{13}
+    \field{urlmonth}{04}
+    \field{urlyear}{2018}
   \endentry
 
   \entry{EJBCA}{online}{}
@@ -299,7 +292,9 @@
     \verb{url}
     \verb https://www.ejbca.org
     \endverb
-    \warn{\item Invalid format of field 'urldate'}
+    \field{urlday}{13}
+    \field{urlmonth}{04}
+    \field{urlyear}{2018}
   \endentry
 
   \entry{TANANAEV}{online}{}
@@ -324,7 +319,9 @@
     \verb https://github.com/tananaev/passport-reader
     \endverb
     \field{year}{2016}
-    \warn{\item Invalid format of field 'urldate'}
+    \field{urlday}{15}
+    \field{urlmonth}{08}
+    \field{urlyear}{2018}
   \endentry
 
   \entry{PRINT}{online}{}
@@ -346,7 +343,9 @@
     \verb{url}
     \verb https://www.freedesktop.org/wiki/Software/fprint/libfprint/
     \endverb
-    \warn{\item Invalid format of field 'urldate'}
+    \field{urlday}{13}
+    \field{urlmonth}{04}
+    \field{urlyear}{2018}
   \endentry
 
   \entry{OPENCV}{online}{}
@@ -368,36 +367,9 @@
     \verb{url}
     \verb https://opencv.org/
     \endverb
-    \warn{\item Invalid format of field 'urldate'}
-  \endentry
-
-  \entry{WZMRTD}{online}{}
-    \name{author}{2}{}{%
-      {{hash=w}{%
-         family={waazaa.org},
-         familyi={w\bibinitperiod},
-      }}%
-      {{hash=a}{%
-         family={ariadNEXT},
-         familyi={a\bibinitperiod},
-      }}%
-    }
-    \strng{namehash}{wa1}
-    \strng{fullhash}{wa1}
-    \field{labelnamesource}{author}
-    \field{labeltitlesource}{title}
-    \field{labelyear}{2011}
-    \field{labeldatesource}{year}
-    \field{sortinit}{W}
-    \field{sortinithash}{W}
-    \field{note}{"Site original http://waazaa.org/wzmrtd não existe mais na
-  data em que este documento foi escrito"}
-    \field{title}{wzMRTD}
-    \verb{url}
-    \verb https://github.com/ariadnext/wzmrtd
-    \endverb
-    \field{year}{2011}
-    \warn{\item Invalid format of field 'urldate'}
+    \field{urlday}{13}
+    \field{urlmonth}{04}
+    \field{urlyear}{2018}
   \endentry
 
   \entry{PASSPORTWIKI}{online}{}
@@ -420,7 +392,9 @@
     \verb{url}
     \verb https://en.wikipedia.org/wiki/Passport
     \endverb
-    \warn{\item Invalid format of field 'urldate'}
+    \field{urlday}{01}
+    \field{urlmonth}{08}
+    \field{urlyear}{2018}
   \endentry
 \enddatalist
 \endinput

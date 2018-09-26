@@ -6,11 +6,13 @@
 package Security;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PublicKey;
+import java.security.cert.Certificate;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,9 +29,9 @@ import net.sf.scuba.smartcards.CardServiceException;
 import org.bouncycastle.util.Arrays;
 import org.jmrtd.BACKeySpec;
 import org.jmrtd.PassportService;
-import org.jmrtd.cert.CVCPrincipal;
 import org.jmrtd.lds.ChipAuthenticationInfo;
 import org.jmrtd.lds.ChipAuthenticationPublicKeyInfo;
+import org.jmrtd.lds.DataGroup;
 import org.jmrtd.lds.LDSFile;
 import org.jmrtd.lds.SODFile;
 import org.jmrtd.lds.SecurityInfo;
@@ -134,8 +136,17 @@ public class SecurityProtocols {
 
         for (int i = 1; i < tags.length; i++) {
 
+               MessageDigest SHA = MessageDigest.getInstance(digestAlgorithm);
+            
             if (Arrays.contains(comtags, tags[i])) {
-                currentHash = MessageDigest.getInstance(digestAlgorithm).digest(reader.getDGFile(i).getEncoded());
+                System.out.println(tags[i]);
+                DataGroup dg = reader.getDGFile(i);
+                if(dg == null){
+                    continue;
+                }
+                byte[] file = dg.getEncoded();
+                
+                currentHash = SHA.digest(file);
 
                 if (java.util.Arrays.equals(currentHash, sodHashes.get(i))) {
                     result.put(i, Boolean.TRUE);
@@ -176,9 +187,12 @@ public class SecurityProtocols {
 
         if (chipinfo == null || chipauthinfo == null) {
             throw new Exception("dg14 file empty");
-        }        
+        }
         
-        CAResult cares = service.doCA(chipauthinfo.getKeyId(), chipinfo.getObjectIdentifier(), SecurityInfo.ID_PK_ECDH, chipauthinfo.getSubjectPublicKey());
+        System.out.println(chipinfo);
+        System.out.println(chipauthinfo);
+        
+        CAResult cares = service.doCA(BigInteger.ZERO, chipinfo.getObjectIdentifier(), chipauthinfo.getObjectIdentifier(), chipauthinfo.getSubjectPublicKey());
         //TAResult tares = service.doTA(caReference, terminalCertificates, cares.getPCDPrivateKey(), SecurityInfo.ID_TA_ECDSA_SHA_256, cares, DOCUMENTNUMBER);
 
         System.out.println("cares:");
