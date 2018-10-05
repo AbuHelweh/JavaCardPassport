@@ -89,8 +89,8 @@ public class CardReader {
             try {
                 DG14File dg14 = this.readDG14();
                 if (dg14 != null) {
-                    EACResult eacres = sec.doEAC(dg14);
-                    System.out.println(eacres.toString());
+                    //EACResult eacres = sec.doEAC(dg14);
+                    //System.out.println(eacres.toString());
                 }
             } catch (Exception e) {
                 System.out.println("EAC ERROR");

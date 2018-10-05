@@ -43,6 +43,10 @@ public class CertificateValidationResult {
         }
     }
     
+    public String toString(){
+        return "" + (isValid? "Valid":"Not Valid - Reason: ") + (ex != null ? ex.getMessage() : "");
+    }
+    
     public Exception getException(){
         return ex;
     }

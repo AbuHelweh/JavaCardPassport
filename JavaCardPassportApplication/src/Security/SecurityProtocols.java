@@ -96,9 +96,13 @@ public class SecurityProtocols {
     public PAResult doPA(COMFile com, SODFile sod) throws NoSuchAlgorithmException, CardServiceException, IOException, CertificateException {
         //Certify SOD File with certificate
 
+        System.out.println("PA");
+        
         boolean SODValidity = true;
 
         CertificateValidationResult certCheck = checkForCertificateValidity(sod.getDocSigningCertificate());
+        
+        System.out.println(certCheck);
 
         if (certCheck.isValid()) {
             for (X509Certificate c : certCheck.getChain()) {
@@ -266,7 +270,7 @@ public class SecurityProtocols {
     public CertificateValidationResult checkForCertificateValidity(X509Certificate cert) {
         try {
             Set<X509Certificate> additionalCerts = MyCertificateFactory.getInstance().generateTestCertificateChain();
-
+            System.out.println("Checking for certificate Validity");
             return CertificateValidator.validate(cert, additionalCerts);
         } catch (Exception e) {
             e.printStackTrace();

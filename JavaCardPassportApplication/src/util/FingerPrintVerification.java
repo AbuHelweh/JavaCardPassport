@@ -209,15 +209,15 @@ public class FingerPrintVerification extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setText("Ded√£o");
+        jLabel2.setText("Polegar");
 
         jLabel3.setText("Indicador");
 
-        jLabel4.setText("Meio");
+        jLabel4.setText("MÈdio");
 
         jLabel5.setText("Anelar");
 
-        jLabel6.setText("M√≠nimo");
+        jLabel6.setText("MÌnimo");
 
         javax.swing.GroupLayout ThumbLayout = new javax.swing.GroupLayout(Thumb);
         Thumb.setLayout(ThumbLayout);
@@ -274,9 +274,9 @@ public class FingerPrintVerification extends javax.swing.JFrame {
             .addGap(0, 150, Short.MAX_VALUE)
         );
 
-        jLabel1.setText("M√£o Direita");
+        jLabel1.setText("M„o Direita");
 
-        jButton2.setText("Trocar m√£o");
+        jButton2.setText("Trocar m„o");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -309,7 +309,7 @@ public class FingerPrintVerification extends javax.swing.JFrame {
                         .addComponent(jLabel4)
                         .addGap(131, 131, 131)
                         .addComponent(jLabel5)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(Little, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -320,8 +320,8 @@ public class FingerPrintVerification extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(242, 242, 242)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(202, 202, 202)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()

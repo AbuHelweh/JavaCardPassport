@@ -43,8 +43,12 @@ public class CertificateValidator {
         } catch (CertificateNotYetValidException e) {
             return new CertificateValidationResult(e);
         }
-
+        
         Set<X509Certificate> chain = simpleCertificateChainBuilder(cert, additionalCerts);
+        
+        if (chain == null){
+            return new CertificateValidationResult(new Exception("Unable to build certificate chain"));
+        }
 
         for (X509Certificate c : chain) {
             try {
@@ -62,52 +66,57 @@ public class CertificateValidator {
         }
     }
 
-    //retirar recursão para fazer com que ele siga a lista
+    //build bottom up;
     public static Set<X509Certificate> simpleCertificateChainBuilder(X509Certificate cert, Set<X509Certificate> certs) {
 
         Set<X509Certificate> chain = new HashSet();
-        X509Certificate current = null;
-        try {
+        X509Certificate current = cert;
+        chain.add(cert);
+            
+        boolean ok = true;
+        while (ok) {
+            ok = false;
+
             for (X509Certificate c : certs) {
-                if (isSelfSigned(c)) {
+                try{
                     if (GlobalFlags.DEBUG) {
-                        System.err.println("Found Anchor " + c.getIssuerX500Principal());
+                        System.err.println("Verify " + current.getIssuerX500Principal() + " with " + c.getIssuerX500Principal());
                     }
-                    current = c;
+                    current.verify(c.getPublicKey(), "BC");
                     chain.add(c);
+                    current = c;
+                    certs.remove(c);
+                    System.out.println("Yep : " + c.getIssuerX500Principal());
+                    ok = true;
                     break;
-                }
-            }
-            certs.remove(current);
-
-            boolean ok = true;
-            while (ok) {
-                ok = false;
-
-                for (X509Certificate c : certs) {
-                    try {
-                        c.verify(current.getPublicKey(), "BC");
-                        if (GlobalFlags.DEBUG) {
-                            System.err.println("Verify " + c.getIssuerX500Principal() + " with " + current.getIssuerX500Principal());
-                        }
-                        current = c;
-                        chain.add(c);
-                        certs.remove(c);
-                        ok = true;
-                        break;
-                    } catch (Exception e) {
-                        if (GlobalFlags.DEBUG) {
-                            System.err.println("Failed " + c.getIssuerX500Principal() + " with " + current.getIssuerX500Principal());
-                        }
-                    }
+                } catch (Exception e){
+                    System.out.println("Nope");
                 }
 
             }
-
-        } catch (Exception e) {
 
         }
-        return chain;
+
+        if(chain.size() > 1){
+            boolean foundAnchor = false;
+            for(X509Certificate c : chain){
+                try{
+                    if(isSelfSigned(c)){
+                        foundAnchor = true;
+                        break;
+                    }
+                }catch(Exception e ){
+                    e.printStackTrace();
+                }
+            }
+            if(foundAnchor){
+                return chain;
+            }
+        }
+    
+        return null;
+        
+
     }
 
     /**

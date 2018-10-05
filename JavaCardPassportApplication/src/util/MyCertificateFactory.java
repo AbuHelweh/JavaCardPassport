@@ -351,7 +351,7 @@ public class MyCertificateFactory {
 
             cert = (X509Certificate) ks.getCertificate("LabsecRootAnchor");
             rootkey = (PrivateKey) ks.getKey("LabsecRootAnchor", pw.toCharArray());
-            lastCertificateChainPrivateKey = (PrivateKey) ks.getKey("LabsecRootAnchor", pw.toCharArray());
+            lastCertificateChainPrivateKey = rootkey;
             certChain.add(cert);
 
         } else {
