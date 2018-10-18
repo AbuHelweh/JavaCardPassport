@@ -35,6 +35,8 @@ public class CertificateValidator {
                 return new CertificateValidationResult(new Exception("Self Signed Certificate"));
             }
         }
+        
+        System.out.println(cert);
 
         try {
             cert.checkValidity();
@@ -76,12 +78,22 @@ public class CertificateValidator {
         boolean ok = true;
         while (ok) {
             ok = false;
+            
+            System.out.println(cert);            
 
             for (X509Certificate c : certs) {
                 try{
                     if (GlobalFlags.DEBUG) {
                         System.err.println("Verify " + current.getIssuerX500Principal() + " with " + c.getIssuerX500Principal());
                     }
+                    
+                    //System.out.println(c);
+                    //System.out.println(isSelfSigned(c));
+                    if(cert.equals(c)){
+                        chain.add(c);
+                        break;
+                    }
+                    
                     current.verify(c.getPublicKey(), "BC");
                     chain.add(c);
                     current = c;
@@ -94,7 +106,8 @@ public class CertificateValidator {
                 }
 
             }
-
+                
+            
         }
 
         if(chain.size() > 1){
