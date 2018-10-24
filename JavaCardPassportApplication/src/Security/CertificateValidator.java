@@ -87,8 +87,9 @@ public class CertificateValidator {
                         System.err.println("Verify " + current.getIssuerX500Principal() + " with " + c.getIssuerX500Principal());
                     }
                     
-                    //System.out.println(c);
-                    //System.out.println(isSelfSigned(c));
+                    System.out.println(c.getIssuerDN());
+                    System.out.println(c.getSubjectDN());
+                    System.out.println(isSelfSigned(c));
                     if(cert.equals(c)){
                         chain.add(c);
                         break;

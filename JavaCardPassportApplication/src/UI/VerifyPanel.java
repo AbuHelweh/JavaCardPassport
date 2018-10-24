@@ -10,11 +10,9 @@ import java.awt.Graphics;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.smartcardio.CardException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import myjmrtdcardapplication.CardReader;
@@ -25,9 +23,6 @@ import org.jmrtd.lds.SODFile;
 import org.jmrtd.lds.icao.COMFile;
 import org.jmrtd.lds.icao.MRZInfo;
 import org.jmrtd.lds.iso19794.FingerInfo;
-import util.CardConnection;
-import util.ControlledDialog;
-import util.GlobalFlags;
 
 /**
  *
@@ -142,7 +137,7 @@ public class VerifyPanel extends javax.swing.JPanel implements Runnable {
             isReading = false;
 
         } catch (Exception ex) {
-            Logger.getLogger(VerifyPanel.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
             isReading = false;
             MainPanel.needsReset = true;
             JOptionPane.showMessageDialog(null, "Error de leitura:" + System.lineSeparator() + ex.getMessage());

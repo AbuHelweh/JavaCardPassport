@@ -52,13 +52,13 @@ public class CardConnection {
         if (GlobalFlags.DEBUG) {
             System.err.println("Reader: " + reader);
             System.err.println(reader.isCardPresent());
-            System.err.println("Por favor insira um cart„o");
+            System.err.println("Por favor insira um cart√£o");
         }
 
         for (int i = 0; i < 10 && !reader.isCardPresent(); i++) {
-            ControlledDialog.showMessageDialog("Por favor insira um cart„o " + i);
+            ControlledDialog.showMessageDialog("Por favor insira um cart√£o " + i);
             reader.waitForCardPresent(1000);
-            System.err.println("Cart„o " + (reader.isCardPresent() ? "" : "n„o ") + "conectado " + i);
+            System.err.println("Cart√£o " + (reader.isCardPresent() ? "" : "n√£o ") + "conectado " + i);
         }
         try {
             if (reader.isCardPresent()) {
@@ -70,7 +70,7 @@ public class CardConnection {
                 Security.addProvider(provider);
 
             } else {
-                throw new CardNotPresentException("Cart„o n„o encontrado");
+                throw new CardNotPresentException("Cart√£o n√£o encontrado");
             }
         } finally {
             ControlledDialog.closeMessageDialog();
@@ -89,13 +89,13 @@ public class CardConnection {
 
             if (reader.isCardPresent()) {
                 if (GlobalFlags.DEBUG) {
-                    System.err.println("Por favor retire o cart„o");
+                    System.err.println("Por favor retire o cart√£o");
                 }
-                ControlledDialog.showMessageDialog("Por favor retire o cart„o");
+                ControlledDialog.showMessageDialog("Por favor retire o cart√£o");
             }
 
             while (reader.isCardPresent()) {
-                System.out.println("Remova o cart„o atual");
+                System.out.println("Remova o cart√£o atual");
                 reader.waitForCardAbsent(1000);
             }
 

@@ -78,7 +78,7 @@ public class CardSender {
         } catch (Exception e) {
             e.printStackTrace();
             if (e instanceof CardServiceException) {
-                JOptionPane.showMessageDialog(null, "ERRO DE LEITURA COM O CARTÃO");
+                JOptionPane.showMessageDialog(null, "ERRO DE LEITURA COM O CARTÃƒO");
             }
         }
     }
@@ -187,6 +187,7 @@ public class CardSender {
 
         //Imagem para o cartÃ£o
         BufferedImage portrait = ImageIO.read(file);        //Carrega a imagem jp2 em java modificar com o metodo do fingerprint 
+        file.delete();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write(portrait, "jpeg 2000", baos);
         baos.flush();
@@ -338,7 +339,7 @@ public class CardSender {
         KeyPair aapair = keyGen.genKeyPair();
         DG15File dg15 = new DG15File(aapair.getPublic());
 
-        System.out.println("Enviando informações para AA");
+        System.out.println("Enviando informaï¿½ï¿½es para AA");
         perso.putPrivateKey(aapair.getPrivate());
 
         perso.createFile(service.EF_DG15, (short) dg15.getEncoded().length);

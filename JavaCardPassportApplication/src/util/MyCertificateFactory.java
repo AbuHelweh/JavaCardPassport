@@ -6,9 +6,9 @@
 package util;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.InvalidAlgorithmParameterException;
@@ -29,9 +29,9 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Base64;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Scanner;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,6 +51,9 @@ import org.jmrtd.cert.CVCPrincipal;
 import org.jmrtd.cert.CVCertificateBuilder;
 import org.jmrtd.cert.CardVerifiableCertificate;
 import org.joda.time.*;
+import org.ldaptive.LdapEntry;
+import org.ldaptive.SearchResult;
+import org.ldaptive.io.LdifReader;
 
 /**
  *
@@ -68,9 +71,7 @@ public class MyCertificateFactory {
     private KeyPair pair;
     private KeyPair RSApair;
     private CardVerifiableCertificate certificate;
-    private 
-
-    PrivateKey lastCertificateChainPrivateKey;
+    private PrivateKey lastCertificateChainPrivateKey;
 
     public static MyCertificateFactory getInstance() {
         if (instance == null) {
@@ -82,20 +83,20 @@ public class MyCertificateFactory {
     private MyCertificateFactory() {
 
     }
-    
-    public KeyPair getEACECPair(){
+
+    public KeyPair getEACECPair() {
         return pair;
     }
-    
-    public KeyPair getEACRSAPair(){
+
+    public KeyPair getEACRSAPair() {
         return RSApair;
     }
-    
-    public CVCPrincipal getCAREF(){
+
+    public CVCPrincipal getCAREF() {
         return caRef;
     }
-    
-    public CVCPrincipal getHOLDERREF(){
+
+    public CVCPrincipal getHOLDERREF() {
         return holderRef;
     }
 
@@ -168,6 +169,7 @@ public class MyCertificateFactory {
 
     /**
      * Gera um certificado x509 assinado pelo par de chaves
+     *
      * @param dnName
      * @param validity
      * @param keyPair
@@ -177,7 +179,7 @@ public class MyCertificateFactory {
      * @throws InvalidKeyException
      * @throws SignatureException
      * @throws NoSuchAlgorithmException
-     * @throws NoSuchProviderException 
+     * @throws NoSuchProviderException
      */
     public Certificate generateSignedX509Certificate(X500Name dnName, long validity, PublicKey pk, PrivateKey sk, String signatureAlgorithm, boolean isCA) throws CertificateException, InvalidKeyException, SignatureException, NoSuchAlgorithmException, NoSuchProviderException {
 
@@ -193,7 +195,7 @@ public class MyCertificateFactory {
 
             long now = System.currentTimeMillis();
             Date startDate = new Date(now);
-            
+
             BigInteger certSerialNumber = new BigInteger(Long.toString(now)); // <-- Using the current timestamp as the certificate serial number
 
             Calendar calendar = Calendar.getInstance();
@@ -224,7 +226,8 @@ public class MyCertificateFactory {
 
     /**
      * DebugPurposes gera um certificado assinado pela corrente de certificados
-     * @return 
+     *
+     * @return
      */
     public Certificate generateTestSignedX509Certificate() {
         try {
@@ -273,8 +276,9 @@ public class MyCertificateFactory {
 
     /**
      * gera um certificado auto assinado do jeito certo, sem gambiarra...
+     *
      * @return
-     * @throws Exception 
+     * @throws Exception
      */
     public Certificate generateSelfSignedX509Certificate() throws Exception {
 
@@ -287,7 +291,7 @@ public class MyCertificateFactory {
             System.out.println("Certificado existe");
             //return (Certificate) ks.getCertificate("DocSignCertificate");
         }
-        
+
         KeyPair keyPair = getRSAKeyPair();
 
         long now = System.currentTimeMillis();
@@ -315,7 +319,7 @@ public class MyCertificateFactory {
         certBuilder.addExtension(new ASN1ObjectIdentifier("2.5.29.19"), true, basicConstraints); // Basic Constraints is usually marked as critical.
 
         // -------------------------------------
-        Certificate cert =  new JcaX509CertificateConverter().setProvider(bcProvider).getCertificate(certBuilder.build(contentSigner));
+        Certificate cert = new JcaX509CertificateConverter().setProvider(bcProvider).getCertificate(certBuilder.build(contentSigner));
 
         System.out.println(cert.toString());
 
@@ -329,7 +333,7 @@ public class MyCertificateFactory {
         return cert;
     }
 
-    public KeyPair getRSAKeyPair() throws NoSuchAlgorithmException{
+    public KeyPair getRSAKeyPair() throws NoSuchAlgorithmException {
         if (RSApair != null) {
             return RSApair;
         }
@@ -338,10 +342,10 @@ public class MyCertificateFactory {
     }
 
     /**
-     * Debug Purposes
-     * gera uma corrente de certificados.
+     * Debug Purposes gera uma corrente de certificados.
+     *
      * @return
-     * @throws Exception 
+     * @throws Exception
      */
     public Set<X509Certificate> generateTestCertificateChain() throws Exception {
         KeyStore ks = KeyStore.getInstance("JKS");
@@ -371,65 +375,64 @@ public class MyCertificateFactory {
 
             certChain.add(xcert);
         }
-        
+
         try {
-            // read file
-            File file = new File("icaoPKD.ldif");
-            Scanner sc = new Scanner(file);
+            //* read file with many certificates
+            FileReader file = new FileReader("icaoPKD.ldif");
+            LdifReader reader = new LdifReader(file);
+            SearchResult result = reader.read();
+            Collection<LdapEntry> entries = result.getEntries();
+            for(LdapEntry entry : entries){
+                
+                if(GlobalFlags.DEBUG){
+                    System.out.println(entry);
+                }
+                //System.out.println(entry.getAttribute("CscaMasterListData"));
+                //System.out.println(entry.getAttribute("CscaMasterListData") == null? "null" : entry.getAttribute("CscaMasterListData").size());
+                //System.out.println(entry.getAttribute("CscaMasterListData") == null ? "null" : entry.getAttribute("CscaMasterListData").getStringValue());
+                //System.out.println(new String(Base64.getDecoder().decode(entry.getAttribute("CscaMasterListData") == null ? "null" : entry.getAttribute("CscaMasterListData").getStringValue())));
 
-            boolean isCert = false;
-            boolean isCN = false;
-
-            String name = "";
-            String cert = "";
-            BigInteger serial = BigInteger.ZERO;
-
-            while (sc.hasNextLine()) {
-                String s = sc.nextLine();
-
-                if (s.startsWith("dn: ")) {
-                    //System.out.println(name);
-                    //System.out.println(cert);
-                    //System.out.println(serial);
-
+                if(entry.getAttribute("userCertificate;binary") != null){
                     CertificateFactory cf = CertificateFactory.getInstance("X.509",JMRTDSecurityProvider.getBouncyCastleProvider());
-                    X509Certificate c = (X509Certificate)cf.generateCertificate(new ByteArrayInputStream(Base64.getDecoder().decode(cert)));
-                    //System.out.println(c);
-                    certChain.add(c);
-                    
-                    name = "";
-                    cert = "";
-                    serial = BigInteger.ZERO;
-                    isCN = false;
-                    isCert = false;
-                    
-                    continue;
-                }
-                if (s.startsWith("cn: ")) {
-                    isCN = true;
-                    isCert = false;
-                }
-                if (s.startsWith("objectClass")) {
-                    continue;
-                }
-                if (s.startsWith("sn: ")) {
-                    isCN = false;
-                    isCert = false;
-                    String temp = s.replace(("sn: "), "").trim();
-                    serial = new BigInteger(temp, 16);
-                }
-                if (s.startsWith("userCertificate;binary:: ")) {
-                    isCN = false;
-                    isCert = true;
-                }
-                if (isCN) {
-                    name += s.replace("cn: ", "").trim();
-                }
-                if (isCert) {
-                    cert += s.replace("userCertificate;binary:: ", "").trim();
-                }
+                    X509Certificate c = (X509Certificate)cf.generateCertificate(new ByteArrayInputStream(Base64.getDecoder().decode(entry.getAttribute("userCertificate;binary").getStringValue())));
 
+                    //certChain.add(c);
+                    
+                    //System.out.println(c);
+                }
+                
+                if(GlobalFlags.DEBUG){
+                    System.out.println("----------------------------------------==========================================================:::::::::::::::::::::::::::::::::::::::::::===========================================---------------------------------------------------------");
+                }
             }
+            //*/
+            //*
+            file = new FileReader("MasterList.ldif");
+            reader = new LdifReader(file);
+            result = reader.read();
+            entries = result.getEntries();
+            for(LdapEntry entry : entries){
+                if(GlobalFlags.DEBUG){
+                    System.out.println(entry);
+                }
+                //System.out.println(entry.getAttribute("CscaMasterListData"));
+                
+                if(entry.getAttribute("CscaMasterListData") != null){
+                    CertificateFactory cf = CertificateFactory.getInstance("X.509",JMRTDSecurityProvider.getBouncyCastleProvider());
+                    Collection<X509Certificate> c = (Collection<X509Certificate>)cf.generateCertificates(new ByteArrayInputStream(Base64.getDecoder().decode(entry.getAttribute("CscaMasterListData").getStringValue())));
+
+                    for(X509Certificate certificate : c){
+                        //System.out.println(certificate.getIssuerDN());
+                        certChain.add(certificate);
+
+                    }
+                }
+                
+                if(GlobalFlags.DEBUG){
+                    System.out.println("----------------------------------------==========================================================:::::::::::::::::::::::::::::::::::::::::::===========================================---------------------------------------------------------");
+                }
+            }
+            //*/
 
         } catch (Exception e) {
             System.err.println(e.getMessage());
@@ -437,12 +440,22 @@ public class MyCertificateFactory {
 
             return null;
         }
-        
+
         FileOutputStream fos = new FileOutputStream("/home/" + System.getProperty("user.name") + "/workspace/JavaCardPassport/Documentos/mykeystore.ks");
 
         ks.store(fos, pw.toCharArray());
 
         return certChain;
+    }
+
+    public static void main(String[] args) {
+        MyCertificateFactory i = MyCertificateFactory.getInstance();
+        try {
+            GlobalFlags.DEBUG = true;
+            i.generateTestCertificateChain();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

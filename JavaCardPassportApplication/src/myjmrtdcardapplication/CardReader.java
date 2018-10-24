@@ -105,7 +105,7 @@ public class CardReader {
                     Security.AAResult aares = sec.doAA(dg15);
                     System.out.println(aares);
                     if(!aares.getResult()){
-                        JOptionPane.showMessageDialog(null, "Falha na AutenticaÁ„o Ativa, Cart„o Inv·lido");
+                        JOptionPane.showMessageDialog(null, "Falha na Autentica√ß√£o Ativa, Cart√£o Inv√°lido");
                     }
                 }
             } catch (Exception e){
@@ -117,7 +117,7 @@ public class CardReader {
             PAResult pares = sec.doPA(com, sod);
             System.out.println(pares.toString());
             if(!pares.veredict()){
-                JOptionPane.showMessageDialog(null, "Falha na AutenticaÁ„o Passiva, Cart„o Modificado");
+                JOptionPane.showMessageDialog(null, "Falha na Autentica√ß√£o Passiva, Cart√£o Modificado");
             }
         } catch (Exception e) {
             System.out.println("PA ERROR");
@@ -214,8 +214,14 @@ public class CardReader {
 
             imgOut.write(imgBytes);
             imgOut.close();
+            
+            File f = new File(((DG1File) this.files[0]).getMRZInfo().getDocumentNumber() + ".jp2");
+            
+            BufferedImage res = ImageIO.read(f);
 
-            return ImageIO.read(new File(((DG1File) this.files[0]).getMRZInfo().getDocumentNumber() + ".jp2"));
+            f.delete();
+            
+            return res;
 
         } else {
             System.out.println("N√£o foi poss√≠vel acessar o arquivo DG2");
