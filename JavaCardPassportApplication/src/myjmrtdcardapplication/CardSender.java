@@ -187,11 +187,11 @@ public class CardSender {
 
         //Imagem para o cartão
         BufferedImage portrait = ImageIO.read(file);        //Carrega a imagem jp2 em java modificar com o metodo do fingerprint 
-        file.delete();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write(portrait, "jpeg 2000", baos);
         baos.flush();
         byte[] imageBytes = baos.toByteArray();     //Transforma em byteArray
+        System.out.println(imageBytes.length);
         //-Imagem para o cartão
 
         FaceImageInfo i1 = new FaceImageInfo(Gender.UNSPECIFIED, //Gender
@@ -232,6 +232,7 @@ public class CardSender {
 
         dataGroupHashes.put(2, digest.digest(dg2.getEncoded()));
         dataGroupComTagList.add(LDSFile.EF_DG2_TAG);
+        
     }
 
     /**
@@ -399,7 +400,10 @@ public class CardSender {
      * @throws CardServiceException
      */
     public void LockCard() throws CardServiceException {
-        perso.lockApplet();
-        perso.close();
+        
+        throw new CardServiceException("Lock");
+
+        //perso.lockApplet();
+        //perso.close();
     }
 }

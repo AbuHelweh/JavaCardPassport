@@ -206,7 +206,7 @@ public class CardReader {
 
             FaceImageInfo image = ((DG2File) files[1]).getFaceInfos().get(0).getFaceImageInfos().get(0);  //Pega a primeira foto
 
-            FileOutputStream imgOut = new FileOutputStream(((DG1File) this.files[0]).getMRZInfo().getDocumentNumber() + ".jp2");
+            FileOutputStream imgOut = new FileOutputStream("Photo.jp2");
 
             byte[] imgBytes = new byte[image.getImageLength()];
 
@@ -215,12 +215,10 @@ public class CardReader {
             imgOut.write(imgBytes);
             imgOut.close();
             
-            File f = new File(((DG1File) this.files[0]).getMRZInfo().getDocumentNumber() + ".jp2");
+            File f = new File("Photo.jp2");
             
             BufferedImage res = ImageIO.read(f);
 
-            f.delete();
-            
             return res;
 
         } else {

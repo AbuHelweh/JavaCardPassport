@@ -63,11 +63,9 @@ public class BACFrame extends javax.swing.JFrame {
         }
         BIRTHMONTHBOX.setSelectedIndex(cal.get(Calendar.MONTH));
         
-BIRTHMONTHBOX.setSelectedIndex(0);
 
         BIRTHDAYBOX.setSelectedIndex(cal.get(Calendar.DATE)-1);
         
-BIRTHDAYBOX.setSelectedIndex(19);
 
         BIRTHYEARBOX.removeAllItems();
         for (int i = 0; i <= 100; i++) {
@@ -75,7 +73,6 @@ BIRTHDAYBOX.setSelectedIndex(19);
         }
         
         
-BIRTHYEARBOX.setSelectedIndex(22);
         
         EXPMONTHBOX.removeAllItems();
         for (int i = 0; i < this.getMonths().length; i++) {
@@ -84,23 +81,24 @@ BIRTHYEARBOX.setSelectedIndex(22);
         
         EXPMONTHBOX.setSelectedIndex(cal.get(Calendar.MONTH));
         
-EXPMONTHBOX.setSelectedIndex(6);
 
         EXPDAYBOX.setSelectedIndex(cal.get(Calendar.DATE)-1);
         
-EXPDAYBOX.setSelectedIndex(2);
 
         EXPYEARBOX.removeAllItems();
         for (int i = -10; i <= 90; i++) {
             EXPYEARBOX.addItem((cal.get(Calendar.YEAR) - i) + "");
         }
 
-       
+        /*
+EXPMONTHBOX.setSelectedIndex(6);
+BIRTHYEARBOX.setSelectedIndex(22);
+BIRTHDAYBOX.setSelectedIndex(19);
+BIRTHMONTHBOX.setSelectedIndex(0);
+EXPDAYBOX.setSelectedIndex(2);
 EXPYEARBOX.setSelectedIndex(2);
-        
-        
 DOCNUMFIELD.setText("FR106509");
-        
+        //*/
     }
 
     /**
