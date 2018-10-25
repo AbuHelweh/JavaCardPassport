@@ -42,6 +42,7 @@ public class CreatePanel extends javax.swing.JPanel {
     private JFrame container;
     private HashMap<Integer, Integer> daysMonths;
     private File chosenImage;
+    private byte[] chosenBArray;
     private CardVerifiableCertificate certificate = null;
     private FingerInfo[] fingers = new FingerInfo[10]; //Ordenado de dedao a mindinho mao direita e esquerda
     private boolean sending = false;
@@ -177,9 +178,10 @@ public class CreatePanel extends javax.swing.JPanel {
 
     }
 
-    public void placeImage(File photo) {
+    public void placeImage(File photo, byte[] imageArray) {
 
         chosenImage = photo;
+        chosenBArray = imageArray;
 
         if (chosenImage == null) {
             System.out.println("Image Error");

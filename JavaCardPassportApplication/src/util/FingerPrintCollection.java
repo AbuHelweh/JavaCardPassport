@@ -193,7 +193,6 @@ public class FingerPrintCollection extends javax.swing.JFrame {
         //Os codigos dos dedos no JMRTD comecam no dedao direito com 1 e vao ate o mindinho esquerdo com 10
         try {
 
-            ControlledDialog.showMessageDialog("Escaneie sua digital agora");
             
             Thread t = new Thread(new Runnable() {
                 public void run() {
@@ -203,9 +202,11 @@ public class FingerPrintCollection extends javax.swing.JFrame {
             t.start();
 
             //Talvez salvar as imagens no banco de dados seja uma boa ideia depois
-           Thread.sleep(1000);
+            Thread.sleep(1000);
+            ControlledDialog.showMessageDialog("Escaneie sua digital agora");
+
            
-           t.join();
+            t.join();
 
             ControlledDialog.closeMessageDialog();
 
@@ -329,9 +330,9 @@ public class FingerPrintCollection extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("Mão Direita");
+        jLabel1.setText("Mï¿½o Direita");
 
-        jButton2.setText("Trocar mão");
+        jButton2.setText("Trocar mï¿½o");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -349,11 +350,11 @@ public class FingerPrintCollection extends javax.swing.JFrame {
 
         jLabel3.setText("Indicador");
 
-        jLabel4.setText("Médio");
+        jLabel4.setText("Mï¿½dio");
 
         jLabel5.setText("Anelar");
 
-        jLabel6.setText("Mínimo");
+        jLabel6.setText("Mï¿½nimo");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

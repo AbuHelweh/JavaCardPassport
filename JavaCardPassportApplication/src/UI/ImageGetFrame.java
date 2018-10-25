@@ -164,6 +164,7 @@ public class ImageGetFrame extends javax.swing.JFrame {
                 File picture = new File("PictureTakenFull.jp2");
                 FileOutputStream fos = new FileOutputStream(picture);
                 fos.write(ba);
+                fos.close();
               
                 ImageWorks.extractPointsFromImageAndResolve(picture);
 
@@ -177,7 +178,8 @@ public class ImageGetFrame extends javax.swing.JFrame {
                 picture = new File("PictureTakenHalf.jp2");
                 fos = new FileOutputStream(picture);
                 fos.write(ba);
-                back.placeImage(picture);
+                back.placeImage(picture,ba);
+                fos.close();
 
             } catch (Exception ex) {
                 ex.printStackTrace();

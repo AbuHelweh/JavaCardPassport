@@ -20,9 +20,11 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
+import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
 import javax.swing.JOptionPane;
 import net.sf.scuba.data.Gender;
 import net.sf.scuba.smartcards.CardServiceException;
@@ -167,6 +169,26 @@ public class CardSender {
         dataGroupComTagList.add(LDSFile.EF_DG1_TAG);
     }
 
+    public static void main(String[] args) throws Exception{
+        for(String i : ImageIO.getWriterFormatNames()){
+            System.out.println(i);
+        };
+        System.out.println(ImageIO.getImageWritersByFormatName("jpeg 2000").next());
+        
+        BufferedImage portrait = ImageIO.read(new File("PictureTakenHalf.jp2"));        //Carrega a imagem jp2 em java modificar com o metodo do fingerprint 
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        
+        ImageWriter iw = (ImageWriter)ImageIO.getImageWritersByFormatName("jpeg 2000").next();
+        ImageWriteParam iwp = iw.getDefaultWriteParam();
+        iw.setOutput(ImageIO.createImageOutputStream(baos));
+        IIOImage image = new IIOImage(portrait, null, null);
+        iw.write(null, image, iwp);
+        iw.dispose();
+        baos.flush();
+        byte[] imageBytes = baos.toByteArray();     //Transforma em byteArray
+        System.out.println(imageBytes.length);
+    }
+    
     /**
      * Envia o arquivo DG2 para o cartão
      *
@@ -182,17 +204,24 @@ public class CardSender {
         if (file == null) {
             return;
         }
-
+        
         FaceImageInfo.FeaturePoint[] fps = ImageWorks.extractPointsFromImageAndResolve(file);
-
+                
+        //*
         //Imagem para o cartão
         BufferedImage portrait = ImageIO.read(file);        //Carrega a imagem jp2 em java modificar com o metodo do fingerprint 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(portrait, "jpeg 2000", baos);
+        
+        ImageWriter iw = (ImageWriter)ImageIO.getImageWritersByFormatName("jpeg 2000").next();
+        ImageWriteParam iwp = iw.getDefaultWriteParam();
+        iw.setOutput(ImageIO.createImageOutputStream(baos));
+        IIOImage image = new IIOImage(portrait, null, null);
+        iw.write(null, image, iwp);
+        iw.dispose();
         baos.flush();
         byte[] imageBytes = baos.toByteArray();     //Transforma em byteArray
         System.out.println(imageBytes.length);
-        //-Imagem para o cartão
+        //-Imagem para o cartão*/
 
         FaceImageInfo i1 = new FaceImageInfo(Gender.UNSPECIFIED, //Gender
                 FaceImageInfo.EyeColor.UNSPECIFIED, //EyeColor
@@ -210,7 +239,7 @@ public class CardSender {
                 portrait.getWidth(), portrait.getHeight(), //Image Dimensions
                 new ByteArrayInputStream(imageBytes), //ImageInputstream
                 imageBytes.length, //imageLength
-                FaceImageInfo.IMAGE_DATA_TYPE_JPEG);    //nova foto
+                FaceImageInfo.IMAGE_DATA_TYPE_JPEG2000);    //nova foto
 
         images.add(i1);
 
@@ -401,9 +430,7 @@ public class CardSender {
      */
     public void LockCard() throws CardServiceException {
         
-        throw new CardServiceException("Lock");
-
-        //perso.lockApplet();
-        //perso.close();
+        perso.lockApplet();
+        perso.close();
     }
 }
