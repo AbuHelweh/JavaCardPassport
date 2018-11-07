@@ -12,12 +12,12 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PublicKey;
-import java.security.cert.Certificate;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Set;
 import javax.crypto.BadPaddingException;
@@ -99,14 +99,26 @@ public class SecurityProtocols {
         System.out.println("PA");
         
         boolean SODValidity = true;
-
+        
         CertificateValidationResult certCheck = checkForCertificateValidity(sod.getDocSigningCertificate());
         
         System.out.println(certCheck);
-
+        System.out.println("Corrente");
         if (certCheck.isValid()) {
-            for (X509Certificate c : certCheck.getChain()) {
-                System.out.println(c.getIssuerX500Principal());
+            ArrayList<X509Certificate> chain = certCheck.getChain();
+            for (int i = chain.size()-1; i >= 0; i--) {
+                X509Certificate c = (X509Certificate) chain.toArray()[i];
+                if(i == chain.size() -1){
+                    System.out.println("Certificado AC Raíz:");
+
+                } else if(i == 0){
+                    System.out.println("Certificado Alvo:");
+
+                } else {
+                    System.out.println("Certificado:");
+                }
+                System.out.println("I: " + c.getIssuerX500Principal());
+                System.out.println("S: " + c.getSubjectX500Principal());
             }
         }
 

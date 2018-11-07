@@ -90,7 +90,7 @@ public class BACFrame extends javax.swing.JFrame {
             EXPYEARBOX.addItem((cal.get(Calendar.YEAR) - i) + "");
         }
 
-        /*
+        //*
 EXPMONTHBOX.setSelectedIndex(6);
 BIRTHYEARBOX.setSelectedIndex(22);
 BIRTHDAYBOX.setSelectedIndex(19);

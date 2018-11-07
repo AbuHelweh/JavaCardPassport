@@ -6,6 +6,7 @@
 package util;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -32,6 +33,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -376,9 +378,11 @@ public class MyCertificateFactory {
             certChain.add(xcert);
         }
 
+        CertificateFactory cf = CertificateFactory.getInstance("X.509", JMRTDSecurityProvider.getBouncyCastleProvider());
+        
         try {
             //* read file with many certificates
-            FileReader file = new FileReader("icaoPKD.ldif");
+            FileReader file = new FileReader("certs/icaoPKD.ldif");
             LdifReader reader = new LdifReader(file);
             SearchResult result = reader.read();
             Collection<LdapEntry> entries = result.getEntries();
@@ -387,16 +391,11 @@ public class MyCertificateFactory {
                 if(GlobalFlags.DEBUG){
                     System.out.println(entry);
                 }
-                //System.out.println(entry.getAttribute("CscaMasterListData"));
-                //System.out.println(entry.getAttribute("CscaMasterListData") == null? "null" : entry.getAttribute("CscaMasterListData").size());
-                //System.out.println(entry.getAttribute("CscaMasterListData") == null ? "null" : entry.getAttribute("CscaMasterListData").getStringValue());
-                //System.out.println(new String(Base64.getDecoder().decode(entry.getAttribute("CscaMasterListData") == null ? "null" : entry.getAttribute("CscaMasterListData").getStringValue())));
-
+                
                 if(entry.getAttribute("userCertificate;binary") != null){
-                    CertificateFactory cf = CertificateFactory.getInstance("X.509",JMRTDSecurityProvider.getBouncyCastleProvider());
                     X509Certificate c = (X509Certificate)cf.generateCertificate(new ByteArrayInputStream(Base64.getDecoder().decode(entry.getAttribute("userCertificate;binary").getStringValue())));
 
-                    //certChain.add(c);
+                    certChain.add(c);
                     
                     //System.out.println(c);
                 }
@@ -407,7 +406,7 @@ public class MyCertificateFactory {
             }
             //*/
             //*
-            file = new FileReader("MasterList.ldif");
+            file = new FileReader("certs/MasterList.ldif");
             reader = new LdifReader(file);
             result = reader.read();
             entries = result.getEntries();
@@ -415,14 +414,11 @@ public class MyCertificateFactory {
                 if(GlobalFlags.DEBUG){
                     System.out.println(entry);
                 }
-                //System.out.println(entry.getAttribute("CscaMasterListData"));
                 
                 if(entry.getAttribute("CscaMasterListData") != null){
-                    CertificateFactory cf = CertificateFactory.getInstance("X.509",JMRTDSecurityProvider.getBouncyCastleProvider());
                     Collection<X509Certificate> c = (Collection<X509Certificate>)cf.generateCertificates(new ByteArrayInputStream(Base64.getDecoder().decode(entry.getAttribute("CscaMasterListData").getStringValue())));
 
                     for(X509Certificate certificate : c){
-                        //System.out.println(certificate.getIssuerDN());
                         certChain.add(certificate);
 
                     }
@@ -432,6 +428,33 @@ public class MyCertificateFactory {
                     System.out.println("----------------------------------------==========================================================:::::::::::::::::::::::::::::::::::::::::::===========================================---------------------------------------------------------");
                 }
             }
+            
+            for (File f : new File("certs").listFiles()){
+                if(f.getName().endsWith(".crt")){
+                    file = new FileReader(f);
+                    Scanner sc = new Scanner(file);
+                    String s = "";
+                    while (sc.hasNext()) {
+                        s += sc.next();
+                    }
+
+                    s = s.replace("-----BEGINCERTIFICATE-----", "");
+                    s = s.replace("-----ENDCERTIFICATE-----", "");
+
+                    X509Certificate c = (X509Certificate) cf.generateCertificate(new ByteArrayInputStream(Base64.getDecoder().decode(s)));
+
+                    if(GlobalFlags.DEBUG){
+                        System.out.println(c.getIssuerX500Principal());
+                    }
+                    
+
+                    certChain.add(c);
+            
+                }
+            }
+            
+
+            
             //*/
 
         } catch (Exception e) {
@@ -451,7 +474,7 @@ public class MyCertificateFactory {
     public static void main(String[] args) {
         MyCertificateFactory i = MyCertificateFactory.getInstance();
         try {
-            GlobalFlags.DEBUG = true;
+            GlobalFlags.DEBUG = false;
             i.generateTestCertificateChain();
         } catch (Exception e) {
             e.printStackTrace();

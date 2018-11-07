@@ -6,6 +6,7 @@
 package Security;
 
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.Set;
 
 /**
@@ -18,9 +19,9 @@ public class CertificateValidationResult {
     
     private Exception ex = null;
     
-    private Set<X509Certificate> chain;
+    private ArrayList<X509Certificate> chain;
     
-    public CertificateValidationResult(boolean valid, Set certChain){
+    public CertificateValidationResult(boolean valid, ArrayList certChain){
         isValid = valid;
         chain = certChain;
     }
@@ -35,16 +36,19 @@ public class CertificateValidationResult {
         return isValid;
     }
     
-    public Set<X509Certificate> getChain(){
+    public ArrayList<X509Certificate> getChain(){
         if(isValid){
-        return chain;
+            return chain;
         } else {
             return null;
         }
     }
     
     public String toString(){
-        return "" + (isValid? "Valid":"Not Valid - Reason: ") + (ex != null ? ex.getMessage() : "");
+        if(isValid){
+            return "Válido : " + System.lineSeparator();
+        }
+        return "Not Valid : " + ex.getMessage();
     }
     
     public Exception getException(){

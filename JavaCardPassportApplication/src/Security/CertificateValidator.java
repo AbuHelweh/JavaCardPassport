@@ -16,6 +16,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import util.GlobalFlags;
@@ -36,7 +37,7 @@ public class CertificateValidator {
             }
         }
         
-        System.out.println(cert);
+        //System.out.println(cert);
 
         try {
             cert.checkValidity();
@@ -46,7 +47,7 @@ public class CertificateValidator {
             return new CertificateValidationResult(e);
         }
         
-        Set<X509Certificate> chain = simpleCertificateChainBuilder(cert, additionalCerts);
+        ArrayList<X509Certificate> chain = simpleCertificateChainBuilder(cert, additionalCerts);
         
         if (chain == null){
             return new CertificateValidationResult(new Exception("Unable to build certificate chain"));
@@ -69,9 +70,9 @@ public class CertificateValidator {
     }
 
     //build bottom up;
-    public static Set<X509Certificate> simpleCertificateChainBuilder(X509Certificate cert, Set<X509Certificate> certs) {
+    public static ArrayList<X509Certificate> simpleCertificateChainBuilder(X509Certificate cert, Set<X509Certificate> certs) {
 
-        Set<X509Certificate> chain = new HashSet();
+        ArrayList<X509Certificate> chain = new ArrayList();
         X509Certificate current = cert;
         chain.add(cert);
             
@@ -79,17 +80,12 @@ public class CertificateValidator {
         while (ok) {
             ok = false;
             
-            System.out.println(cert);            
-
             for (X509Certificate c : certs) {
                 try{
                     if (GlobalFlags.DEBUG) {
                         System.err.println("Verify " + current.getIssuerX500Principal() + " with " + c.getIssuerX500Principal());
                     }
                     
-                    System.out.println(c.getIssuerDN());
-                    System.out.println(c.getSubjectDN());
-                    System.out.println(isSelfSigned(c));
                     if(cert.equals(c)){
                         chain.add(c);
                         break;
@@ -99,11 +95,13 @@ public class CertificateValidator {
                     chain.add(c);
                     current = c;
                     certs.remove(c);
-                    System.out.println("Yep : " + c.getIssuerX500Principal());
+                    System.out.println("Encontrou certificado : ");
+                    System.out.println("I: " + c.getIssuerX500Principal());
+                    System.out.println("S: " + c.getSubjectX500Principal());
                     ok = true;
                     break;
                 } catch (Exception e){
-                    System.out.println("Nope");
+                    //System.out.println("Nope");
                 }
 
             }

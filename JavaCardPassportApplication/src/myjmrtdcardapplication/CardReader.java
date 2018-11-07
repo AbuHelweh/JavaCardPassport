@@ -5,7 +5,6 @@
  */
 package myjmrtdcardapplication;
 
-import Security.EACResult;
 import Security.PAResult;
 import Security.SecurityProtocols;
 import java.awt.image.BufferedImage;
@@ -32,6 +31,7 @@ import org.jmrtd.lds.icao.DG2File;
 import org.jmrtd.lds.icao.DG3File;
 import org.jmrtd.lds.icao.MRZInfo;
 import org.jmrtd.lds.iso19794.FaceImageInfo;
+import org.jmrtd.lds.iso19794.FaceImageInfo.FeaturePoint;
 import org.jmrtd.lds.iso19794.FingerInfo;
 import org.jmrtd.protocol.BACResult;
 import util.CardConnection;
@@ -205,6 +205,13 @@ public class CardReader {
             this.files[1] = new DG2File(dg2Input);
 
             FaceImageInfo image = ((DG2File) files[1]).getFaceInfos().get(0).getFaceImageInfos().get(0);  //Pega a primeira foto
+            
+            FeaturePoint[] fps = image.getFeaturePoints();
+            
+            System.out.println("Feature Points");
+            for(FeaturePoint fp : fps){
+                System.out.println("FP: " + fp);
+            }
 
             FileOutputStream imgOut = new FileOutputStream("Photo.jp2");
 

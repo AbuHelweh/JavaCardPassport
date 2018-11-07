@@ -168,26 +168,6 @@ public class CardSender {
         dataGroupHashes.put(1, digest.digest(dg1.getEncoded()));
         dataGroupComTagList.add(LDSFile.EF_DG1_TAG);
     }
-
-    public static void main(String[] args) throws Exception{
-        for(String i : ImageIO.getWriterFormatNames()){
-            System.out.println(i);
-        };
-        System.out.println(ImageIO.getImageWritersByFormatName("jpeg 2000").next());
-        
-        BufferedImage portrait = ImageIO.read(new File("PictureTakenHalf.jp2"));        //Carrega a imagem jp2 em java modificar com o metodo do fingerprint 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        
-        ImageWriter iw = (ImageWriter)ImageIO.getImageWritersByFormatName("jpeg 2000").next();
-        ImageWriteParam iwp = iw.getDefaultWriteParam();
-        iw.setOutput(ImageIO.createImageOutputStream(baos));
-        IIOImage image = new IIOImage(portrait, null, null);
-        iw.write(null, image, iwp);
-        iw.dispose();
-        baos.flush();
-        byte[] imageBytes = baos.toByteArray();     //Transforma em byteArray
-        System.out.println(imageBytes.length);
-    }
     
     /**
      * Envia o arquivo DG2 para o cartão
@@ -220,7 +200,6 @@ public class CardSender {
         iw.dispose();
         baos.flush();
         byte[] imageBytes = baos.toByteArray();     //Transforma em byteArray
-        System.out.println(imageBytes.length);
         //-Imagem para o cartão*/
 
         FaceImageInfo i1 = new FaceImageInfo(Gender.UNSPECIFIED, //Gender
