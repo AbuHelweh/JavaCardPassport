@@ -348,7 +348,7 @@ public class CardSender {
         KeyPair aapair = keyGen.genKeyPair();
         DG15File dg15 = new DG15File(aapair.getPublic());
 
-        System.out.println("Enviando informa��es para AA");
+        System.out.println("Enviando informações para AA");
         perso.putPrivateKey(aapair.getPrivate());
 
         perso.createFile(service.EF_DG15, (short) dg15.getEncoded().length);
