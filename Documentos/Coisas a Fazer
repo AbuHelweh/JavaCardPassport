@@ -1,0 +1,71 @@
+- O applet que você se refere no texto, é o applet da lib ou você desenvolveu?
+
+- Leitura de passaporte, você se refere a passaportes Javacard (seus)?
+Não é possível ler um passaporte oficial?
+
+
+- Como foi a validação da proposta? 
+Por exemplo, por que não foi validado
+o experimento através de softwares de leitura de passaporte? Acredito que deveria
+ser possível a exportação de um documento compatível ICAO9309? 
+----- Infelizmente não foi possível pelos cartões não serem RFID;
+
+- Qual a motivação do trabalho? (Você falou agora na apresentação né)
+Eu não entendi. Qual a problemática, por que?
+Isso não está bem claro na sua introdução. De fato, de tão importante que isso é,
+geralmente nós dedicamos uma subseção da introdução só para isto.
+----- Acho que consegui me expressar bem no novo capítulo para a metodologia.
+
+Agora eu vou fazer algumas criticas que eu espero que você receba de forma construtiva
+para melhorar o texto final. De forma alguma entenda que qualquer comentário que
+segue se reflete na obra toda.
+
+Luca, o que eu tenho a impressão ao ler teu texto é do seguinte: muito esforço e tempo
+foi dedicado à solução (software). Quando terminado, houve pouco tempo para escrever o 
+texto. Isso é uma pena, pois os dois trabalhos não compartilham das mesmas qualidades.
+Fica claro para mim isso lendo os teus trabalhos relacionados. Lembra que a gente
+falou sobre isso? Veja quanto melhorou em poucos dias de trabalho. Agora imagina se você
+tivesse dedicado mais tempo ainda? O mesmo serve para o resto do trabalho escrito.
+
+Pontos fracos
+
+Introdução: Referência do chip do passaporte está relacionado a um vídeo Youtube. 
+Não seria melhor referenciar o padrão ICAO? Esta referência, para mim, é inédita.
+
+Senti falta de uma justificativa do trabalho. Por que isso é necessário? Qual a motivação?
+De início, não fica claro a vantagem ou as diferenças técnicas entre o passaporte e o cartão?
+Parece que o passaporte é uma caderneta com o chip do cartão embutido, mas a proposta seria 
+apenas remover a caderneta. Poderias elaborar melhor para ficar claro estes aspectos no teu 
+trabalho.
+
+Documento ICAO: Você enumera o que cada "parte" tem como objetivo, mas não explica o padrão.
+Acho que aqui você poderia detalhar o documento, no mínimo, no que você utiliza. Por exemplo, 
+por que os protocolos de segurança descritos na sessão 4.2 não estão aqui? 
+
+2.7 Applet e estrutura lógica de dados - Não se refere ao JMRTD? Acredito que estas definições
+são independentes "do Applet", que no caso aqui é um applet específico desta biblioteca.
+Não fica claro isso. Para mi, esta sessão parece uma continuação da anterior (ICAO)
+
+
+Exemplo de por que o texto parece um relatório:
+4.6 3o parágrafo
+
+A descrição da dificuldade de implementar o protocolo de AA usando a biblioteca:
+A biblioteca envia um buffer com um formato
+O cartão espera um formato diferente
+O cartão lança exceção
+Se removidas três partes do buffer da lib, o cartão lê o formato correto
+Funciona!
+
+Acho que o espirito do trabalho deveria ser mais focado, por exemplo, na descrição da 
+API do applet, que se comunica por um padrão, e no envio correto destes parâmetros
+sem parecer que você está usando método tentativa erro. No trabalho de fato consta a descrição
+das libs q você usa, mas não há nada técnico nestas descrições. Possivelmente este foi
+o motivo das dificuldades.
+
+Na sequencia, texto idêntico com a dificuldade de validação de cadeia de certificação.
+Não espero ler em um trabalho de TCC sobre esta dificuldade, espero que isso seja uma "feature".
+Explique como funciona o processo de validação da cadeia, por que é importante, por que
+você precisa dele? No texto parece apenas que você precisou fazer isso somente por que a biblioteca
+pedia isso.
+
